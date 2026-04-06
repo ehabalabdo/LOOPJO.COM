@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LOOP — Our Clients</title>
+    <meta name="description" content="Loop Marketing Solutions - Instagram accounts we manage across multiple industries in Jordan.">
+    <link rel="stylesheet" href="css/style.css?v=37">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script>if(sessionStorage.getItem('loopLoaded')){document.documentElement.classList.add('no-loader')}</script>
+    <link rel="prefetch" href="index.html">
+    <link rel="prefetch" href="portfolio.html">
+    <link rel="prefetch" href="solutions.html">
+</head>
+<body>
+    <!-- Video Background -->
+    <div class="bg-video-wrap">
+        <video class="bg-video" autoplay muted loop playsinline>
+            <source src="assets/bg-video.mp4" type="video/mp4">
+        </video>
+        <div class="bg-video-overlay"></div>
+    </div>
+
+    <!-- Animated Background -->
+    <div class="bg-aurora"></div>
+    <div class="bg-grid"></div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-follower" id="cursorFollower"></div>
+
+    <!-- Noise Overlay -->
+    <div class="noise-overlay"></div>
+
+
+
+    <!-- Loading Screen -->
+    <div class="loader" id="loader">
+        <div class="loader-inner">
+            <div class="loader-logo">
+                <img src="assets/logo.png" alt="Loop">
+            </div>
+            <div class="loader-bar">
+                <div class="loader-progress" id="loaderProgress"></div>
+            </div>
+            <div class="loader-text">
+                <span id="loaderPercent">0</span>%
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="assets/logo.png" alt="Loop">
+            </a>
+
+            <!-- Flying Icons -->
+            <div class="flying-icons" id="flyingIcons">
+                <div class="fly-icon" style="--i:0"><i class="fab fa-instagram"></i></div>
+                <div class="fly-icon" style="--i:1"><i class="fab fa-facebook-f"></i></div>
+                <div class="fly-icon" style="--i:2"><i class="fab fa-tiktok"></i></div>
+                <div class="fly-icon" style="--i:3"><i class="fas fa-hashtag"></i></div>
+                <div class="fly-icon" style="--i:4"><i class="fas fa-bolt"></i></div>
+                <div class="fly-icon" style="--i:5"><i class="fas fa-fire"></i></div>
+                <div class="fly-icon" style="--i:6"><i class="fas fa-rocket"></i></div>
+            </div>
+
+            <div class="nav-right">
+                <a href="index.html#contact" class="nav-cta magnetic" data-magnetic>
+                    <span>LET'S GO</span>
+                    <svg width="13" height="13" viewBox="0 0 13 13"><path d="M1 12L12 1M12 1H3M12 1V10" stroke="currentColor" stroke-width="2"/></svg>
+                </a>
+
+                <!-- Radial Menu Trigger -->
+                <div class="radial-menu-wrap" id="radialWrap">
+                    <button class="radial-trigger" id="radialTrigger" aria-label="Menu">
+                        <div class="radial-trigger-inner">
+                            <span class="radial-bar"></span>
+                            <span class="radial-bar"></span>
+                            <span class="radial-bar"></span>
+                        </div>
+                        <svg class="radial-ring" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="46" fill="none" stroke="rgba(242,242,241,0.15)" stroke-width="1"/>
+                            <circle class="radial-ring-progress" cx="50" cy="50" r="46" fill="none" stroke="url(#holoGrad)" stroke-width="2" stroke-dasharray="289" stroke-dashoffset="289" stroke-linecap="round"/>
+                            <defs>
+                                <linearGradient id="holoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#eea9c9"/>
+                                    <stop offset="50%" stop-color="#74bae1"/>
+                                    <stop offset="100%" stop-color="#9ddad0"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </button>
+                    <a href="index.html" class="radial-item" data-index="0">
+                        <span class="radial-item-icon"><i class="fas fa-home"></i></span>
+                        <span class="radial-item-label">HOME</span>
+                    </a>
+                    <a href="portfolio.html" class="radial-item" data-index="1">
+                        <span class="radial-item-icon"><i class="fas fa-briefcase"></i></span>
+                        <span class="radial-item-label">WORK</span>
+                    </a>
+                    <a href="clients.html" class="radial-item" data-index="2">
+                        <span class="radial-item-icon"><i class="fab fa-instagram"></i></span>
+                        <span class="radial-item-label">CLIENTS</span>
+                    </a>
+                    <a href="solutions.html" class="radial-item" data-index="3">
+                        <span class="radial-item-icon"><i class="fas fa-code"></i></span>
+                        <span class="radial-item-label">SOLUTIONS</span>
+                    </a>
+                    <a href="index.html#services" class="radial-item" data-index="4">
+                        <span class="radial-item-icon"><i class="fas fa-cogs"></i></span>
+                        <span class="radial-item-label">SERVICES</span>
+                    </a>
+                    <a href="index.html#contact" class="radial-item" data-index="5">
+                        <span class="radial-item-icon"><i class="fas fa-envelope"></i></span>
+                        <span class="radial-item-label">CONTACT</span>
+                    </a>
+                    <button class="radial-item" data-index="6" id="langToggle" aria-label="Toggle Language">
+                        <span class="radial-item-icon"><i class="fas fa-globe"></i></span>
+                        <span class="radial-item-label lang-toggle-text">عربي</span>
+                    </button>
+                    <div class="radial-backdrop" id="radialBackdrop"></div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- PAGE HERO -->
+    <section class="page-hero">
+        <div class="container">
+            <div class="page-hero-tag reveal-up">
+                <span class="hero-tag glitch" data-text="CLIENTS">CLIENTS</span>
+            </div>
+            <h1 class="hero-title">
+                <div class="title-line reveal-up" style="--delay: 0.1s">
+                    <span class="title-word">ACCOUNTS</span>
+                    <span class="title-word holo-word">WE</span>
+                </div>
+                <div class="title-line reveal-up" style="--delay: 0.2s">
+                    <span class="title-word stroke-text">MANAGE</span>
+                    <span class="title-word">DAILY.</span>
+                </div>
+            </h1>
+            <p class="page-hero-desc reveal-up" style="--delay: 0.4s">
+                Real brands. Real growth. Explore the Instagram pages we manage across Jordan.
+            </p>
+        </div>
+    </section>
+
+    <!-- CLIENT CATEGORIES & GRID -->
+    <section class="clients-page-section" id="clients">
+        <div class="container">
+            <div class="client-filters reveal-up">
+                <button class="filter-btn active" data-filter="all">ALL</button>
+                <button class="filter-btn" data-filter="services">SERVICES</button>
+                <button class="filter-btn" data-filter="realestate">REAL ESTATE</button>
+                <button class="filter-btn" data-filter="clothing">FASHION</button>
+                <button class="filter-btn" data-filter="education">EDUCATION</button>
+                <button class="filter-btn" data-filter="food">FOOD</button>
+                <button class="filter-btn" data-filter="appliances">APPLIANCES</button>
+                <button class="filter-btn" data-filter="health">HEALTH</button>
+                <button class="filter-btn" data-filter="travel">TRAVEL</button>
+            </div>
+
+            <div class="ig-grid">
+
+                <!-- SERVICES — simeramena -->
+                <div class="ig-card reveal-up" data-category="services" style="--delay:0s">
+                    <a href="https://www.instagram.com/simeramena/" target="_blank" rel="noopener noreferrer" class="ig-card-header">
+                        <div class="ig-avatar">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <div class="ig-info">
+                            <h4>@simeramena</h4>
+                            <span>Simer AMENA</span>
+                        </div>
+                        <div class="ig-follow-badge">
+                            <i class="fas fa-external-link-alt"></i>
+                        </div>
+                    </a>
+                    <div class="ig-card-body">
+                        <div class="ig-embed-wrap">
+                            <iframe src="https://www.instagram.com/simeramena/embed/" frameborder="0" scrolling="no" allowtransparency="true" loading="lazy"></iframe>
+                        </div>
+                    </div>
+                    <div class="ig-card-footer">
+                        <span class="ig-category"><i class="fas fa-tag"></i> خدمات | SERVICES</span>
+                        <span class="ig-managed">MANAGED BY LOOP</span>
+                    </div>
+                </div>
+
+                <!-- REAL ESTATE — moderndesignh5 -->
+                <div class="ig-card reveal-up" data-category="realestate" style="--delay:0.05s">
+                    <a href="https://www.instagram.com/moderndesignh5/" target="_blank" rel="noopener noreferrer" class="ig-card-header">
+                        <div class="ig-avatar">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <div class="ig-info">
+                            <h4>@moderndesignh5</h4>
+                            <span>Modern Design</span>
+                        </div>
+                        <div class="ig-follow-badge">
+                            <i class="fas fa-external-link-alt"></i>
+                        </div>
+                    </a>
+                    <div class="ig-card-body">
+                        <div class="ig-embed-wrap">
+                            <iframe src="https://www.instagram.com/moderndesignh5/embed/" frameborder="0" scrolling="no" allowtransparency="true" loading="lazy"></iframe>
+                        </div>
+                    </div>
+                    <div class="ig-card-footer">
+                        <span class="ig-category"><i class="fas fa-tag"></i> عقارات | REAL ESTATE</span>
+                        <span class="ig-managed">MANAGED BY LOOP</span>
+                    </div>
+                </div>
+
+                <!-- CLOTHING — footprint.shoes -->
+                <div class="ig-card reveal-up" data-category="clothing" style="--delay:0.1s">
+                    <a href="https://www.instagram.com/footprint.shoes/" target="_blank" rel="noopener noreferrer" class="ig-card-header">
+                        <div class="ig-avatar">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <div class="ig-info">
+                            <h4>@footprint.shoes</h4>
+                            <span>Footprint Shoes</span>
+                        </div>
+                        <div class="ig-follow-badge">
+                            <i class="fas fa-external-link-alt"></i>
+                        </div>
+                    </a>
+                    <div class="ig-card-body">
+                        <div class="ig-embed-wrap">
+                            <iframe src="https://www.instagram.com/footprint.shoes/embed/" frameborder="0" scrolling="no" allowtransparency="true" loading="lazy"></iframe>
+                        </div>
+                    </div>
+                    <div class="ig-card-footer">
+                        <span class="ig-category"><i class="fas fa-tag"></i> ملابس وأحذية | FASHION</span>
+                        <span class="ig-managed">MANAGED BY LOOP</span>
+                    </div>
+                </div>
+
+                <!-- CLOTHING — pipe__fashion -->
+                <div class="ig-card reveal-up" data-category="clothing" style="--delay:0.15s">
+                    <a href="https://www.instagram.com/pipe__fashion/" target="_blank" rel="noopener noreferrer" class="ig-card-header">
+                        <div class="ig-avatar">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <div class="ig-info">
+                            <h4>@pipe__fashion</h4>
+                            <span>Pipe Fashion</span>
+                        </div>
+                        <div class="ig-follow-badge">
+                            <i class="fas fa-external-link-alt"></i>
+                        </div>
+                    </a>
+                    <div class="ig-card-body">
+                        <div class="ig-embed-wrap">
+                            <iframe src="https://www.instagram.com/pipe__fashion/embed/" frameborder="0" scrolling="no" allowtransparency="true" loading="lazy"></iframe>
+                        </div>
+                    </div>
+                    <div class="ig-card-footer">
+                        <span class="ig-category"><i class="fas fa-tag"></i> ملابس وأحذية | FASHION</span>
+                        <span class="ig-managed">MANAGED BY LOOP</span>
+                    </div>
+                </div>
+
+                <!-- EDUCATION — agtr.aining -->
+                <div class="ig-card reveal-up" data-category="education" style="--delay:0.2s">
+                    <a href="https://www.instagram.com/agtr.aining/" target="_blank" rel="noopener noreferrer" class="ig-card-header">
+                        <div class="ig-avatar">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <div class="ig-info">
+                            <h4>@agtr.aining</h4>
+                            <span>AG Training</span>
+                        </div>
+                        <div class="ig-follow-badge">
+                            <i class="fas fa-external-link-alt"></i>
+                        </div>
+                    </a>
+                    <div class="ig-card-body">
+                        <div class="ig-embed-wrap">
+                            <iframe src="https://www.instagram.com/agtr.aining/embed/" frameborder="0" scrolling="no" allowtransparency="true" loading="lazy"></iframe>
+                        </div>
+                    </div>
+                    <div class="ig-card-footer">
+                        <span class="ig-category"><i class="fas fa-tag"></i> تعليم | EDUCATION</span>
+                        <span class="ig-managed">MANAGED BY LOOP</span>
+                    </div>
+                </div>
+
+                <!-- EDUCATION — aaucollege -->
+                <div class="ig-card reveal-up" data-category="education" style="--delay:0.22s">
+                    <a href="https://www.instagram.com/aaucollege/" target="_blank" rel="noopener noreferrer" class="ig-card-header">
+                        <div class="ig-avatar">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <div class="ig-info">
+                            <h4>@aaucollege</h4>
+                            <span>AAU College</span>
+                        </div>
+                        <div class="ig-follow-badge">
+                            <i class="fas fa-external-link-alt"></i>
+                        </div>
+                    </a>
+                    <div class="ig-card-body">
+                        <div class="ig-embed-wrap">
+                            <iframe src="https://www.instagram.com/aaucollege/embed/" frameborder="0" scrolling="no" allowtransparency="true" loading="lazy"></iframe>
+                        </div>
+                    </div>
+                    <div class="ig-card-footer">
+                        <span class="ig-category"><i class="fas fa-tag"></i> تعليم | EDUCATION</span>
+                        <span class="ig-managed">MANAGED BY LOOP</span>
+                    </div>
+                </div>
+
+                <!-- FOOD — mansafmarees26 -->
+                <div class="ig-card reveal-up" data-category="food" style="--delay:0.25s">
+                    <a href="https://www.instagram.com/mansafmarees26/" target="_blank" rel="noopener noreferrer" class="ig-card-header">
+                        <div class="ig-avatar">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <div class="ig-info">
+                            <h4>@mansafmarees26</h4>
+                            <span>Mansaf Marees</span>
+                        </div>
+                        <div class="ig-follow-badge">
+                            <i class="fas fa-external-link-alt"></i>
+                        </div>
+                    </a>
+                    <div class="ig-card-body">
+                        <div class="ig-embed-wrap">
+                            <iframe src="https://www.instagram.com/mansafmarees26/embed/" frameborder="0" scrolling="no" allowtransparency="true" loading="lazy"></iframe>
+                        </div>
+                    </div>
+                    <div class="ig-card-footer">
+                        <span class="ig-category"><i class="fas fa-tag"></i> طعام | FOOD</span>
+                        <span class="ig-managed">MANAGED BY LOOP</span>
+                    </div>
+                </div>
+
+                <!-- FOOD — fizzupdrinks -->
+                <div class="ig-card reveal-up" data-category="food" style="--delay:0.3s">
+                    <a href="https://www.instagram.com/fizzupdrinks/" target="_blank" rel="noopener noreferrer" class="ig-card-header">
+                        <div class="ig-avatar">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <div class="ig-info">
+                            <h4>@fizzupdrinks</h4>
+                            <span>Fizz Up Drinks</span>
+                        </div>
+                        <div class="ig-follow-badge">
+                            <i class="fas fa-external-link-alt"></i>
+                        </div>
+                    </a>
+                    <div class="ig-card-body">
+                        <div class="ig-embed-wrap">
+                            <iframe src="https://www.instagram.com/fizzupdrinks/embed/" frameborder="0" scrolling="no" allowtransparency="true" loading="lazy"></iframe>
+                        </div>
+                    </div>
+                    <div class="ig-card-footer">
+                        <span class="ig-category"><i class="fas fa-tag"></i> طعام | FOOD</span>
+                        <span class="ig-managed">MANAGED BY LOOP</span>
+                    </div>
+                </div>
+
+                <!-- APPLIANCES — maraqaappliances -->
+                <div class="ig-card reveal-up" data-category="appliances" style="--delay:0.35s">
+                    <a href="https://www.instagram.com/maraqaappliances/" target="_blank" rel="noopener noreferrer" class="ig-card-header">
+                        <div class="ig-avatar">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <div class="ig-info">
+                            <h4>@maraqaappliances</h4>
+                            <span>Maraqa Appliances</span>
+                        </div>
+                        <div class="ig-follow-badge">
+                            <i class="fas fa-external-link-alt"></i>
+                        </div>
+                    </a>
+                    <div class="ig-card-body">
+                        <div class="ig-embed-wrap">
+                            <iframe src="https://www.instagram.com/maraqaappliances/embed/" frameborder="0" scrolling="no" allowtransparency="true" loading="lazy"></iframe>
+                        </div>
+                    </div>
+                    <div class="ig-card-footer">
+                        <span class="ig-category"><i class="fas fa-tag"></i> أجهزة منزلية | APPLIANCES</span>
+                        <span class="ig-managed">MANAGED BY LOOP</span>
+                    </div>
+                </div>
+
+                <!-- HEALTH — aljeel_alsaaed -->
+                <div class="ig-card reveal-up" data-category="health" style="--delay:0.4s">
+                    <a href="https://www.instagram.com/aljeel_alsaaed/" target="_blank" rel="noopener noreferrer" class="ig-card-header">
+                        <div class="ig-avatar">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <div class="ig-info">
+                            <h4>@aljeel_alsaaed</h4>
+                            <span>Al Jeel Al Saaed</span>
+                        </div>
+                        <div class="ig-follow-badge">
+                            <i class="fas fa-external-link-alt"></i>
+                        </div>
+                    </a>
+                    <div class="ig-card-body">
+                        <div class="ig-embed-wrap">
+                            <iframe src="https://www.instagram.com/aljeel_alsaaed/embed/" frameborder="0" scrolling="no" allowtransparency="true" loading="lazy"></iframe>
+                        </div>
+                    </div>
+                    <div class="ig-card-footer">
+                        <span class="ig-category"><i class="fas fa-tag"></i> صحة | HEALTH</span>
+                        <span class="ig-managed">MANAGED BY LOOP</span>
+                    </div>
+                </div>
+
+                <!-- HEALTH — veliajo25 -->
+                <div class="ig-card reveal-up" data-category="health" style="--delay:0.45s">
+                    <a href="https://www.instagram.com/veliajo25/" target="_blank" rel="noopener noreferrer" class="ig-card-header">
+                        <div class="ig-avatar">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <div class="ig-info">
+                            <h4>@veliajo25</h4>
+                            <span>Velia Jo</span>
+                        </div>
+                        <div class="ig-follow-badge">
+                            <i class="fas fa-external-link-alt"></i>
+                        </div>
+                    </a>
+                    <div class="ig-card-body">
+                        <div class="ig-embed-wrap">
+                            <iframe src="https://www.instagram.com/veliajo25/embed/" frameborder="0" scrolling="no" allowtransparency="true" loading="lazy"></iframe>
+                        </div>
+                    </div>
+                    <div class="ig-card-footer">
+                        <span class="ig-category"><i class="fas fa-tag"></i> صحة | HEALTH</span>
+                        <span class="ig-managed">MANAGED BY LOOP</span>
+                    </div>
+                </div>
+
+                <!-- HEALTH — drmohammedrashidclinic -->
+                <div class="ig-card reveal-up" data-category="health" style="--delay:0.5s">
+                    <a href="https://www.instagram.com/drmohammedrashidclinic/" target="_blank" rel="noopener noreferrer" class="ig-card-header">
+                        <div class="ig-avatar">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <div class="ig-info">
+                            <h4>@drmohammedrashidclinic</h4>
+                            <span>Dr. Mohammed Rashid Clinic</span>
+                        </div>
+                        <div class="ig-follow-badge">
+                            <i class="fas fa-external-link-alt"></i>
+                        </div>
+                    </a>
+                    <div class="ig-card-body">
+                        <div class="ig-embed-wrap">
+                            <iframe src="https://www.instagram.com/drmohammedrashidclinic/embed/" frameborder="0" scrolling="no" allowtransparency="true" loading="lazy"></iframe>
+                        </div>
+                    </div>
+                    <div class="ig-card-footer">
+                        <span class="ig-category"><i class="fas fa-tag"></i> صحة | HEALTH</span>
+                        <span class="ig-managed">MANAGED BY LOOP</span>
+                    </div>
+                </div>
+
+                <!-- HEALTH — wasaan_baraheem -->
+                <div class="ig-card reveal-up" data-category="health" style="--delay:0.55s">
+                    <a href="https://www.instagram.com/wasaan_baraheem/" target="_blank" rel="noopener noreferrer" class="ig-card-header">
+                        <div class="ig-avatar">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <div class="ig-info">
+                            <h4>@wasaan_baraheem</h4>
+                            <span>Wasaan Baraheem</span>
+                        </div>
+                        <div class="ig-follow-badge">
+                            <i class="fas fa-external-link-alt"></i>
+                        </div>
+                    </a>
+                    <div class="ig-card-body">
+                        <div class="ig-embed-wrap">
+                            <iframe src="https://www.instagram.com/wasaan_baraheem/embed/" frameborder="0" scrolling="no" allowtransparency="true" loading="lazy"></iframe>
+                        </div>
+                    </div>
+                    <div class="ig-card-footer">
+                        <span class="ig-category"><i class="fas fa-tag"></i> صحة | HEALTH</span>
+                        <span class="ig-managed">MANAGED BY LOOP</span>
+                    </div>
+                </div>
+
+                <!-- HEALTH — bayanjabary.opthalmologist -->
+                <div class="ig-card reveal-up" data-category="health" style="--delay:0.6s">
+                    <a href="https://www.instagram.com/bayanjabary.opthalmologist/" target="_blank" rel="noopener noreferrer" class="ig-card-header">
+                        <div class="ig-avatar">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <div class="ig-info">
+                            <h4>@bayanjabary.opthalmologist</h4>
+                            <span>Bayan Jabary - Ophthalmologist</span>
+                        </div>
+                        <div class="ig-follow-badge">
+                            <i class="fas fa-external-link-alt"></i>
+                        </div>
+                    </a>
+                    <div class="ig-card-body">
+                        <div class="ig-embed-wrap">
+                            <iframe src="https://www.instagram.com/bayanjabary.opthalmologist/embed/" frameborder="0" scrolling="no" allowtransparency="true" loading="lazy"></iframe>
+                        </div>
+                    </div>
+                    <div class="ig-card-footer">
+                        <span class="ig-category"><i class="fas fa-tag"></i> صحة | HEALTH</span>
+                        <span class="ig-managed">MANAGED BY LOOP</span>
+                    </div>
+                </div>
+
+                <!-- SERVICES — alattal.electric.generators -->
+                <div class="ig-card reveal-up" data-category="services" style="--delay:0.65s">
+                    <a href="https://www.instagram.com/alattal.electric.generators/" target="_blank" rel="noopener noreferrer" class="ig-card-header">
+                        <div class="ig-avatar">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <div class="ig-info">
+                            <h4>@alattal.electric.generators</h4>
+                            <span>Al Attal Electric Generators</span>
+                        </div>
+                        <div class="ig-follow-badge">
+                            <i class="fas fa-external-link-alt"></i>
+                        </div>
+                    </a>
+                    <div class="ig-card-body">
+                        <div class="ig-embed-wrap">
+                            <iframe src="https://www.instagram.com/alattal.electric.generators/embed/" frameborder="0" scrolling="no" allowtransparency="true" loading="lazy"></iframe>
+                        </div>
+                    </div>
+                    <div class="ig-card-footer">
+                        <span class="ig-category"><i class="fas fa-tag"></i> خدمات | SERVICES</span>
+                        <span class="ig-managed">MANAGED BY LOOP</span>
+                    </div>
+                </div>
+
+                <!-- SERVICES — lolladolla_ -->
+                <div class="ig-card reveal-up" data-category="services" style="--delay:0.7s">
+                    <a href="https://www.instagram.com/lolladolla_/" target="_blank" rel="noopener noreferrer" class="ig-card-header">
+                        <div class="ig-avatar">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <div class="ig-info">
+                            <h4>@lolladolla_</h4>
+                            <span>Lolla Dolla</span>
+                        </div>
+                        <div class="ig-follow-badge">
+                            <i class="fas fa-external-link-alt"></i>
+                        </div>
+                    </a>
+                    <div class="ig-card-body">
+                        <div class="ig-embed-wrap">
+                            <iframe src="https://www.instagram.com/lolladolla_/embed/" frameborder="0" scrolling="no" allowtransparency="true" loading="lazy"></iframe>
+                        </div>
+                    </div>
+                    <div class="ig-card-footer">
+                        <span class="ig-category"><i class="fas fa-tag"></i> خدمات | SERVICES</span>
+                        <span class="ig-managed">MANAGED BY LOOP</span>
+                    </div>
+                </div>
+
+                <!-- SERVICES — sanaie.jo -->
+                <div class="ig-card reveal-up" data-category="services" style="--delay:0.75s">
+                    <a href="https://www.instagram.com/sanaie.jo/" target="_blank" rel="noopener noreferrer" class="ig-card-header">
+                        <div class="ig-avatar">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <div class="ig-info">
+                            <h4>@sanaie.jo</h4>
+                            <span>Sanaie Jo</span>
+                        </div>
+                        <div class="ig-follow-badge">
+                            <i class="fas fa-external-link-alt"></i>
+                        </div>
+                    </a>
+                    <div class="ig-card-body">
+                        <div class="ig-embed-wrap">
+                            <iframe src="https://www.instagram.com/sanaie.jo/embed/" frameborder="0" scrolling="no" allowtransparency="true" loading="lazy"></iframe>
+                        </div>
+                    </div>
+                    <div class="ig-card-footer">
+                        <span class="ig-category"><i class="fas fa-tag"></i> خدمات | SERVICES</span>
+                        <span class="ig-managed">MANAGED BY LOOP</span>
+                    </div>
+                </div>
+
+                <!-- SERVICES — tiryaq.jo2025 -->
+                <div class="ig-card reveal-up" data-category="services" style="--delay:0.8s">
+                    <a href="https://www.instagram.com/tiryaq.jo2025/" target="_blank" rel="noopener noreferrer" class="ig-card-header">
+                        <div class="ig-avatar">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <div class="ig-info">
+                            <h4>@tiryaq.jo2025</h4>
+                            <span>Tiryaq Jo</span>
+                        </div>
+                        <div class="ig-follow-badge">
+                            <i class="fas fa-external-link-alt"></i>
+                        </div>
+                    </a>
+                    <div class="ig-card-body">
+                        <div class="ig-embed-wrap">
+                            <iframe src="https://www.instagram.com/tiryaq.jo2025/embed/" frameborder="0" scrolling="no" allowtransparency="true" loading="lazy"></iframe>
+                        </div>
+                    </div>
+                    <div class="ig-card-footer">
+                        <span class="ig-category"><i class="fas fa-tag"></i> خدمات | SERVICES</span>
+                        <span class="ig-managed">MANAGED BY LOOP</span>
+                    </div>
+                </div>
+
+                <!-- TRAVEL — golden_horses_travel -->
+                <div class="ig-card reveal-up" data-category="travel" style="--delay:0.85s">
+                    <a href="https://www.instagram.com/golden_horses_travel/" target="_blank" rel="noopener noreferrer" class="ig-card-header">
+                        <div class="ig-avatar">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <div class="ig-info">
+                            <h4>@golden_horses_travel</h4>
+                            <span>Golden Horses Travel</span>
+                        </div>
+                        <div class="ig-follow-badge">
+                            <i class="fas fa-external-link-alt"></i>
+                        </div>
+                    </a>
+                    <div class="ig-card-body">
+                        <div class="ig-embed-wrap">
+                            <iframe src="https://www.instagram.com/golden_horses_travel/embed/" frameborder="0" scrolling="no" allowtransparency="true" loading="lazy"></iframe>
+                        </div>
+                    </div>
+                    <div class="ig-card-footer">
+                        <span class="ig-category"><i class="fas fa-tag"></i> سياحة وسفر | TRAVEL</span>
+                        <span class="ig-managed">MANAGED BY LOOP</span>
+                    </div>
+                </div>
+
+                <!-- REAL ESTATE — activeengineer.jo -->
+                <div class="ig-card reveal-up" data-category="realestate" style="--delay:0.9s">
+                    <a href="https://www.instagram.com/activeengineer.jo/" target="_blank" rel="noopener noreferrer" class="ig-card-header">
+                        <div class="ig-avatar">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <div class="ig-info">
+                            <h4>@activeengineer.jo</h4>
+                            <span>Active Engineer Jo</span>
+                        </div>
+                        <div class="ig-follow-badge">
+                            <i class="fas fa-external-link-alt"></i>
+                        </div>
+                    </a>
+                    <div class="ig-card-body">
+                        <div class="ig-embed-wrap">
+                            <iframe src="https://www.instagram.com/activeengineer.jo/embed/" frameborder="0" scrolling="no" allowtransparency="true" loading="lazy"></iframe>
+                        </div>
+                    </div>
+                    <div class="ig-card-footer">
+                        <span class="ig-category"><i class="fas fa-tag"></i> عقارات | REAL ESTATE</span>
+                        <span class="ig-managed">MANAGED BY LOOP</span>
+                    </div>
+                </div>
+
+                <!-- FOOD — rawabi_albayader_resturant -->
+                <div class="ig-card reveal-up" data-category="food" style="--delay:0.95s">
+                    <a href="https://www.instagram.com/rawabi_albayader_resturant/" target="_blank" rel="noopener noreferrer" class="ig-card-header">
+                        <div class="ig-avatar">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <div class="ig-info">
+                            <h4>@rawabi_albayader_resturant</h4>
+                            <span>Rawabi Al Bayader</span>
+                        </div>
+                        <div class="ig-follow-badge">
+                            <i class="fas fa-external-link-alt"></i>
+                        </div>
+                    </a>
+                    <div class="ig-card-body">
+                        <div class="ig-embed-wrap">
+                            <iframe src="https://www.instagram.com/rawabi_albayader_resturant/embed/" frameborder="0" scrolling="no" allowtransparency="true" loading="lazy"></iframe>
+                        </div>
+                    </div>
+                    <div class="ig-card-footer">
+                        <span class="ig-category"><i class="fas fa-tag"></i> طعام | FOOD</span>
+                        <span class="ig-managed">MANAGED BY LOOP</span>
+                    </div>
+                </div>
+
+                <!-- APPLIANCES — sectorsjo -->
+                <div class="ig-card reveal-up" data-category="appliances" style="--delay:1s">
+                    <a href="https://www.instagram.com/sectorsjo/" target="_blank" rel="noopener noreferrer" class="ig-card-header">
+                        <div class="ig-avatar">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <div class="ig-info">
+                            <h4>@sectorsjo</h4>
+                            <span>Sectors Jo</span>
+                        </div>
+                        <div class="ig-follow-badge">
+                            <i class="fas fa-external-link-alt"></i>
+                        </div>
+                    </a>
+                    <div class="ig-card-body">
+                        <div class="ig-embed-wrap">
+                            <iframe src="https://www.instagram.com/sectorsjo/embed/" frameborder="0" scrolling="no" allowtransparency="true" loading="lazy"></iframe>
+                        </div>
+                    </div>
+                    <div class="ig-card-footer">
+                        <span class="ig-category"><i class="fas fa-tag"></i> أجهزة منزلية | APPLIANCES</span>
+                        <span class="ig-managed">MANAGED BY LOOP</span>
+                    </div>
+                </div>
+
+                <!-- FOOD — sednayaalsham -->
+                <div class="ig-card reveal-up" data-category="food" style="--delay:1.05s">
+                    <a href="https://www.instagram.com/sednayaalsham/" target="_blank" rel="noopener noreferrer" class="ig-card-header">
+                        <div class="ig-avatar">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <div class="ig-info">
+                            <h4>@sednayaalsham</h4>
+                            <span>Sednaya Al Sham</span>
+                        </div>
+                        <div class="ig-follow-badge">
+                            <i class="fas fa-external-link-alt"></i>
+                        </div>
+                    </a>
+                    <div class="ig-card-body">
+                        <div class="ig-embed-wrap">
+                            <iframe src="https://www.instagram.com/sednayaalsham/embed/" frameborder="0" scrolling="no" allowtransparency="true" loading="lazy"></iframe>
+                        </div>
+                    </div>
+                    <div class="ig-card-footer">
+                        <span class="ig-category"><i class="fas fa-tag"></i> طعام | FOOD</span>
+                        <span class="ig-managed">MANAGED BY LOOP</span>
+                    </div>
+                </div>
+
+                <!-- REAL ESTATE — naserhamdan.group -->
+                <div class="ig-card reveal-up" data-category="realestate" style="--delay:1.1s">
+                    <a href="https://www.instagram.com/naserhamdan.group/" target="_blank" rel="noopener noreferrer" class="ig-card-header">
+                        <div class="ig-avatar">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <div class="ig-info">
+                            <h4>@naserhamdan.group</h4>
+                            <span>Naser Hamdan Group</span>
+                        </div>
+                        <div class="ig-follow-badge">
+                            <i class="fas fa-external-link-alt"></i>
+                        </div>
+                    </a>
+                    <div class="ig-card-body">
+                        <div class="ig-embed-wrap">
+                            <iframe src="https://www.instagram.com/naserhamdan.group/embed/" frameborder="0" scrolling="no" allowtransparency="true" loading="lazy"></iframe>
+                        </div>
+                    </div>
+                    <div class="ig-card-footer">
+                        <span class="ig-category"><i class="fas fa-tag"></i> عقارات | REAL ESTATE</span>
+                        <span class="ig-managed">MANAGED BY LOOP</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA SECTION -->
+    <section class="big-text-section">
+        <div class="container">
+            <h2 class="massive-text reveal-up">
+                LET'S GROW <span class="holo-word">TOGETHER ✦</span>
+            </h2>
+            <div style="text-align:center; margin-top: 40px;" class="reveal-up" style="--delay:0.2s">
+                <a href="index.html#contact" class="btn-wild magnetic" data-magnetic>
+                    <span class="btn-text">LET'S TALK</span>
+                    <span class="btn-icon"><i class="fas fa-arrow-right"></i></span>
+                    <div class="btn-ripple"></div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-marquee">
+            <div class="marquee">
+                <div class="marquee-content marquee-footer">
+                    <span>LOOP MARKETING</span><span class="marquee-dot">✦</span>
+                    <span>JORDAN</span><span class="marquee-dot">✦</span>
+                    <span>EST. 2020</span><span class="marquee-dot">✦</span>
+                    <span>LOOP MARKETING</span><span class="marquee-dot">✦</span>
+                    <span>JORDAN</span><span class="marquee-dot">✦</span>
+                    <span>EST. 2020</span><span class="marquee-dot">✦</span>
+                    <span>LOOP MARKETING</span><span class="marquee-dot">✦</span>
+                    <span>JORDAN</span><span class="marquee-dot">✦</span>
+                    <span>EST. 2020</span><span class="marquee-dot">✦</span>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="footer-inner">
+                <div class="footer-brand">
+                    <img src="assets/logo.png" alt="Loop" class="footer-logo">
+                </div>
+                <div class="footer-nav">
+                    <a href="index.html">HOME</a>
+                    <a href="portfolio.html">WORK</a>
+                    <a href="clients.html">CLIENTS</a>
+                    <a href="solutions.html">SOLUTIONS</a>
+                    <a href="index.html#services">SERVICES</a>
+                    <a href="index.html#contact">CONTACT</a>
+                </div>
+                <p class="footer-copy">&copy; 2026 LOOP MARKETING SOLUTIONS — ALL RIGHTS RESERVED</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js?v=37"></script>
+</body>
+</html>

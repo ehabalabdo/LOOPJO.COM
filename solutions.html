@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LOOP — Web, Apps & Software Solutions</title>
+    <meta name="description" content="Loop Marketing Solutions - We build websites, mobile apps, and custom software solutions that drive growth.">
+    <link rel="stylesheet" href="css/style.css?v=37">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script>if(sessionStorage.getItem('loopLoaded')){document.documentElement.classList.add('no-loader')}</script>
+    <link rel="prefetch" href="index.html">
+    <link rel="prefetch" href="portfolio.html">
+    <link rel="prefetch" href="clients.html">
+</head>
+<body>
+    <!-- Video Background -->
+    <div class="bg-video-wrap">
+        <video class="bg-video" autoplay muted loop playsinline>
+            <source src="assets/bg-video.mp4" type="video/mp4">
+        </video>
+        <div class="bg-video-overlay"></div>
+    </div>
+
+    <!-- Animated Background -->
+    <div class="bg-aurora"></div>
+    <div class="bg-grid"></div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-follower" id="cursorFollower"></div>
+
+    <!-- Noise Overlay -->
+    <div class="noise-overlay"></div>
+
+
+
+    <!-- Loading Screen -->
+    <div class="loader" id="loader">
+        <div class="loader-inner">
+            <div class="loader-logo">
+                <img src="assets/logo.png" alt="Loop">
+            </div>
+            <div class="loader-bar">
+                <div class="loader-progress" id="loaderProgress"></div>
+            </div>
+            <div class="loader-text">
+                <span id="loaderPercent">0</span>%
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="assets/logo.png" alt="Loop">
+            </a>
+
+            <!-- Flying Icons -->
+            <div class="flying-icons" id="flyingIcons">
+                <div class="fly-icon" style="--i:0"><i class="fas fa-code"></i></div>
+                <div class="fly-icon" style="--i:1"><i class="fas fa-mobile-alt"></i></div>
+                <div class="fly-icon" style="--i:2"><i class="fas fa-laptop-code"></i></div>
+                <div class="fly-icon" style="--i:3"><i class="fas fa-database"></i></div>
+                <div class="fly-icon" style="--i:4"><i class="fas fa-cloud"></i></div>
+                <div class="fly-icon" style="--i:5"><i class="fas fa-terminal"></i></div>
+                <div class="fly-icon" style="--i:6"><i class="fas fa-cogs"></i></div>
+            </div>
+
+            <div class="nav-right">
+                <a href="index.html#contact" class="nav-cta magnetic" data-magnetic>
+                    <span>LET'S GO</span>
+                    <svg width="13" height="13" viewBox="0 0 13 13"><path d="M1 12L12 1M12 1H3M12 1V10" stroke="currentColor" stroke-width="2"/></svg>
+                </a>
+
+                <!-- Radial Menu Trigger -->
+                <div class="radial-menu-wrap" id="radialWrap">
+                    <button class="radial-trigger" id="radialTrigger" aria-label="Menu">
+                        <div class="radial-trigger-inner">
+                            <span class="radial-bar"></span>
+                            <span class="radial-bar"></span>
+                            <span class="radial-bar"></span>
+                        </div>
+                        <svg class="radial-ring" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="46" fill="none" stroke="rgba(242,242,241,0.15)" stroke-width="1"/>
+                            <circle class="radial-ring-progress" cx="50" cy="50" r="46" fill="none" stroke="url(#holoGrad)" stroke-width="2" stroke-dasharray="289" stroke-dashoffset="289" stroke-linecap="round"/>
+                            <defs>
+                                <linearGradient id="holoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#eea9c9"/>
+                                    <stop offset="50%" stop-color="#74bae1"/>
+                                    <stop offset="100%" stop-color="#9ddad0"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </button>
+                    <a href="index.html" class="radial-item" data-index="0">
+                        <span class="radial-item-icon"><i class="fas fa-home"></i></span>
+                        <span class="radial-item-label">HOME</span>
+                    </a>
+                    <a href="portfolio.html" class="radial-item" data-index="1">
+                        <span class="radial-item-icon"><i class="fas fa-briefcase"></i></span>
+                        <span class="radial-item-label">WORK</span>
+                    </a>
+                    <a href="clients.html" class="radial-item" data-index="2">
+                        <span class="radial-item-icon"><i class="fab fa-instagram"></i></span>
+                        <span class="radial-item-label">CLIENTS</span>
+                    </a>
+                    <a href="solutions.html" class="radial-item" data-index="3">
+                        <span class="radial-item-icon"><i class="fas fa-code"></i></span>
+                        <span class="radial-item-label">SOLUTIONS</span>
+                    </a>
+                    <a href="index.html#services" class="radial-item" data-index="4">
+                        <span class="radial-item-icon"><i class="fas fa-cogs"></i></span>
+                        <span class="radial-item-label">SERVICES</span>
+                    </a>
+                    <a href="index.html#contact" class="radial-item" data-index="5">
+                        <span class="radial-item-icon"><i class="fas fa-envelope"></i></span>
+                        <span class="radial-item-label">CONTACT</span>
+                    </a>
+                    <button class="radial-item" data-index="6" id="langToggle" aria-label="Toggle Language">
+                        <span class="radial-item-icon"><i class="fas fa-globe"></i></span>
+                        <span class="radial-item-label lang-toggle-text">عربي</span>
+                    </button>
+                    <div class="radial-backdrop" id="radialBackdrop"></div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- PAGE HERO -->
+    <section class="page-hero">
+        <div class="container">
+            <div class="page-hero-tag reveal-up">
+                <span class="hero-tag glitch" data-text="DIGITAL SOLUTIONS">DIGITAL SOLUTIONS</span>
+            </div>
+            <h1 class="hero-title">
+                <div class="title-line reveal-up" style="--delay: 0.1s">
+                    <span class="title-word">WE</span>
+                    <span class="title-word holo-word">BUILD</span>
+                </div>
+                <div class="title-line reveal-up" style="--delay: 0.2s">
+                    <span class="title-word stroke-text">DIGITAL</span>
+                    <span class="title-word">FUTURES.</span>
+                </div>
+            </h1>
+            <p class="page-hero-desc reveal-up" style="--delay: 0.4s">
+                Websites, mobile apps, and custom software — engineered<br>
+                to scale your business and dominate the digital space.
+            </p>
+        </div>
+    </section>
+
+    <!-- SERVICES OVERVIEW STRIP -->
+    <section class="solutions-strip">
+        <div class="container">
+            <div class="solutions-cards">
+
+                <!-- Web Development -->
+                <div class="solution-card reveal-up" style="--delay:0s">
+                    <div class="solution-card-icon" style="--accent: var(--pink)">
+                        <i class="fas fa-globe"></i>
+                        <div class="solution-card-glow"></div>
+                    </div>
+                    <h3 class="solution-card-title">WEB DEVELOPMENT</h3>
+                    <p class="solution-card-desc">Custom websites, landing pages, e-commerce platforms, and web applications built with modern technologies and stunning design.</p>
+                    <ul class="solution-features">
+                        <li><i class="fas fa-check"></i> Corporate Websites</li>
+                        <li><i class="fas fa-check"></i> E-Commerce Stores</li>
+                        <li><i class="fas fa-check"></i> Landing Pages</li>
+                        <li><i class="fas fa-check"></i> Web Applications</li>
+                        <li><i class="fas fa-check"></i> CMS Integration</li>
+                        <li><i class="fas fa-check"></i> SEO Optimized</li>
+                    </ul>
+                </div>
+
+                <!-- Mobile Apps -->
+                <div class="solution-card reveal-up" style="--delay:0.1s">
+                    <div class="solution-card-icon" style="--accent: var(--blue)">
+                        <i class="fas fa-mobile-alt"></i>
+                        <div class="solution-card-glow"></div>
+                    </div>
+                    <h3 class="solution-card-title">MOBILE APPS</h3>
+                    <p class="solution-card-desc">Native and cross-platform mobile applications for iOS and Android. Beautiful interfaces, smooth performance, engaged users.</p>
+                    <ul class="solution-features">
+                        <li><i class="fas fa-check"></i> iOS Development</li>
+                        <li><i class="fas fa-check"></i> Android Development</li>
+                        <li><i class="fas fa-check"></i> Cross-Platform (Flutter)</li>
+                        <li><i class="fas fa-check"></i> UI/UX Design</li>
+                        <li><i class="fas fa-check"></i> App Store Publishing</li>
+                        <li><i class="fas fa-check"></i> Push Notifications</li>
+                    </ul>
+                </div>
+
+                <!-- Custom Software -->
+                <div class="solution-card reveal-up" style="--delay:0.2s">
+                    <div class="solution-card-icon" style="--accent: var(--mint)">
+                        <i class="fas fa-server"></i>
+                        <div class="solution-card-glow"></div>
+                    </div>
+                    <h3 class="solution-card-title">CUSTOM SOFTWARE</h3>
+                    <p class="solution-card-desc">Tailored software solutions to automate processes, manage data, and streamline operations. Built for your specific business needs.</p>
+                    <ul class="solution-features">
+                        <li><i class="fas fa-check"></i> CRM Systems</li>
+                        <li><i class="fas fa-check"></i> ERP Solutions</li>
+                        <li><i class="fas fa-check"></i> Dashboard & Analytics</li>
+                        <li><i class="fas fa-check"></i> API Development</li>
+                        <li><i class="fas fa-check"></i> Cloud Hosting</li>
+                        <li><i class="fas fa-check"></i> Maintenance & Support</li>
+                    </ul>
+                </div>
+
+                <!-- Social Media Marketing -->
+                <div class="solution-card reveal-up" style="--delay:0.3s">
+                    <div class="solution-card-icon" style="--accent: var(--purple)">
+                        <i class="fab fa-instagram"></i>
+                        <div class="solution-card-glow"></div>
+                    </div>
+                    <h3 class="solution-card-title">SOCIAL MEDIA MARKETING</h3>
+                    <p class="solution-card-desc">Full-service social media management, advertising, and content creation to grow your brand and dominate every platform.</p>
+                    <ul class="solution-features">
+                        <li><i class="fas fa-check"></i> Content Strategy & Calendars</li>
+                        <li><i class="fas fa-check"></i> Social Media Management</li>
+                        <li><i class="fas fa-check"></i> Paid Ads (Meta, TikTok, Google)</li>
+                        <li><i class="fas fa-check"></i> Influencer Marketing</li>
+                        <li><i class="fas fa-check"></i> Analytics & Reporting</li>
+                        <li><i class="fas fa-check"></i> Community Management</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- PROCESS SECTION -->
+    <section class="process-section">
+        <div class="container">
+            <div class="section-label reveal-up">( HOW WE WORK )</div>
+            <h2 class="big-heading reveal-up" style="--delay:0.1s">
+                THE <span class="holo-word">PROCESS</span>
+            </h2>
+
+            <div class="process-timeline">
+                <div class="process-step reveal-up" style="--delay:0s">
+                    <div class="process-step-num">01</div>
+                    <div class="process-step-content">
+                        <h3>DISCOVERY</h3>
+                        <p>We dive deep into your business, goals, audience, and competitors to understand exactly what you need.</p>
+                    </div>
+                    <div class="process-step-icon"><i class="fas fa-search"></i></div>
+                </div>
+                <div class="process-step reveal-up" style="--delay:0.08s">
+                    <div class="process-step-num">02</div>
+                    <div class="process-step-content">
+                        <h3>STRATEGY & DESIGN</h3>
+                        <p>Wireframes, prototypes, and UI/UX design crafted for maximum impact and conversion.</p>
+                    </div>
+                    <div class="process-step-icon"><i class="fas fa-pencil-ruler"></i></div>
+                </div>
+                <div class="process-step reveal-up" style="--delay:0.16s">
+                    <div class="process-step-num">03</div>
+                    <div class="process-step-content">
+                        <h3>DEVELOPMENT</h3>
+                        <p>Clean, scalable code. Modern frameworks. Responsive design. Tested on every device and browser.</p>
+                    </div>
+                    <div class="process-step-icon"><i class="fas fa-code"></i></div>
+                </div>
+                <div class="process-step reveal-up" style="--delay:0.24s">
+                    <div class="process-step-num">04</div>
+                    <div class="process-step-content">
+                        <h3>LAUNCH & SUPPORT</h3>
+                        <p>Deployment, performance monitoring, and ongoing maintenance to keep everything running at peak.</p>
+                    </div>
+                    <div class="process-step-icon"><i class="fas fa-rocket"></i></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TECH STACK MARQUEE -->
+    <div class="marquee-section">
+        <div class="marquee marquee-reverse">
+            <div class="marquee-content marquee-big">
+                <span>REACT</span><span class="marquee-dot">→</span>
+                <span>FLUTTER</span><span class="marquee-dot">→</span>
+                <span>NODE.JS</span><span class="marquee-dot">→</span>
+                <span>PYTHON</span><span class="marquee-dot">→</span>
+                <span>WORDPRESS</span><span class="marquee-dot">→</span>
+                <span>FIREBASE</span><span class="marquee-dot">→</span>
+                <span>AWS</span><span class="marquee-dot">→</span>
+                <span>FIGMA</span><span class="marquee-dot">→</span>
+                <span>REACT</span><span class="marquee-dot">→</span>
+                <span>FLUTTER</span><span class="marquee-dot">→</span>
+                <span>NODE.JS</span><span class="marquee-dot">→</span>
+                <span>PYTHON</span><span class="marquee-dot">→</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- WHY US -->
+    <section class="why-us-section">
+        <div class="container">
+            <div class="section-label reveal-up">( WHY LOOP )</div>
+            <h2 class="big-heading reveal-up" style="--delay:0.1s">
+                NOT JUST <span class="holo-word">CODE</span>
+            </h2>
+
+            <div class="why-grid">
+                <div class="why-card reveal-up" style="--delay:0s">
+                    <div class="why-num">01</div>
+                    <h4>MARKETING + TECH</h4>
+                    <p>We don't just build — we build with marketing DNA. Every feature is designed to convert and grow.</p>
+                </div>
+                <div class="why-card reveal-up" style="--delay:0.08s">
+                    <div class="why-num">02</div>
+                    <h4>INSANE DESIGN</h4>
+                    <p>Pixel-perfect, award-worthy interfaces that make competitors jealous. Your brand, amplified digitally.</p>
+                </div>
+                <div class="why-card reveal-up" style="--delay:0.16s">
+                    <div class="why-num">03</div>
+                    <h4>FAST DELIVERY</h4>
+                    <p>Agile process, clear milestones, no BS delays. We ship fast without cutting corners.</p>
+                </div>
+                <div class="why-card reveal-up" style="--delay:0.24s">
+                    <div class="why-num">04</div>
+                    <h4>FULL SUPPORT</h4>
+                    <p>Post-launch maintenance, updates, hosting, and scaling. We're with you for the long run.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="big-text-section">
+        <div class="container">
+            <h2 class="massive-text reveal-up">
+                LET'S BUILD<br>
+                SOMETHING <span class="holo-word">INSANE</span> ✦
+            </h2>
+            <div style="text-align:center; margin-top: 40px;" class="reveal-up">
+                <a href="index.html#contact" class="btn-wild magnetic" data-magnetic>
+                    <span class="btn-text">START YOUR PROJECT</span>
+                    <span class="btn-icon"><i class="fas fa-arrow-right"></i></span>
+                    <div class="btn-ripple"></div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-marquee">
+            <div class="marquee">
+                <div class="marquee-content marquee-footer">
+                    <span>LOOP MARKETING</span><span class="marquee-dot">✦</span>
+                    <span>JORDAN</span><span class="marquee-dot">✦</span>
+                    <span>EST. 2020</span><span class="marquee-dot">✦</span>
+                    <span>LOOP MARKETING</span><span class="marquee-dot">✦</span>
+                    <span>JORDAN</span><span class="marquee-dot">✦</span>
+                    <span>EST. 2020</span><span class="marquee-dot">✦</span>
+                    <span>LOOP MARKETING</span><span class="marquee-dot">✦</span>
+                    <span>JORDAN</span><span class="marquee-dot">✦</span>
+                    <span>EST. 2020</span><span class="marquee-dot">✦</span>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="footer-inner">
+                <div class="footer-brand">
+                    <img src="assets/logo.png" alt="Loop" class="footer-logo">
+                </div>
+                <div class="footer-nav">
+                    <a href="index.html">HOME</a>
+                    <a href="portfolio.html">WORK</a>
+                    <a href="clients.html">CLIENTS</a>
+                    <a href="solutions.html">SOLUTIONS</a>
+                    <a href="index.html#services">SERVICES</a>
+                    <a href="index.html#contact">CONTACT</a>
+                </div>
+                <p class="footer-copy">&copy; 2026 LOOP MARKETING SOLUTIONS — ALL RIGHTS RESERVED</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js?v=37"></script>
+</body>
+</html>

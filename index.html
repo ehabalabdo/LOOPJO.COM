@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LOOP — We Break The Algorithm</title>
+    <meta name="description" content="Loop Marketing Solutions - We don't follow trends, we create them.">
+    <link rel="stylesheet" href="css/style.css?v=37">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script>if(sessionStorage.getItem('loopLoaded')){document.documentElement.classList.add('no-loader')}</script>
+    <link rel="prefetch" href="portfolio.html">
+    <link rel="prefetch" href="clients.html">
+    <link rel="prefetch" href="solutions.html">
+</head>
+<body>
+    <!-- Video Background -->
+    <div class="bg-video-wrap">
+        <video class="bg-video" autoplay muted loop playsinline preload="auto">
+            <source src="assets/bg-video.mp4" type="video/mp4">
+        </video>
+        <div class="bg-video-overlay"></div>
+    </div>
+
+    <!-- Animated Background -->
+    <div class="bg-aurora"></div>
+    <div class="bg-grid"></div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-follower" id="cursorFollower"></div>
+
+    <!-- Noise Overlay -->
+    <div class="noise-overlay"></div>
+
+
+
+    <!-- Loading Screen -->
+    <div class="loader" id="loader">
+        <div class="loader-inner">
+            <div class="loader-logo">
+                <img src="assets/logo.png" alt="Loop">
+            </div>
+            <div class="loader-bar">
+                <div class="loader-progress" id="loaderProgress"></div>
+            </div>
+            <div class="loader-text">
+                <span id="loaderPercent">0</span>%
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">
+                <img src="assets/logo.png" alt="Loop">
+            </a>
+
+            <!-- Flying Icons -->
+            <div class="flying-icons" id="flyingIcons">
+                <div class="fly-icon" style="--i:0"><i class="fab fa-instagram"></i></div>
+                <div class="fly-icon" style="--i:1"><i class="fab fa-facebook-f"></i></div>
+                <div class="fly-icon" style="--i:2"><i class="fab fa-tiktok"></i></div>
+                <div class="fly-icon" style="--i:3"><i class="fas fa-hashtag"></i></div>
+                <div class="fly-icon" style="--i:4"><i class="fas fa-bolt"></i></div>
+                <div class="fly-icon" style="--i:5"><i class="fas fa-fire"></i></div>
+                <div class="fly-icon" style="--i:6"><i class="fas fa-rocket"></i></div>
+            </div>
+
+            <div class="nav-right">
+                <a href="#contact" class="nav-cta magnetic" data-magnetic>
+                    <span>LET'S GO</span>
+                    <svg width="13" height="13" viewBox="0 0 13 13"><path d="M1 12L12 1M12 1H3M12 1V10" stroke="currentColor" stroke-width="2"/></svg>
+                </a>
+
+                <!-- Radial Menu Trigger -->
+                <div class="radial-menu-wrap" id="radialWrap">
+                    <button class="radial-trigger" id="radialTrigger" aria-label="Menu">
+                        <div class="radial-trigger-inner">
+                            <span class="radial-bar"></span>
+                            <span class="radial-bar"></span>
+                            <span class="radial-bar"></span>
+                        </div>
+                        <svg class="radial-ring" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="46" fill="none" stroke="rgba(242,242,241,0.15)" stroke-width="1"/>
+                            <circle class="radial-ring-progress" cx="50" cy="50" r="46" fill="none" stroke="url(#holoGrad)" stroke-width="2" stroke-dasharray="289" stroke-dashoffset="289" stroke-linecap="round"/>
+                            <defs>
+                                <linearGradient id="holoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#eea9c9"/>
+                                    <stop offset="50%" stop-color="#74bae1"/>
+                                    <stop offset="100%" stop-color="#9ddad0"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </button>
+                    <!-- Radial Menu Items -->
+                    <a href="#home" class="radial-item" data-index="0">
+                        <span class="radial-item-icon"><i class="fas fa-home"></i></span>
+                        <span class="radial-item-label">HOME</span>
+                    </a>
+                    <a href="portfolio.html" class="radial-item" data-index="1">
+                        <span class="radial-item-icon"><i class="fas fa-briefcase"></i></span>
+                        <span class="radial-item-label">WORK</span>
+                    </a>
+                    <a href="clients.html" class="radial-item" data-index="2">
+                        <span class="radial-item-icon"><i class="fab fa-instagram"></i></span>
+                        <span class="radial-item-label">CLIENTS</span>
+                    </a>
+                    <a href="solutions.html" class="radial-item" data-index="3">
+                        <span class="radial-item-icon"><i class="fas fa-code"></i></span>
+                        <span class="radial-item-label">SOLUTIONS</span>
+                    </a>
+                    <a href="#services" class="radial-item" data-index="4">
+                        <span class="radial-item-icon"><i class="fas fa-cogs"></i></span>
+                        <span class="radial-item-label">SERVICES</span>
+                    </a>
+                    <a href="#contact" class="radial-item" data-index="5">
+                        <span class="radial-item-icon"><i class="fas fa-envelope"></i></span>
+                        <span class="radial-item-label">CONTACT</span>
+                    </a>
+                    <button class="radial-item" data-index="6" id="langToggle" aria-label="Toggle Language">
+                        <span class="radial-item-icon"><i class="fas fa-globe"></i></span>
+                        <span class="radial-item-label lang-toggle-text">عربي</span>
+                    </button>
+                    <!-- Radial backdrop blur -->
+                    <div class="radial-backdrop" id="radialBackdrop"></div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero" id="home">
+        <div class="hero-bg">
+            <div class="gradient-sphere sphere-1"></div>
+            <div class="gradient-sphere sphere-2"></div>
+            <div class="gradient-sphere sphere-3"></div>
+            <canvas id="heroCanvas"></canvas>
+        </div>
+        
+        <div class="hero-content">
+            <div class="hero-top reveal-up">
+                <div class="hero-tag glitch" data-text="SOCIAL MEDIA MARKETING">SOCIAL MEDIA MARKETING</div>
+            </div>
+            
+            <h1 class="hero-title">
+                <div class="title-line reveal-up" style="--delay: 0.1s">
+                    <span class="title-word">WE</span>
+                    <span class="title-word stroke-text">DON'T</span>
+                </div>
+                <div class="title-line reveal-up" style="--delay: 0.2s">
+                    <span class="title-word">FOLLOW</span>
+                    <span class="title-word holo-word">TRENDS</span>
+                </div>
+                <div class="title-line reveal-up" style="--delay: 0.3s">
+                    <span class="title-word">WE</span>
+                    <span class="title-word">CREATE</span>
+                    <span class="title-word holo-word">THEM.</span>
+                </div>
+            </h1>
+
+            <div class="hero-bottom reveal-up" style="--delay: 0.5s">
+                <p class="hero-desc">
+                    Loop for Marketing Solutions — where creativity<br>
+                    meets strategy to amplify your brand's presence.
+                </p>
+                <div class="hero-cta-wrap">
+                    <a href="#services" class="btn-wild magnetic" data-magnetic>
+                        <span class="btn-text">EXPLORE</span>
+                        <span class="btn-icon"><i class="fas fa-arrow-down"></i></span>
+                        <div class="btn-ripple"></div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ticker / Marquee -->
+        <div class="marquee-wrap">
+            <div class="marquee">
+                <div class="marquee-content">
+                    <span>SOCIAL MEDIA</span><span class="marquee-dot">✦</span>
+                    <span>DIGITAL MARKETING</span><span class="marquee-dot">✦</span>
+                    <span>BRAND IDENTITY</span><span class="marquee-dot">✦</span>
+                    <span>CREATIVE SOLUTIONS</span><span class="marquee-dot">✦</span>
+                    <span>VIDEO PRODUCTION</span><span class="marquee-dot">✦</span>
+                    <span>EVENT SERVICES</span><span class="marquee-dot">✦</span>
+                    <span>DIRECT MARKETING</span><span class="marquee-dot">✦</span>
+                    <span>SOCIAL MEDIA</span><span class="marquee-dot">✦</span>
+                    <span>DIGITAL MARKETING</span><span class="marquee-dot">✦</span>
+                    <span>BRAND IDENTITY</span><span class="marquee-dot">✦</span>
+                    <span>CREATIVE SOLUTIONS</span><span class="marquee-dot">✦</span>
+                    <span>VIDEO PRODUCTION</span><span class="marquee-dot">✦</span>
+                    <span>EVENT SERVICES</span><span class="marquee-dot">✦</span>
+                    <span>DIRECT MARKETING</span><span class="marquee-dot">✦</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll CTA -->
+        <div class="scroll-hint">
+            <div class="scroll-line"></div>
+            <span>SCROLL</span>
+        </div>
+    </section>
+
+    <!-- STATS STRIP -->
+    <section class="stats-strip">
+        <div class="stat-block reveal-up">
+            <span class="stat-num" data-target="98">0</span><span class="stat-sign">%</span>
+            <span class="stat-txt">CLIENT<br>SATISFACTION</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-block reveal-up" style="--delay:0.1s">
+            <span class="stat-num" data-target="5">0</span><span class="stat-sign">K+</span>
+            <span class="stat-txt">SUCCESSFUL<br>ACTIVATIONS</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-block reveal-up" style="--delay:0.2s">
+            <span class="stat-num" data-target="10">0</span><span class="stat-sign">M+</span>
+            <span class="stat-txt">REACHED<br>IMPRESSIONS</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-block reveal-up" style="--delay:0.3s">
+            <span class="stat-num" data-target="95">0</span><span class="stat-sign">%</span>
+            <span class="stat-txt">TARGETED<br>RESULTS</span>
+        </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="about-layout">
+                <div class="about-left">
+                    <div class="section-label reveal-up">( ABOUT US )</div>
+                    <h2 class="big-heading reveal-up">
+                        WE BUILD<br>
+                        <span class="holo-word">EMPIRES</span>,<br>
+                        NOT JUST<br>
+                        BRANDS.
+                    </h2>
+                </div>
+                <div class="about-right">
+                    <div class="about-text-block reveal-up">
+                        <p class="big-text">
+                            Loop for Marketing Solutions was founded to break the mold. 
+                            We're not your average agency — we're a full-service creative 
+                            powerhouse that turns businesses into cultural phenomena.
+                        </p>
+                    </div>
+                    <div class="about-text-block reveal-up" style="--delay:0.1s">
+                        <p>
+                            We assemble dedicated staff, advanced tools, and relentless 
+                            creativity to provide customized strategies that don't just 
+                            hit targets — they shatter them.
+                        </p>
+                    </div>
+                    <div class="about-pills reveal-up" style="--delay:0.2s">
+                        <span class="pill">STRATEGY</span>
+                        <span class="pill">CREATIVITY</span>
+                        <span class="pill">TECHNOLOGY</span>
+                        <span class="pill">GROWTH</span>
+                        <span class="pill">RESULTS</span>
+                        <span class="pill">INNOVATION</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MARQUEE 2 -->
+    <div class="marquee-section">
+        <div class="marquee marquee-reverse">
+            <div class="marquee-content marquee-big">
+                <span>THINK BIG</span><span class="marquee-dot">→</span>
+                <span>ACT BOLD</span><span class="marquee-dot">→</span>
+                <span>GROW FAST</span><span class="marquee-dot">→</span>
+                <span>REPEAT</span><span class="marquee-dot">→</span>
+                <span>THINK BIG</span><span class="marquee-dot">→</span>
+                <span>ACT BOLD</span><span class="marquee-dot">→</span>
+                <span>GROW FAST</span><span class="marquee-dot">→</span>
+                <span>REPEAT</span><span class="marquee-dot">→</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SERVICES -->
+    <section class="services" id="services">
+        <div class="container">
+            <div class="section-label reveal-up">( WHAT WE DO )</div>
+            <h2 class="big-heading reveal-up" style="--delay:0.1s">
+                OUR <span class="holo-word">ARSENAL</span>
+            </h2>
+        </div>
+        <div class="services-list">
+            <!-- Service 1 -->
+            <div class="service-item" data-color="pink">
+                <div class="container">
+                    <div class="service-inner">
+                        <div class="service-left">
+                            <span class="service-num">01</span>
+                            <h3 class="service-title">DIGITAL MARKETING</h3>
+                        </div>
+                        <div class="service-right">
+                            <p>Social Media Management • Advertising • Analytics & Reporting • Influencer Engagement • Event Promotion & Coverage</p>
+                        </div>
+                        <div class="service-arrow"><i class="fas fa-arrow-right"></i></div>
+                    </div>
+                </div>
+                <div class="service-bg-fill"></div>
+            </div>
+            <!-- Service 2 -->
+            <div class="service-item" data-color="blue">
+                <div class="container">
+                    <div class="service-inner">
+                        <div class="service-left">
+                            <span class="service-num">02</span>
+                            <h3 class="service-title">DIRECT MARKETING</h3>
+                        </div>
+                        <div class="service-right">
+                            <p>In-store Promotions • Mall Activations • Road Shows • Printings • Giveaways • Brand Activations</p>
+                        </div>
+                        <div class="service-arrow"><i class="fas fa-arrow-right"></i></div>
+                    </div>
+                </div>
+                <div class="service-bg-fill"></div>
+            </div>
+            <!-- Service 3 -->
+            <div class="service-item" data-color="mint">
+                <div class="container">
+                    <div class="service-inner">
+                        <div class="service-left">
+                            <span class="service-num">03</span>
+                            <h3 class="service-title">EVENT SERVICES</h3>
+                        </div>
+                        <div class="service-right">
+                            <p>Online Registration • Event Websites • Theme Conceptualization • Stage Designs • 3D Mockups • Branding</p>
+                        </div>
+                        <div class="service-arrow"><i class="fas fa-arrow-right"></i></div>
+                    </div>
+                </div>
+                <div class="service-bg-fill"></div>
+            </div>
+            <!-- Service 4 -->
+            <div class="service-item" data-color="purple">
+                <div class="container">
+                    <div class="service-inner">
+                        <div class="service-left">
+                            <span class="service-num">04</span>
+                            <h3 class="service-title">CREATIVE SOLUTIONS</h3>
+                        </div>
+                        <div class="service-right">
+                            <p>Concept Creation • Brand Identity • Web & App Design • Video Production • Print Design • Campaigns</p>
+                        </div>
+                        <div class="service-arrow"><i class="fas fa-arrow-right"></i></div>
+                    </div>
+                </div>
+                <div class="service-bg-fill"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BIG TEXT SECTION -->
+    <section class="big-text-section">
+        <div class="container">
+            <h2 class="massive-text reveal-up">
+                YOUR BRAND +<br>
+                <span class="holo-word">OUR MADNESS</span><br>
+                = MAGIC ✦
+            </h2>
+        </div>
+    </section>
+
+    <!-- TEAM -->
+    <section class="team" id="team">
+        <div class="container">
+            <div class="section-label reveal-up">( THE CREW )</div>
+            <h2 class="big-heading reveal-up" style="--delay:0.1s">
+                MEET THE <span class="holo-word">MANIACS</span>
+            </h2>
+            <div class="team-grid">
+                <div class="team-card reveal-up" style="--delay:0s">
+                    <div class="team-img-wrap">
+                        <img src="assets/team/ehab.png" alt="Ehab Alabdo" class="team-photo">
+                        <div class="team-overlay">
+                            <span>CEO</span>
+                        </div>
+                    </div>
+                    <div class="team-info">
+                        <h4>EHAB ALABDO</h4>
+                        <span>Chief Executive Officer</span>
+                    </div>
+                </div>
+                <div class="team-card reveal-up" style="--delay:0.05s">
+                    <div class="team-img-wrap">
+                        <img src="assets/team/ahmad-daoud.png" alt="Ahmad Daoud" class="team-photo">
+                        <div class="team-overlay">
+                            <span>CEO</span>
+                        </div>
+                    </div>
+                    <div class="team-info">
+                        <h4>AHMAD DAOUD</h4>
+                        <span>Chief Executive Officer</span>
+                    </div>
+                </div>
+                <div class="team-card reveal-up" style="--delay:0.1s">
+                    <div class="team-img-wrap">
+                        <img src="assets/team/amer.png" alt="Amer Aljazar" class="team-photo">
+                        <div class="team-overlay">
+                            <span>ACCOUNTS</span>
+                        </div>
+                    </div>
+                    <div class="team-info">
+                        <h4>AMER ALJAZAR</h4>
+                        <span>Account Manager</span>
+                    </div>
+                </div>
+                <div class="team-card reveal-up" style="--delay:0.15s">
+                    <div class="team-img-wrap">
+                        <img src="assets/team/mahmoud.png" alt="Mahmoud Walweel" class="team-photo">
+                        <div class="team-overlay">
+                            <span>DEV</span>
+                        </div>
+                    </div>
+                    <div class="team-info">
+                        <h4>MAHMOUD WALWEEL</h4>
+                        <span>Programmer</span>
+                    </div>
+                </div>
+                <div class="team-card reveal-up" style="--delay:0.2s">
+                    <div class="team-img-wrap">
+                        <img src="assets/team/abdellrahman.png" alt="Abd Ell Rahman" class="team-photo">
+                        <div class="team-overlay">
+                            <span>DESIGN</span>
+                        </div>
+                    </div>
+                    <div class="team-info">
+                        <h4>ABD ELL RAHMAN</h4>
+                        <span>Designer</span>
+                    </div>
+                </div>
+                <div class="team-card reveal-up" style="--delay:0.25s">
+                    <div class="team-img-wrap">
+                        <img src="assets/team/ahmad-mamoun.png" alt="Ahmad Mamoun" class="team-photo">
+                        <div class="team-overlay">
+                            <span>VIDEO</span>
+                        </div>
+                    </div>
+                    <div class="team-info">
+                        <h4>AHMAD MAMOUN</h4>
+                        <span>Video Editor</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="contact-layout">
+                <div class="contact-left">
+                    <div class="section-label reveal-up">( LET'S TALK )</div>
+                    <h2 class="big-heading reveal-up" style="--delay:0.1s">
+                        READY TO<br>
+                        GO <span class="holo-word">VIRAL</span>?
+                    </h2>
+                    <div class="contact-details reveal-up" style="--delay:0.2s">
+                        <a href="mailto:Info@loopjo.com" class="contact-link">
+                            <i class="fas fa-envelope"></i>
+                            <span>Info@loopjo.com</span>
+                        </a>
+                        <a href="tel:+962792020388" class="contact-link">
+                            <i class="fas fa-phone"></i>
+                            <span>+962 792 020 388</span>
+                        </a>
+                        <a href="https://www.loopjo.com" target="_blank" rel="noopener noreferrer" class="contact-link">
+                            <i class="fas fa-globe"></i>
+                            <span>www.loopjo.com</span>
+                        </a>
+                    </div>
+                    <div class="contact-socials reveal-up" style="--delay:0.3s">
+                        <a href="https://www.facebook.com/loopmsjo" target="_blank" rel="noopener noreferrer" class="social-btn magnetic" data-magnetic aria-label="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.instagram.com/loopjoms" target="_blank" rel="noopener noreferrer" class="social-btn magnetic" data-magnetic aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="contact-right reveal-up" style="--delay:0.2s">
+                    <form class="contact-form" id="contactForm">
+                        <div class="form-group">
+                            <input type="text" id="name" name="name" required placeholder="YOUR NAME" autocomplete="name">
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="email" name="email" required placeholder="YOUR EMAIL" autocomplete="email">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="subject" name="subject" required placeholder="SUBJECT">
+                        </div>
+                        <div class="form-group">
+                            <textarea id="message" name="message" rows="4" required placeholder="YOUR MESSAGE"></textarea>
+                        </div>
+                        <button type="submit" class="btn-wild btn-submit magnetic" data-magnetic>
+                            <span class="btn-text">SEND IT 🚀</span>
+                            <div class="btn-ripple"></div>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-marquee">
+            <div class="marquee">
+                <div class="marquee-content marquee-footer">
+                    <span>LOOP MARKETING</span><span class="marquee-dot">✦</span>
+                    <span>JORDAN</span><span class="marquee-dot">✦</span>
+                    <span>EST. 2020</span><span class="marquee-dot">✦</span>
+                    <span>LOOP MARKETING</span><span class="marquee-dot">✦</span>
+                    <span>JORDAN</span><span class="marquee-dot">✦</span>
+                    <span>EST. 2020</span><span class="marquee-dot">✦</span>
+                    <span>LOOP MARKETING</span><span class="marquee-dot">✦</span>
+                    <span>JORDAN</span><span class="marquee-dot">✦</span>
+                    <span>EST. 2020</span><span class="marquee-dot">✦</span>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="footer-inner">
+                <div class="footer-brand">
+                    <img src="assets/logo.png" alt="Loop" class="footer-logo">
+                </div>
+                <div class="footer-nav">
+                    <a href="#home">HOME</a>
+                    <a href="portfolio.html">WORK</a>
+                    <a href="clients.html">CLIENTS</a>
+                    <a href="solutions.html">SOLUTIONS</a>
+                    <a href="#services">SERVICES</a>
+                    <a href="#contact">CONTACT</a>
+                </div>
+                <p class="footer-copy">&copy; 2026 LOOP MARKETING SOLUTIONS — ALL RIGHTS RESERVED</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js?v=37"></script>
+</body>
+</html>

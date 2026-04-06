@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LOOP — Our Work</title>
+    <meta name="description" content="Loop Marketing Solutions - See our portfolio of successful campaigns, activations, and creative projects.">
+    <link rel="stylesheet" href="css/style.css?v=37">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script>if(sessionStorage.getItem('loopLoaded')){document.documentElement.classList.add('no-loader')}</script>
+    <link rel="prefetch" href="index.html">
+    <link rel="prefetch" href="clients.html">
+    <link rel="prefetch" href="solutions.html">
+</head>
+<body>
+    <!-- Video Background -->
+    <div class="bg-video-wrap">
+        <video class="bg-video" autoplay muted loop playsinline>
+            <source src="assets/bg-video.mp4" type="video/mp4">
+        </video>
+        <div class="bg-video-overlay"></div>
+    </div>
+
+    <!-- Animated Background -->
+    <div class="bg-aurora"></div>
+    <div class="bg-grid"></div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-follower" id="cursorFollower"></div>
+
+    <!-- Noise Overlay -->
+    <div class="noise-overlay"></div>
+
+
+
+    <!-- Loading Screen -->
+    <div class="loader" id="loader">
+        <div class="loader-inner">
+            <div class="loader-logo">
+                <img src="assets/logo.png" alt="Loop">
+            </div>
+            <div class="loader-bar">
+                <div class="loader-progress" id="loaderProgress"></div>
+            </div>
+            <div class="loader-text">
+                <span id="loaderPercent">0</span>%
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="assets/logo.png" alt="Loop">
+            </a>
+
+            <!-- Flying Icons -->
+            <div class="flying-icons" id="flyingIcons">
+                <div class="fly-icon" style="--i:0"><i class="fab fa-instagram"></i></div>
+                <div class="fly-icon" style="--i:1"><i class="fab fa-facebook-f"></i></div>
+                <div class="fly-icon" style="--i:2"><i class="fab fa-tiktok"></i></div>
+                <div class="fly-icon" style="--i:3"><i class="fas fa-hashtag"></i></div>
+                <div class="fly-icon" style="--i:4"><i class="fas fa-bolt"></i></div>
+                <div class="fly-icon" style="--i:5"><i class="fas fa-fire"></i></div>
+                <div class="fly-icon" style="--i:6"><i class="fas fa-rocket"></i></div>
+            </div>
+
+            <div class="nav-right">
+                <a href="index.html#contact" class="nav-cta magnetic" data-magnetic>
+                    <span>LET'S GO</span>
+                    <svg width="13" height="13" viewBox="0 0 13 13"><path d="M1 12L12 1M12 1H3M12 1V10" stroke="currentColor" stroke-width="2"/></svg>
+                </a>
+
+                <!-- Radial Menu Trigger -->
+                <div class="radial-menu-wrap" id="radialWrap">
+                    <button class="radial-trigger" id="radialTrigger" aria-label="Menu">
+                        <div class="radial-trigger-inner">
+                            <span class="radial-bar"></span>
+                            <span class="radial-bar"></span>
+                            <span class="radial-bar"></span>
+                        </div>
+                        <svg class="radial-ring" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="46" fill="none" stroke="rgba(242,242,241,0.15)" stroke-width="1"/>
+                            <circle class="radial-ring-progress" cx="50" cy="50" r="46" fill="none" stroke="url(#holoGrad)" stroke-width="2" stroke-dasharray="289" stroke-dashoffset="289" stroke-linecap="round"/>
+                            <defs>
+                                <linearGradient id="holoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#eea9c9"/>
+                                    <stop offset="50%" stop-color="#74bae1"/>
+                                    <stop offset="100%" stop-color="#9ddad0"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </button>
+                    <a href="index.html" class="radial-item" data-index="0">
+                        <span class="radial-item-icon"><i class="fas fa-home"></i></span>
+                        <span class="radial-item-label">HOME</span>
+                    </a>
+                    <a href="portfolio.html" class="radial-item" data-index="1">
+                        <span class="radial-item-icon"><i class="fas fa-briefcase"></i></span>
+                        <span class="radial-item-label">WORK</span>
+                    </a>
+                    <a href="clients.html" class="radial-item" data-index="2">
+                        <span class="radial-item-icon"><i class="fab fa-instagram"></i></span>
+                        <span class="radial-item-label">CLIENTS</span>
+                    </a>
+                    <a href="solutions.html" class="radial-item" data-index="3">
+                        <span class="radial-item-icon"><i class="fas fa-code"></i></span>
+                        <span class="radial-item-label">SOLUTIONS</span>
+                    </a>
+                    <a href="index.html#services" class="radial-item" data-index="4">
+                        <span class="radial-item-icon"><i class="fas fa-cogs"></i></span>
+                        <span class="radial-item-label">SERVICES</span>
+                    </a>
+                    <a href="index.html#contact" class="radial-item" data-index="5">
+                        <span class="radial-item-icon"><i class="fas fa-envelope"></i></span>
+                        <span class="radial-item-label">CONTACT</span>
+                    </a>
+                    <button class="radial-item" data-index="6" id="langToggle" aria-label="Toggle Language">
+                        <span class="radial-item-icon"><i class="fas fa-globe"></i></span>
+                        <span class="radial-item-label lang-toggle-text">عربي</span>
+                    </button>
+                    <div class="radial-backdrop" id="radialBackdrop"></div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- PAGE HERO -->
+    <section class="page-hero">
+        <div class="container">
+            <div class="page-hero-tag reveal-up">
+                <span class="hero-tag glitch" data-text="PORTFOLIO">PORTFOLIO</span>
+            </div>
+            <h1 class="hero-title">
+                <div class="title-line reveal-up" style="--delay: 0.1s">
+                    <span class="title-word">OUR</span>
+                    <span class="title-word holo-word">WORK</span>
+                </div>
+                <div class="title-line reveal-up" style="--delay: 0.2s">
+                    <span class="title-word stroke-text">SPEAKS</span>
+                    <span class="title-word">LOUD.</span>
+                </div>
+            </h1>
+            <p class="page-hero-desc reveal-up" style="--delay: 0.4s">
+                From viral campaigns to on-ground activations — every project<br>
+                is crafted with strategy, creativity, and a dash of madness.
+            </p>
+        </div>
+    </section>
+
+    <!-- PORTFOLIO FILTER -->
+    <section class="portfolio-section" id="portfolio">
+        <div class="container">
+            <div class="portfolio-filters reveal-up">
+                <button class="filter-btn active" data-filter="all">ALL</button>
+                <button class="filter-btn" data-filter="social">SOCIAL MEDIA</button>
+                <button class="filter-btn" data-filter="activations">ACTIVATIONS</button>
+                <button class="filter-btn" data-filter="branding">BRANDING</button>
+                <button class="filter-btn" data-filter="events">EVENTS</button>
+                <button class="filter-btn" data-filter="video">VIDEO</button>
+            </div>
+        </div>
+
+        <!-- Portfolio Grid -->
+        <div class="container">
+            <div class="portfolio-grid">
+
+                <!-- Project 1 -->
+                <div class="portfolio-card reveal-up" data-category="social" style="--delay:0s">
+                    <div class="portfolio-card-inner">
+                        <div class="portfolio-card-front">
+                            <div class="portfolio-card-visual" style="--accent: var(--pink)">
+                                <i class="fab fa-instagram"></i>
+                                <span class="portfolio-num">01</span>
+                            </div>
+                            <div class="portfolio-card-info">
+                                <h3>SOCIAL MEDIA MANAGEMENT</h3>
+                                <p>Multi-brand social strategy & content creation</p>
+                            </div>
+                        </div>
+                        <div class="portfolio-card-overlay">
+                            <span class="portfolio-tag">SOCIAL MEDIA</span>
+                            <h3>COMPLETE SOCIAL PRESENCE</h3>
+                            <p>End-to-end social media management for 50+ brands across Instagram, Facebook, TikTok, and LinkedIn. Content calendars, copywriting, design, and analytics.</p>
+                            <div class="portfolio-stats">
+                                <span><strong>50+</strong> Brands</span>
+                                <span><strong>10M+</strong> Reach</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="portfolio-card reveal-up" data-category="activations" style="--delay:0.05s">
+                    <div class="portfolio-card-inner">
+                        <div class="portfolio-card-front">
+                            <div class="portfolio-card-visual" style="--accent: var(--blue)">
+                                <i class="fas fa-bullhorn"></i>
+                                <span class="portfolio-num">02</span>
+                            </div>
+                            <div class="portfolio-card-info">
+                                <h3>MALL ACTIVATIONS</h3>
+                                <p>In-store promos & customer engagement</p>
+                            </div>
+                        </div>
+                        <div class="portfolio-card-overlay">
+                            <span class="portfolio-tag">ACTIVATIONS</span>
+                            <h3>BRAND ACTIVATIONS & ROADSHOWS</h3>
+                            <p>High-impact mall activations, in-store promotions, and road shows across Jordan. Direct customer engagement with measurable ROI.</p>
+                            <div class="portfolio-stats">
+                                <span><strong>5K+</strong> Activations</span>
+                                <span><strong>98%</strong> Satisfaction</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="portfolio-card reveal-up" data-category="branding" style="--delay:0.1s">
+                    <div class="portfolio-card-inner">
+                        <div class="portfolio-card-front">
+                            <div class="portfolio-card-visual" style="--accent: var(--mint)">
+                                <i class="fas fa-palette"></i>
+                                <span class="portfolio-num">03</span>
+                            </div>
+                            <div class="portfolio-card-info">
+                                <h3>BRAND IDENTITY</h3>
+                                <p>Complete visual identity systems</p>
+                            </div>
+                        </div>
+                        <div class="portfolio-card-overlay">
+                            <span class="portfolio-tag">BRANDING</span>
+                            <h3>FULL BRAND IDENTITY DESIGN</h3>
+                            <p>Logo design, color palettes, typography systems, brand guidelines, stationery, packaging, and complete visual identity for startups and enterprises.</p>
+                            <div class="portfolio-stats">
+                                <span><strong>100+</strong> Brands</span>
+                                <span><strong>All</strong> Industries</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 4 -->
+                <div class="portfolio-card reveal-up" data-category="events" style="--delay:0.15s">
+                    <div class="portfolio-card-inner">
+                        <div class="portfolio-card-front">
+                            <div class="portfolio-card-visual" style="--accent: var(--purple)">
+                                <i class="fas fa-calendar-star"></i>
+                                <span class="portfolio-num">04</span>
+                            </div>
+                            <div class="portfolio-card-info">
+                                <h3>EVENT MANAGEMENT</h3>
+                                <p>Corporate events & launches</p>
+                            </div>
+                        </div>
+                        <div class="portfolio-card-overlay">
+                            <span class="portfolio-tag">EVENTS</span>
+                            <h3>EVENTS & CONFERENCES</h3>
+                            <p>Full event planning including theme conceptualization, 3D stage design, online registration systems, event websites, and on-ground branding.</p>
+                            <div class="portfolio-stats">
+                                <span><strong>200+</strong> Events</span>
+                                <span><strong>50K+</strong> Attendees</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 5 -->
+                <div class="portfolio-card reveal-up" data-category="video" style="--delay:0.2s">
+                    <div class="portfolio-card-inner">
+                        <div class="portfolio-card-front">
+                            <div class="portfolio-card-visual" style="--accent: var(--pink)">
+                                <i class="fas fa-video"></i>
+                                <span class="portfolio-num">05</span>
+                            </div>
+                            <div class="portfolio-card-info">
+                                <h3>VIDEO PRODUCTION</h3>
+                                <p>Ads, reels, and brand films</p>
+                            </div>
+                        </div>
+                        <div class="portfolio-card-overlay">
+                            <span class="portfolio-tag">VIDEO</span>
+                            <h3>VIDEO & MOTION CONTENT</h3>
+                            <p>Professional video production from concept to final cut. Commercials, social media reels, brand documentaries, event coverage, and motion graphics.</p>
+                            <div class="portfolio-stats">
+                                <span><strong>500+</strong> Videos</span>
+                                <span><strong>1M+</strong> Views</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 6 -->
+                <div class="portfolio-card reveal-up" data-category="social" style="--delay:0.25s">
+                    <div class="portfolio-card-inner">
+                        <div class="portfolio-card-front">
+                            <div class="portfolio-card-visual" style="--accent: var(--blue)">
+                                <i class="fas fa-chart-line"></i>
+                                <span class="portfolio-num">06</span>
+                            </div>
+                            <div class="portfolio-card-info">
+                                <h3>AD CAMPAIGNS</h3>
+                                <p>Paid media & performance marketing</p>
+                            </div>
+                        </div>
+                        <div class="portfolio-card-overlay">
+                            <span class="portfolio-tag">SOCIAL MEDIA</span>
+                            <h3>PERFORMANCE MARKETING</h3>
+                            <p>Data-driven ad campaigns on Meta, Google, TikTok, and Snapchat. A/B testing, audience targeting, conversion optimization, and detailed reporting.</p>
+                            <div class="portfolio-stats">
+                                <span><strong>95%</strong> ROI Target</span>
+                                <span><strong>10M+</strong> Impressions</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 7 -->
+                <div class="portfolio-card reveal-up" data-category="branding" style="--delay:0.3s">
+                    <div class="portfolio-card-inner">
+                        <div class="portfolio-card-front">
+                            <div class="portfolio-card-visual" style="--accent: var(--mint)">
+                                <i class="fas fa-print"></i>
+                                <span class="portfolio-num">07</span>
+                            </div>
+                            <div class="portfolio-card-info">
+                                <h3>PRINT & PACKAGING</h3>
+                                <p>Physical design deliverables</p>
+                            </div>
+                        </div>
+                        <div class="portfolio-card-overlay">
+                            <span class="portfolio-tag">BRANDING</span>
+                            <h3>PRINT DESIGN & PACKAGING</h3>
+                            <p>Brochures, flyers, banners, giveaways, product packaging, menus, and all physical brand touchpoints with premium print quality.</p>
+                            <div class="portfolio-stats">
+                                <span><strong>1000+</strong> Designs</span>
+                                <span><strong>Premium</strong> Quality</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 8 -->
+                <div class="portfolio-card reveal-up" data-category="activations" style="--delay:0.35s">
+                    <div class="portfolio-card-inner">
+                        <div class="portfolio-card-front">
+                            <div class="portfolio-card-visual" style="--accent: var(--purple)">
+                                <i class="fas fa-gift"></i>
+                                <span class="portfolio-num">08</span>
+                            </div>
+                            <div class="portfolio-card-info">
+                                <h3>GIVEAWAYS & PROMOS</h3>
+                                <p>Branded merchandise & campaigns</p>
+                            </div>
+                        </div>
+                        <div class="portfolio-card-overlay">
+                            <span class="portfolio-tag">ACTIVATIONS</span>
+                            <h3>GIVEAWAY CAMPAIGNS</h3>
+                            <p>Custom branded merchandise, promotional items, social media giveaway campaigns, and contest management that drive engagement and brand awareness.</p>
+                            <div class="portfolio-stats">
+                                <span><strong>300+</strong> Campaigns</span>
+                                <span><strong>High</strong> Engagement</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA SECTION -->
+    <section class="big-text-section">
+        <div class="container">
+            <h2 class="massive-text reveal-up">
+                HAVE A <span class="holo-word">PROJECT</span><br>
+                IN MIND? ✦
+            </h2>
+            <div style="text-align:center; margin-top: 40px;" class="reveal-up" style="--delay:0.2s">
+                <a href="index.html#contact" class="btn-wild magnetic" data-magnetic>
+                    <span class="btn-text">LET'S TALK</span>
+                    <span class="btn-icon"><i class="fas fa-arrow-right"></i></span>
+                    <div class="btn-ripple"></div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-marquee">
+            <div class="marquee">
+                <div class="marquee-content marquee-footer">
+                    <span>LOOP MARKETING</span><span class="marquee-dot">✦</span>
+                    <span>JORDAN</span><span class="marquee-dot">✦</span>
+                    <span>EST. 2020</span><span class="marquee-dot">✦</span>
+                    <span>LOOP MARKETING</span><span class="marquee-dot">✦</span>
+                    <span>JORDAN</span><span class="marquee-dot">✦</span>
+                    <span>EST. 2020</span><span class="marquee-dot">✦</span>
+                    <span>LOOP MARKETING</span><span class="marquee-dot">✦</span>
+                    <span>JORDAN</span><span class="marquee-dot">✦</span>
+                    <span>EST. 2020</span><span class="marquee-dot">✦</span>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="footer-inner">
+                <div class="footer-brand">
+                    <img src="assets/logo.png" alt="Loop" class="footer-logo">
+                </div>
+                <div class="footer-nav">
+                    <a href="index.html">HOME</a>
+                    <a href="portfolio.html">WORK</a>
+                    <a href="clients.html">CLIENTS</a>
+                    <a href="solutions.html">SOLUTIONS</a>
+                    <a href="index.html#services">SERVICES</a>
+                    <a href="index.html#contact">CONTACT</a>
+                </div>
+                <p class="footer-copy">&copy; 2026 LOOP MARKETING SOLUTIONS — ALL RIGHTS RESERVED</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js?v=37"></script>
+</body>
+</html>
