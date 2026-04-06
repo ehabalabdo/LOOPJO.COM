@@ -247,7 +247,6 @@
 
     // ─── FLYING ICONS PARALLAX ──────────────
     function initFlyingIcons() {
-        if (window.innerWidth <= 768) return;
         const container = document.getElementById('flyingIcons');
         if (!container) return;
         const icons = container.querySelectorAll('.fly-icon');
@@ -479,8 +478,8 @@
                     ctaHTML:'YOUR BRAND +<br>OUR <span class="holo-word">MADNESS</span> =<br>MAGIC \u2726',
                     teamLabel:'( THE CREW )',
                     teamHeadingHTML:'MEET THE <span class="holo-word">MANIACS</span>',
-                    teamRoles:['CEO','CEO','ACCOUNTS','DEV','DESIGN','VIDEO'],
-                    teamJobTitles:['Chief Executive Officer','Chief Executive Officer','Account Manager','Programmer','Designer','Video Editor'],
+                    teamRoles:['CEO','DESIGN','ACCOUNTS','ACCOUNTS','DESIGN','VIDEO'],
+                    teamJobTitles:['Chief Executive Officer','Designer','Account Manager','Account Manager','Designer','Video Editor'],
                     contactLabel:'( LET\u2019S TALK )',
                     contactHeadingHTML:'READY TO<br>GO <span class="holo-word">VIRAL</span>?',
                     formPlaceholders:['YOUR NAME','YOUR EMAIL','SUBJECT','YOUR MESSAGE'],
@@ -511,8 +510,8 @@
                     ctaHTML:'\u0639\u0644\u0627\u0645\u062a\u0643 \u0627\u0644\u062a\u062c\u0627\u0631\u064a\u0629 +<br><span class="holo-word">\u062c\u0646\u0648\u0646\u0646\u0627</span> =<br>\u0633\u062d\u0631 \u2726',
                     teamLabel:'( \u0627\u0644\u0641\u0631\u064a\u0642 )',
                     teamHeadingHTML:'\u062a\u0639\u0631\u0641 \u0639\u0644\u0649 <span class="holo-word">\u0627\u0644\u0645\u062c\u0627\u0646\u064a\u0646</span>',
-                    teamRoles:['\u0631\u0626\u064a\u0633 \u062a\u0646\u0641\u064a\u0630\u064a','\u0631\u0626\u064a\u0633 \u062a\u0646\u0641\u064a\u0630\u064a','\u0625\u062f\u0627\u0631\u0629 \u062d\u0633\u0627\u0628\u0627\u062a','\u0645\u0637\u0648\u0631','\u062a\u0635\u0645\u064a\u0645','\u0641\u064a\u062f\u064a\u0648'],
-                    teamJobTitles:['\u0627\u0644\u0631\u0626\u064a\u0633 \u0627\u0644\u062a\u0646\u0641\u064a\u0630\u064a','\u0627\u0644\u0631\u0626\u064a\u0633 \u0627\u0644\u062a\u0646\u0641\u064a\u0630\u064a','\u0645\u062f\u064a\u0631 \u0627\u0644\u062d\u0633\u0627\u0628\u0627\u062a','\u0645\u0628\u0631\u0645\u062c','\u0645\u0635\u0645\u0645','\u0645\u062d\u0631\u0631 \u0641\u064a\u062f\u064a\u0648'],
+                    teamRoles:['\u0631\u0626\u064a\u0633 \u062a\u0646\u0641\u064a\u0630\u064a','\u062a\u0635\u0645\u064a\u0645','\u0625\u062f\u0627\u0631\u0629 \u062d\u0633\u0627\u0628\u0627\u062a','\u0625\u062f\u0627\u0631\u0629 \u062d\u0633\u0627\u0628\u0627\u062a','\u062a\u0635\u0645\u064a\u0645','\u0641\u064a\u062f\u064a\u0648'],
+                    teamJobTitles:['\u0627\u0644\u0631\u0626\u064a\u0633 \u0627\u0644\u062a\u0646\u0641\u064a\u0630\u064a','\u0645\u0635\u0645\u0645','\u0645\u062f\u064a\u0631 \u0627\u0644\u062d\u0633\u0627\u0628\u0627\u062a','\u0645\u062f\u064a\u0631 \u062d\u0633\u0627\u0628\u0627\u062a','\u0645\u0635\u0645\u0645','\u0645\u062d\u0631\u0631 \u0641\u064a\u062f\u064a\u0648'],
                     contactLabel:'( \u062a\u0648\u0627\u0635\u0644 \u0645\u0639\u0646\u0627 )',
                     contactHeadingHTML:'\u062c\u0627\u0647\u0632 \u062a\u0635\u064a\u0631<br><span class="holo-word">\u0641\u0627\u064a\u0631\u0644</span>\u061f',
                     formPlaceholders:['\u0627\u0633\u0645\u0643','\u0628\u0631\u064a\u062f\u0643 \u0627\u0644\u0625\u0644\u0643\u062a\u0631\u0648\u0646\u064a','\u0627\u0644\u0645\u0648\u0636\u0648\u0639','\u0631\u0633\u0627\u0644\u062a\u0643'],

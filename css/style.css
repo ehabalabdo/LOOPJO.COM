@@ -2295,8 +2295,9 @@ body.is-arabic .lang-toggle {
         letter-spacing: 2px;
     }
 
-    /* Hide flying icons on mobile */
-    .flying-icons { display: none; }
+    /* Flying icons on mobile - smaller */
+    .flying-icons { width: 300px; height: 40px; }
+    .fly-icon { width: 24px; height: 24px; font-size: 0.65rem; opacity: 0.45; }
     
     /* Hero */
     .hero { padding: 100px 20px 0; min-height: 100svh; }
