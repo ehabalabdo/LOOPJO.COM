@@ -13,14 +13,17 @@
     <meta property="og:url" content="https://www.loopjo.com/articles-branding.html">
     <meta property="og:image" content="https://www.loopjo.com/assets/logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Cairo:wght@400;600;700;800;900&family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Cairo:wght@400;600;700;800;900&family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css?v=45">
+    <link rel="stylesheet" href="css/style.css?v=46">
 </head>
 <body>
+    <!-- Skip to Content (Accessibility) -->
+    <a href="#content" class="skip-link">Skip to Content</a>
+
     <!-- Video Background -->
     <div class="bg-video-wrap">
-        <video class="bg-video" autoplay muted loop playsinline>
+        <video class="bg-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/bg-video.mp4" type="video/mp4">
         </video>
         <div class="bg-video-overlay"></div>
@@ -687,6 +690,6 @@
     <!-- Scroll Progress Bar -->
     <div class="scroll-progress" id="scrollProgress"></div>
 
-    <script src="js/main.js?v=45"></script>
+    <script src="js/main.js?v=46"></script>
 </body>
 </html>

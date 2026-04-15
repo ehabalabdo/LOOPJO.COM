@@ -91,7 +91,11 @@
         canvas.height = canvas.offsetHeight;
     }
     resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => { resizeCanvas(); initParticles(); }, 200);
+    });
 
     class Particle {
         constructor() {
@@ -155,15 +159,32 @@
         }
     }
 
+    let particlesRunning = true;
+    let particleRAF = 0;
+
+    // Pause particles when tab is hidden
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            particlesRunning = false;
+        } else {
+            particlesRunning = true;
+            if (!particleRAF) particleRAF = requestAnimationFrame(animateParticles);
+        }
+    });
+
     function animateParticles() {
+        if (!particlesRunning) { particleRAF = 0; return; }
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         particles.forEach(p => { p.update(); p.draw(); });
         drawLines();
-        requestAnimationFrame(animateParticles);
+        particleRAF = requestAnimationFrame(animateParticles);
     }
 
-    initParticles();
-    animateParticles();
+    // Skip heavy animations if user prefers reduced motion
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        initParticles();
+        animateParticles();
+    }
     } // end if canvas
 
     // ─── AFTER LOAD INIT ─────────────────────
@@ -220,29 +241,57 @@
         const backdrop = document.getElementById('radialBackdrop');
         if (!wrap || !trigger) return;
 
+        let previousFocus = null;
+
+        function openMenu() {
+            previousFocus = document.activeElement;
+            wrap.classList.add('active');
+            trigger.setAttribute('aria-expanded', 'true');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            wrap.classList.remove('active');
+            trigger.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = '';
+            if (previousFocus) previousFocus.focus();
+        }
+
+        trigger.setAttribute('aria-expanded', 'false');
+        trigger.setAttribute('aria-label', 'Navigation menu');
+
         trigger.addEventListener('click', () => {
-            wrap.classList.toggle('active');
-            document.body.style.overflow = wrap.classList.contains('active') ? 'hidden' : '';
+            if (wrap.classList.contains('active')) closeMenu();
+            else openMenu();
         });
 
         if (backdrop) {
-            backdrop.addEventListener('click', () => {
-                wrap.classList.remove('active');
-                document.body.style.overflow = '';
-            });
+            backdrop.addEventListener('click', closeMenu);
         }
 
         wrap.querySelectorAll('.radial-item').forEach(item => {
-            item.addEventListener('click', () => {
-                wrap.classList.remove('active');
-                document.body.style.overflow = '';
-            });
+            item.addEventListener('click', closeMenu);
         });
 
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && wrap.classList.contains('active')) {
-                wrap.classList.remove('active');
-                document.body.style.overflow = '';
+                closeMenu();
+            }
+        });
+
+        // Focus trap within menu
+        wrap.addEventListener('keydown', (e) => {
+            if (!wrap.classList.contains('active') || e.key !== 'Tab') return;
+            const focusable = wrap.querySelectorAll('a, button, [tabindex]:not([tabindex="-1"])');
+            if (!focusable.length) return;
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (e.shiftKey && document.activeElement === first) {
+                e.preventDefault();
+                last.focus();
+            } else if (!e.shiftKey && document.activeElement === last) {
+                e.preventDefault();
+                first.focus();
             }
         });
     }
@@ -364,13 +413,38 @@
     function initFormHandler() {
         const form = document.getElementById('contactForm');
         if (!form) return;
+
         form.addEventListener('submit', (e) => {
             e.preventDefault();
+
+            // Prevent double-submit
+            if (form.dataset.submitting === 'true') return;
+
             const btn = form.querySelector('.btn-submit .btn-text');
             const orig = btn.textContent;
+            const emailInput = form.querySelector('#email');
+            const messageInput = form.querySelector('#message');
+            const nameInput = form.querySelector('#name');
+
+            // Validation
+            if (nameInput && nameInput.value.trim().length < 2) {
+                shakeField(nameInput);
+                return;
+            }
+            if (emailInput && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value)) {
+                shakeField(emailInput);
+                return;
+            }
+            if (messageInput && messageInput.value.trim().length < 10) {
+                shakeField(messageInput);
+                return;
+            }
+
+            form.dataset.submitting = 'true';
             btn.textContent = 'SENDING...';
             btn.parentElement.style.opacity = '0.7';
-            
+            btn.parentElement.style.pointerEvents = 'none';
+
             fetch(form.action, {
                 method: 'POST',
                 body: new FormData(form),
@@ -381,29 +455,36 @@
                     btn.parentElement.style.background = '#9ddad0';
                     btn.parentElement.style.opacity = '1';
                     form.reset();
-                    setTimeout(() => {
-                        btn.textContent = orig;
-                        btn.parentElement.style.background = '';
-                    }, 3000);
+                    resetBtn(btn, orig, form, 3000);
                 } else {
                     btn.textContent = 'ERROR ✕';
                     btn.parentElement.style.background = '#e06060';
                     btn.parentElement.style.opacity = '1';
-                    setTimeout(() => {
-                        btn.textContent = orig;
-                        btn.parentElement.style.background = '';
-                    }, 3000);
+                    resetBtn(btn, orig, form, 3000);
                 }
             }).catch(() => {
                 btn.textContent = 'ERROR ✕';
                 btn.parentElement.style.background = '#e06060';
                 btn.parentElement.style.opacity = '1';
-                setTimeout(() => {
-                    btn.textContent = orig;
-                    btn.parentElement.style.background = '';
-                }, 3000);
+                resetBtn(btn, orig, form, 3000);
             });
         });
+
+        function shakeField(el) {
+            el.style.borderColor = '#e06060';
+            el.classList.add('shake');
+            el.focus();
+            setTimeout(() => { el.classList.remove('shake'); el.style.borderColor = ''; }, 600);
+        }
+
+        function resetBtn(btn, orig, form, ms) {
+            setTimeout(() => {
+                btn.textContent = orig;
+                btn.parentElement.style.background = '';
+                btn.parentElement.style.pointerEvents = '';
+                form.dataset.submitting = 'false';
+            }, ms);
+        }
     }
 
     // ─── SCROLL TO TOP ────────────────────────
