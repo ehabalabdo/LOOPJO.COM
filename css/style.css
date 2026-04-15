@@ -1251,6 +1251,9 @@ button.radial-item { background: none; border: none; cursor: pointer; padding: 0
     font-size: 0.82rem;
     justify-content: center;
 }
+.btn-submit:hover {
+    box-shadow: 0 0 40px rgba(238, 169, 201, 0.3), 0 0 80px rgba(116, 186, 225, 0.15);
+}
 
 /* === PAGE HERO (for sub-pages) === */
 .page-hero {
@@ -2285,6 +2288,71 @@ body.is-arabic .whatsapp-float {
 }
 .lang-toggle .lang-toggle-text {
     line-height: 1;
+}
+
+/* === SCROLL TO TOP BUTTON === */
+.scroll-top {
+    position: fixed;
+    bottom: 100px;
+    right: 30px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--white05);
+    border: 1px solid var(--white10);
+    color: var(--white70);
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 99997;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: opacity 0.4s var(--ease), transform 0.4s var(--ease), visibility 0.4s, background 0.3s, border-color 0.3s, color 0.3s;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+.scroll-top.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+.scroll-top:hover {
+    background: var(--pink);
+    border-color: var(--pink);
+    color: var(--bg);
+    transform: translateY(-3px);
+}
+body.is-arabic .scroll-top {
+    right: auto;
+    left: 30px;
+}
+@media (max-width: 768px) {
+    .scroll-top {
+        width: 42px;
+        height: 42px;
+        bottom: 82px;
+        right: 20px;
+    }
+    body.is-arabic .scroll-top {
+        right: auto;
+        left: 20px;
+    }
+}
+
+/* === SCROLL PROGRESS BAR === */
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0%;
+    background: var(--holo);
+    z-index: 100000;
+    transition: width 0.1s linear;
+    border-radius: 0 2px 2px 0;
 }
 
 /* ═══════════════════════════════════════════

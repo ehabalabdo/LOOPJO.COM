@@ -179,6 +179,8 @@
         initPortfolioFilter();
         initClientFilter();
         initLangToggle();
+        initScrollTop();
+        initScrollProgress();
     }
 
     // ─── SCROLL REVEAL ───────────────────────
@@ -288,6 +290,17 @@
                 }
             });
         });
+
+        // Page transitions for internal links
+        document.querySelectorAll('a[href]').forEach(link => {
+            const href = link.getAttribute('href');
+            if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('javascript:') || link.getAttribute('target') === '_blank') return;
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.body.classList.add('page-leaving');
+                setTimeout(() => { window.location.href = href; }, 200);
+            });
+        });
     }
 
     // ─── COUNTER ─────────────────────────────
@@ -391,6 +404,34 @@
                 }, 3000);
             });
         });
+    }
+
+    // ─── SCROLL TO TOP ────────────────────────
+    function initScrollTop() {
+        const btn = document.getElementById('scrollTop');
+        if (!btn) return;
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 600) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
+            }
+        }, { passive: true });
+        btn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+
+    // ─── SCROLL PROGRESS BAR ────────────────
+    function initScrollProgress() {
+        const bar = document.getElementById('scrollProgress');
+        if (!bar) return;
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            bar.style.width = progress + '%';
+        }, { passive: true });
     }
 
     // ─── PORTFOLIO FILTER ────────────────────
