@@ -68,6 +68,30 @@
     <link rel="stylesheet" href="css/style.css?v=42">
 </head>
 <body>
+    <div class="bg-grid"></div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-follower" id="cursorFollower"></div>
+
+    <!-- Noise Overlay -->
+    <div class="noise-overlay"></div>
+
+    <!-- Loading Screen -->
+    <div class="loader" id="loader">
+        <div class="loader-inner">
+            <div class="loader-logo">
+                <img src="assets/logo.png" alt="Loop">
+            </div>
+            <div class="loader-bar">
+                <div class="loader-progress" id="loaderProgress"></div>
+            </div>
+            <div class="loader-text">
+                <span id="loaderPercent">0</span>%
+            </div>
+        </div>
+    </div>
+
     <nav class="navbar" id="navbar">
         <div class="nav-container">
             <a href="index.html" class="nav-logo"><img src="assets/logo.png" alt="Loop"></a>
