@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -251,7 +251,7 @@
     }
     </script>
 
-    <link rel="stylesheet" href="css/style.css?v=43">
+    <link rel="stylesheet" href="css/style.css?v=44">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -737,7 +737,11 @@
                     </div>
                 </div>
                 <div class="contact-right reveal-up" style="--delay:0.2s">
-                    <form class="contact-form" id="contactForm">
+                    <form class="contact-form" id="contactForm" action="https://formsubmit.co/Info@loopjo.com" method="POST">
+                        <input type="hidden" name="_subject" value="New message from loopjo.com">
+                        <input type="hidden" name="_captcha" value="false">
+                        <input type="hidden" name="_next" value="https://www.loopjo.com/index.html#contact">
+                        <input type="text" name="_honey" style="display:none">
                         <div class="form-group">
                             <input type="text" id="name" name="name" required placeholder="YOUR NAME" autocomplete="name">
                         </div>
@@ -800,6 +804,6 @@
         <i class="fab fa-whatsapp"></i>
     </a>
 
-    <script src="js/main.js?v=41"></script>
+    <script src="js/main.js?v=44"></script>
 </body>
 </html>

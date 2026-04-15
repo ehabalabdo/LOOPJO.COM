@@ -355,13 +355,41 @@
             e.preventDefault();
             const btn = form.querySelector('.btn-submit .btn-text');
             const orig = btn.textContent;
-            btn.textContent = 'SENT! ✓';
-            btn.parentElement.style.background = '#9ddad0';
-            setTimeout(() => {
-                btn.textContent = orig;
-                btn.parentElement.style.background = '';
-                form.reset();
-            }, 2500);
+            btn.textContent = 'SENDING...';
+            btn.parentElement.style.opacity = '0.7';
+            
+            fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form),
+                headers: { 'Accept': 'application/json' }
+            }).then(r => {
+                if (r.ok) {
+                    btn.textContent = 'SENT! ✓';
+                    btn.parentElement.style.background = '#9ddad0';
+                    btn.parentElement.style.opacity = '1';
+                    form.reset();
+                    setTimeout(() => {
+                        btn.textContent = orig;
+                        btn.parentElement.style.background = '';
+                    }, 3000);
+                } else {
+                    btn.textContent = 'ERROR ✕';
+                    btn.parentElement.style.background = '#e06060';
+                    btn.parentElement.style.opacity = '1';
+                    setTimeout(() => {
+                        btn.textContent = orig;
+                        btn.parentElement.style.background = '';
+                    }, 3000);
+                }
+            }).catch(() => {
+                btn.textContent = 'ERROR ✕';
+                btn.parentElement.style.background = '#e06060';
+                btn.parentElement.style.opacity = '1';
+                setTimeout(() => {
+                    btn.textContent = orig;
+                    btn.parentElement.style.background = '';
+                }, 3000);
+            });
         });
     }
 
