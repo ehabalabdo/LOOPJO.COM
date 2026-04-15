@@ -1930,6 +1930,172 @@ button.radial-item { background: none; border: none; cursor: pointer; padding: 0
     transform: translateY(0);
 }
 
+/* === BLOG SECTION === */
+.blog-section {
+    padding: 40px 0 100px;
+}
+.blog-article {
+    background: var(--white05);
+    border: 1px solid var(--white10);
+    border-radius: 20px;
+    padding: 48px;
+    margin-bottom: 40px;
+    transition: border-color 0.4s var(--ease), box-shadow 0.4s var(--ease);
+}
+.blog-article:hover {
+    border-color: var(--pink);
+    box-shadow: 0 0 40px rgba(238, 169, 201, 0.08);
+}
+.blog-article-header {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+.blog-date, .blog-category {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--white40);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+.blog-date i, .blog-category i {
+    margin-right: 6px;
+    background: var(--holo);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.blog-article-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: 800;
+    line-height: 1.3;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.blog-article-title-ar {
+    font-family: var(--font-arabic-display);
+    font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+    font-weight: 700;
+    line-height: 1.8;
+    color: var(--white70);
+    margin-bottom: 24px;
+    letter-spacing: 0;
+}
+.blog-article-body h4 {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--pink);
+    margin: 28px 0 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.blog-article-body p {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--white70);
+    margin-bottom: 14px;
+}
+.blog-article-body ul {
+    list-style: none;
+    padding: 0;
+    margin: 16px 0;
+}
+.blog-article-body ul li {
+    position: relative;
+    padding-left: 24px;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--white70);
+}
+.blog-article-body ul li::before {
+    content: '✦';
+    position: absolute;
+    left: 0;
+    background: var(--holo);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 10px;
+    top: 5px;
+}
+.blog-article-body strong {
+    color: var(--white);
+    font-weight: 600;
+}
+.blog-article-ar-content {
+    background: var(--white05);
+    border-radius: 12px;
+    padding: 24px;
+    margin-top: 24px;
+    font-family: var(--font-arabic);
+    direction: rtl;
+    text-align: right;
+    line-height: 2 !important;
+    border: 1px solid var(--white10);
+}
+body.is-arabic .blog-article-body ul li {
+    padding-left: 0;
+    padding-right: 24px;
+}
+body.is-arabic .blog-article-body ul li::before {
+    left: auto;
+    right: 0;
+}
+body.is-arabic .blog-date i, body.is-arabic .blog-category i {
+    margin-right: 0;
+    margin-left: 6px;
+}
+@media (max-width: 768px) {
+    .blog-article {
+        padding: 28px 20px;
+    }
+}
+
+/* === WHATSAPP FLOATING BUTTON === */
+.whatsapp-float {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #25D366;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 32px;
+    z-index: 99998;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4), 0 2px 10px rgba(0,0,0,0.3);
+    transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+    animation: waFloat 3s ease-in-out infinite;
+    text-decoration: none;
+}
+.whatsapp-float:hover {
+    transform: translateY(-4px) scale(1.1);
+    box-shadow: 0 6px 30px rgba(37, 211, 102, 0.6), 0 4px 15px rgba(0,0,0,0.4);
+}
+.whatsapp-float:active {
+    transform: translateY(-1px) scale(1);
+}
+@keyframes waFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+}
+.whatsapp-float:hover {
+    animation: none;
+}
+body.is-arabic .whatsapp-float {
+    right: auto;
+    left: 30px;
+}
+
 /* === LANGUAGE TOGGLE === */
 .lang-toggle {
     display: none;
@@ -2220,6 +2386,17 @@ body.is-arabic .lang-toggle {
         left: 20px;
         padding: 10px 18px;
         font-size: 12px;
+    }
+    .whatsapp-float {
+        width: 52px;
+        height: 52px;
+        font-size: 28px;
+        bottom: 20px;
+        right: 20px;
+    }
+    body.is-arabic .whatsapp-float {
+        right: auto;
+        left: 20px;
     }
 }
 

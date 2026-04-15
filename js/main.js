@@ -442,6 +442,7 @@
         if (path.indexOf('portfolio') !== -1) page = 'portfolio';
         else if (path.indexOf('clients') !== -1) page = 'clients';
         else if (path.indexOf('solutions') !== -1) page = 'solutions';
+        else if (path.indexOf('blog') !== -1) page = 'blog';
 
         var navCta = { en: 'LET\u2019S GO', ar: '\u0647\u064a\u0627 \u0646\u0628\u062f\u0623' };
         var footerCopy = {
@@ -632,6 +633,22 @@
                     ],
                     ctaHTML:'\u062e\u0644\u064a\u0646\u0627 \u0646\u0628\u0646\u064a \u0634\u064a <span class="holo-word">\u062c\u0646\u0648\u0646\u064a \u2726</span>',
                     ctaBtn:'\u0627\u0628\u062f\u0623 \u0645\u0634\u0631\u0648\u0639\u0643'
+                }
+            },
+            blog: {
+                en: {
+                    heroTag:'BLOG',
+                    heroTitle:[['MARKETING','&'],['TECH','INSIGHTS.']],
+                    heroDesc:'Expert knowledge from Jordan\u2019s leading marketing and technology agency. Tips, strategies, and insights to grow your business.',
+                    ctaHTML:'READY TO <span class="holo-word">GROW</span><br>YOUR BRAND? \u2726',
+                    ctaBtn:'LET\u2019S TALK'
+                },
+                ar: {
+                    heroTag:'\u0627\u0644\u0645\u062f\u0648\u0646\u0629',
+                    heroTitle:[['\u062a\u0633\u0648\u064a\u0642','\u0648'],['\u062a\u0643\u0646\u0648\u0644\u0648\u062c\u064a\u0627','\u0648\u0631\u0624\u0649.']],
+                    heroDesc:'\u0645\u0639\u0631\u0641\u0629 \u0627\u062d\u062a\u0631\u0627\u0641\u064a\u0629 \u0645\u0646 \u0623\u0641\u0636\u0644 \u0648\u0643\u0627\u0644\u0629 \u062a\u0633\u0648\u064a\u0642 \u0648\u062a\u0643\u0646\u0648\u0644\u0648\u062c\u064a\u0627 \u0641\u064a \u0627\u0644\u0623\u0631\u062f\u0646. \u0646\u0635\u0627\u0626\u062d \u0648\u0627\u0633\u062a\u0631\u0627\u062a\u064a\u062c\u064a\u0627\u062a \u0648\u0631\u0624\u0649 \u0644\u062a\u0646\u0645\u064a\u0629 \u0623\u0639\u0645\u0627\u0644\u0643.',
+                    ctaHTML:'\u062c\u0627\u0647\u0632 <span class="holo-word">\u062a\u0646\u0645\u0651\u064a</span><br>\u0628\u0631\u0627\u0646\u062f\u0643\u061f \u2726',
+                    ctaBtn:'\u062a\u0648\u0627\u0635\u0644 \u0645\u0639\u0646\u0627'
                 }
             }
         };
