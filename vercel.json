@@ -1,0 +1,14 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/lp-social-media-jordan", "destination": "/social-media-jordan", "permanent": true },
+    { "source": "/lp-social-media-jordan.html", "destination": "/social-media-jordan", "permanent": true },
+    { "source": "/lp-social-media-management-amman", "destination": "/social-media-jordan", "permanent": true },
+    { "source": "/lp-social-media-management-amman.html", "destination": "/social-media-jordan", "permanent": true },
+    { "source": "/lp-web-design-jordan", "destination": "/web-design-jordan", "permanent": true },
+    { "source": "/lp-web-design-jordan.html", "destination": "/web-design-jordan", "permanent": true },
+    { "source": "/lp-paid-ads-jordan", "destination": "/google-ads-jordan", "permanent": true },
+    { "source": "/lp-paid-ads-jordan.html", "destination": "/google-ads-jordan", "permanent": true }
+  ]
+}

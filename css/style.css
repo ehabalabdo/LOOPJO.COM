@@ -935,6 +935,61 @@ button.radial-item { background: none; border: none; cursor: pointer; padding: 0
     gap: 10px;
     margin-top: 16px;
 }
+
+/* About meta — YEARS / TEAM / COUNTRIES */
+.about-meta {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin: 28px 0 24px;
+    padding: 22px 18px;
+    border: 1px solid var(--white10);
+    border-radius: 20px;
+    background: linear-gradient(135deg, rgba(238,169,201,0.05), rgba(255,255,255,0.02));
+}
+.meta-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+}
+.meta-item + .meta-item {
+    border-left: 1px solid var(--white10);
+    padding-left: 10px;
+}
+.meta-num {
+    font-family: var(--font-mono, 'Space Grotesk', monospace);
+    font-size: clamp(2rem, 4.5vw, 2.8rem);
+    font-weight: 800;
+    color: var(--pink, #eea9c9);
+    line-height: 1;
+    letter-spacing: -1px;
+}
+.meta-num i {
+    font-style: normal;
+    font-size: 0.65em;
+    color: var(--white70);
+    margin-left: 2px;
+}
+.meta-lbl {
+    font-family: var(--font-mono, 'Space Grotesk', monospace);
+    font-size: 0.62rem;
+    letter-spacing: 2px;
+    color: var(--white40);
+    text-transform: uppercase;
+}
+@media (max-width: 540px) {
+    .about-meta { padding: 16px 10px; gap: 8px; }
+    .meta-item + .meta-item { padding-left: 6px; }
+    .meta-lbl { font-size: 0.55rem; letter-spacing: 1.2px; }
+}
+
+/* Google Maps contact link highlight */
+.contact-link-map {
+    color: var(--pink, #eea9c9) !important;
+}
+.contact-link-map:hover { opacity: 0.85; }
 .pill {
     padding: 10px 22px;
     border: 1px solid var(--white10);
