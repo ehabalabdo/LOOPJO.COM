@@ -9,6 +9,35 @@
     { "source": "/lp-web-design-jordan", "destination": "/web-design-jordan", "permanent": true },
     { "source": "/lp-web-design-jordan.html", "destination": "/web-design-jordan", "permanent": true },
     { "source": "/lp-paid-ads-jordan", "destination": "/google-ads-jordan", "permanent": true },
-    { "source": "/lp-paid-ads-jordan.html", "destination": "/google-ads-jordan", "permanent": true }
+    { "source": "/lp-paid-ads-jordan.html", "destination": "/google-ads-jordan", "permanent": true },
+
+    { "source": "/portfolio-item/:slug*", "destination": "/portfolio.html", "permanent": true },
+    { "source": "/portfolio-types/:slug*", "destination": "/portfolio.html", "permanent": true },
+    { "source": "/projects/:slug*", "destination": "/portfolio.html", "permanent": true },
+    { "source": "/project/:slug*", "destination": "/portfolio.html", "permanent": true },
+
+    { "source": "/blog/:slug*", "destination": "/blog.html", "permanent": true },
+    { "source": "/category/:slug*", "destination": "/blog.html", "permanent": true },
+    { "source": "/tag/:slug*", "destination": "/blog.html", "permanent": true },
+    { "source": "/author/:slug*", "destination": "/ehab-alabdo", "permanent": true },
+
+    { "source": "/about", "destination": "/", "permanent": true },
+    { "source": "/about-us", "destination": "/", "permanent": true },
+    { "source": "/contact", "destination": "/", "permanent": true },
+    { "source": "/contact-us", "destination": "/", "permanent": true },
+    { "source": "/services", "destination": "/solutions.html", "permanent": true },
+    { "source": "/our-services", "destination": "/solutions.html", "permanent": true },
+    { "source": "/team", "destination": "/", "permanent": true },
+    { "source": "/our-team", "destination": "/", "permanent": true },
+
+    { "source": "/wp-content/:slug*", "destination": "/", "permanent": true },
+    { "source": "/wp-includes/:slug*", "destination": "/", "permanent": true },
+    { "source": "/wp-admin/:slug*", "destination": "/", "permanent": true },
+    { "source": "/wp-json/:slug*", "destination": "/", "permanent": true },
+    { "source": "/wp-login.php", "destination": "/", "permanent": true },
+    { "source": "/xmlrpc.php", "destination": "/", "permanent": true },
+    { "source": "/feed", "destination": "/rss.xml", "permanent": true },
+    { "source": "/feed/:slug*", "destination": "/rss.xml", "permanent": true },
+    { "source": "/comments/feed", "destination": "/rss.xml", "permanent": true }
   ]
 }
