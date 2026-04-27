@@ -11,6 +11,7 @@
     let loadProgress = 0;
 
     function animateLoader() {
+        if (!loader || !loaderProgress || !loaderPercent) return;
         const increment = Math.random() * 30 + 20;
         loadProgress = Math.min(loadProgress + increment, 100);
         loaderProgress.style.width = loadProgress + '%';
@@ -27,8 +28,14 @@
         }
     }
 
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = loader ? 'hidden' : '';
     window.addEventListener('load', () => {
+        if (!loader || !loaderProgress || !loaderPercent) {
+            // Pages without loader (service pages, articles): just init
+            document.body.style.overflow = '';
+            initAfterLoad();
+            return;
+        }
         if (sessionStorage.getItem('loopLoaded')) {
             loader.classList.add('done');
             document.body.style.overflow = '';
