@@ -38,6 +38,13 @@
     { "source": "/xmlrpc.php", "destination": "/", "permanent": true },
     { "source": "/feed", "destination": "/rss.xml", "permanent": true },
     { "source": "/feed/:slug*", "destination": "/rss.xml", "permanent": true },
-    { "source": "/comments/feed", "destination": "/rss.xml", "permanent": true }
+    { "source": "/comments/feed", "destination": "/rss.xml", "permanent": true },
+    { "source": "/:any/feed", "destination": "/rss.xml", "permanent": true },
+    { "source": "/:any/:more/feed", "destination": "/rss.xml", "permanent": true },
+    { "source": "/:any/:more/:deep/feed", "destination": "/rss.xml", "permanent": true },
+
+    { "source": "/agency9-portfolio-detail-:slug*", "destination": "/portfolio.html", "permanent": true },
+    { "source": "/agency9-:slug*", "destination": "/", "permanent": true },
+    { "source": "/:any-portfolio-detail-:pic*", "destination": "/portfolio.html", "permanent": true }
   ]
 }
