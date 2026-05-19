@@ -90,29 +90,56 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
 .add-client-card:hover { border-color:var(--blue); color:var(--blue); }
 
 /* ── POSTS SCREEN ── */
-#posts-screen { padding:24px; max-width:1100px; margin:0 auto; }
+#posts-screen { padding:24px; max-width:1200px; margin:0 auto; }
 .posts-toolbar { display:flex; align-items:center; gap:10px; margin-bottom:20px; flex-wrap:wrap; }
 .posts-toolbar .left { flex:1; }
 .posts-count { color:var(--muted); font-size:13px; }
 
-.posts-table { width:100%; border-collapse:collapse; }
-.posts-table th { text-align:right; padding:10px 12px; color:var(--muted); font-size:12px; font-weight:600; border-bottom:1px solid var(--border); white-space:nowrap; }
-.posts-table td { padding:10px 12px; border-bottom:1px solid rgba(255,255,255,.04); vertical-align:middle; }
-.posts-table tr:hover td { background:rgba(255,255,255,.02); }
+/* ── CARD GRID ── */
+.posts-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:18px; }
 
-.thumb { width:52px; height:52px; object-fit:cover; border-radius:8px; display:block; }
-.thumb-vid { width:52px; height:52px; background:var(--bg3); border-radius:8px; display:flex; align-items:center; justify-content:center; color:var(--purple); }
-.caption-cell { max-width:280px; font-size:13px; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.post-card {
+  background:var(--bg2); border:1px solid var(--border); border-radius:16px;
+  overflow:hidden; transition:.2s; display:flex; flex-direction:column;
+}
+.post-card:hover { border-color:var(--blue); transform:translateY(-2px); }
+
+.post-media {
+  width:100%; aspect-ratio:1/1; background:var(--bg3); position:relative; overflow:hidden;
+  cursor:pointer; flex-shrink:0;
+}
+.post-media img { width:100%; height:100%; object-fit:cover; display:block; }
+.post-media video { width:100%; height:100%; object-fit:cover; display:block; }
+.post-media .vid-overlay {
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  background:rgba(0,0,0,.4);
+}
+.post-num-badge {
+  position:absolute; top:8px; right:8px;
+  background:rgba(0,0,0,.6); color:#fff; font-size:11px; font-weight:700;
+  padding:3px 8px; border-radius:20px; backdrop-filter:blur(4px);
+}
 .type-badge { padding:3px 9px; border-radius:20px; font-size:11px; }
 .type-image { background:rgba(116,186,225,.12); color:var(--blue); }
 .type-video { background:rgba(177,151,252,.12); color:var(--purple); }
 .product-badge { padding:3px 9px; border-radius:20px; font-size:11px; background:var(--bg3); color:var(--mint); }
-.row-actions { display:flex; gap:6px; }
-.btn-sm { padding:5px 11px; border-radius:7px; border:1px solid var(--border); background:transparent; color:var(--text); font-family:inherit; font-size:12px; cursor:pointer; white-space:nowrap; transition:.15s; }
-.btn-sm:hover { background:var(--bg3); }
-.btn-sm.edit { border-color:var(--blue); color:var(--blue); }
-.btn-sm.del { border-color:var(--red); color:var(--red); }
-.drag-handle { cursor:grab; color:var(--muted); font-size:18px; padding:0 4px; }
+
+.post-body { padding:12px 14px; flex:1; display:flex; flex-direction:column; gap:8px; }
+.post-date-row { display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap; }
+.post-date { font-size:12px; color:var(--blue); font-weight:600; }
+.post-caption { font-size:13px; color:var(--text); line-height:1.7; flex:1;
+  display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;
+}
+.post-action-row {
+  display:flex; gap:8px; padding:10px 14px; border-top:1px solid var(--border);
+}
+.btn-card { flex:1; padding:8px 0; border-radius:9px; border:1px solid var(--border);
+  background:transparent; color:var(--text); font-family:inherit; font-size:13px;
+  cursor:pointer; transition:.15s; font-weight:600;
+}
+.btn-card:hover { background:var(--bg3); }
+.btn-card.edit { border-color:var(--blue); color:var(--blue); }
+.btn-card.del  { border-color:var(--red);  color:var(--red); }
 
 /* ── MODAL ── */
 .modal-backdrop {
@@ -175,8 +202,7 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
 
 /* ── RESPONSIVE ── */
 @media(max-width:640px) {
-  .posts-table th:nth-child(4), .posts-table td:nth-child(4),
-  .posts-table th:nth-child(5), .posts-table td:nth-child(5) { display:none; }
+  .posts-grid { grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px; }
   .field-row { grid-template-columns:1fr; }
 }
 </style>
@@ -217,21 +243,7 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
       <span class="posts-count" id="posts-count"></span>
     </div>
   </div>
-  <div style="overflow-x:auto">
-    <table class="posts-table">
-      <thead>
-        <tr>
-          <th style="width:64px"></th>
-          <th>التاريخ</th>
-          <th>المنتج</th>
-          <th>الكابشن</th>
-          <th>النوع</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody id="posts-tbody"></tbody>
-    </table>
-  </div>
+  <div class="posts-grid" id="posts-grid"></div>
   <div class="empty-state" id="posts-empty" style="display:none">
     <div class="empty-icon">📭</div>
     <div>لا يوجد بوستات بعد — أضف أول بوست</div>
@@ -447,38 +459,56 @@ async function openClient(client) {
   renderPosts();
 }
 
-// ── POSTS TABLE ───────────────────────────────────────────────────────────────
+// ── POSTS GRID (card view) ────────────────────────────────────────────────────
 function renderPosts() {
   // Sort by date
   posts.sort((a, b) => parseDMY(a.date) - parseDMY(b.date));
   // Re-number
   posts.forEach((p, i) => p.num = i + 1);
 
-  const tbody = document.getElementById('posts-tbody');
-  tbody.innerHTML = '';
+  const grid = document.getElementById('posts-grid');
+  grid.innerHTML = '';
   document.getElementById('posts-empty').style.display = posts.length ? 'none' : 'block';
   document.getElementById('posts-count').textContent = `${posts.length} بوست`;
 
   posts.forEach((post, idx) => {
-    const tr = document.createElement('tr');
-    const thumb = post.type === 'video'
-      ? `<div class="thumb-vid"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg></div>`
-      : `<img class="thumb" src="${escHtml(post.img || '')}" alt="" loading="lazy">`;
+    const card = document.createElement('div');
+    card.className = 'post-card';
 
-    tr.innerHTML = `
-      <td>${thumb}</td>
-      <td style="white-space:nowrap;font-size:13px">${escHtml(post.date)}<br><span style="color:var(--muted);font-size:11px">${escHtml(post.dayAr||'')}</span></td>
-      <td><span class="product-badge">${escHtml(post.product||'')}</span></td>
-      <td class="caption-cell">${escHtml((post.caption||'').replace(/\n/g,' '))}</td>
-      <td><span class="type-badge type-${post.type}">${post.type === 'video' ? '🎬 فيديو' : '🖼 صورة'}</span></td>
-      <td>
-        <div class="row-actions">
-          <button class="btn-sm edit" onclick="openPostModal(${idx})">تعديل</button>
-          <button class="btn-sm del" onclick="confirmDelete(${idx})">حذف</button>
+    let mediaHtml;
+    if (post.type === 'video') {
+      mediaHtml = `
+      <div class="post-media">
+        <video src="${escHtml(post.video||'')}" muted playsinline preload="metadata"
+          onmouseenter="this.play()" onmouseleave="this.pause();this.currentTime=0"></video>
+        <div class="vid-overlay">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="rgba(255,255,255,.85)"><polygon points="5,3 19,12 5,21"/></svg>
         </div>
-      </td>
+        <span class="post-num-badge">#${post.num}</span>
+      </div>`;
+    } else {
+      mediaHtml = `
+      <div class="post-media">
+        <img src="${escHtml(post.img||'')}" alt="بوست ${post.num}" loading="lazy">
+        <span class="post-num-badge">#${post.num}</span>
+      </div>`;
+    }
+
+    card.innerHTML = `
+      ${mediaHtml}
+      <div class="post-body">
+        <div class="post-date-row">
+          <span class="post-date">${escHtml(post.dayAr||'')}، ${escHtml(post.date)}</span>
+          <span class="product-badge">${escHtml(post.product||'')}</span>
+        </div>
+        <p class="post-caption">${escHtml(post.caption||'').replace(/\n/g,'<br>')}</p>
+      </div>
+      <div class="post-action-row">
+        <button class="btn-card edit" onclick="openPostModal(${idx})">✏ تعديل</button>
+        <button class="btn-card del"  onclick="confirmDelete(${idx})">🗑 حذف</button>
+      </div>
     `;
-    tbody.appendChild(tr);
+    grid.appendChild(card);
   });
 }
 
