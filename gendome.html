@@ -71,26 +71,33 @@
         .post-card.approved { border-color:rgba(78,202,139,.4)!important; box-shadow:0 0 0 1px rgba(78,202,139,.1)!important; }
         .post-card.rejected  { border-color:rgba(224,90,90,.4)!important;  box-shadow:0 0 0 1px rgba(224,90,90,.1)!important;  }
 
-        /* media area */
-        .post-media { position:relative; aspect-ratio:1/1; background:#13131a; overflow:hidden; }
-        .post-media img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .4s; }
-        .post-card:hover .post-media img { transform:scale(1.02); }
-        /* video in card */
-        .post-media video { width:100%; height:100%; object-fit:cover; display:block; }
-        .video-badge { position:absolute; z-index:4; top:10px; left:10px;
+        /* ── MEDIA AREA — full image, no crop ── */
+        .post-media { position:relative; background:#0c0c10; overflow:hidden; cursor:zoom-in; }
+        .post-media img { width:100%; height:auto; display:block; transition:transform .35s; }
+        .post-card:hover .post-media img { transform:scale(1.015); }
+        .post-media video { width:100%; height:auto; display:block; }
+
+        /* expand icon top-right */
+        .media-expand-btn { position:absolute; z-index:5; top:8px; right:8px;
+            width:30px; height:30px; border-radius:8px; background:rgba(14,14,17,.7);
+            border:1px solid rgba(242,242,241,.15); display:flex; align-items:center; justify-content:center;
+            cursor:pointer; opacity:0; transition:opacity .2s; backdrop-filter:blur(6px); }
+        .post-media:hover .media-expand-btn { opacity:1; }
+        .media-expand-btn svg { width:14px; height:14px; color:var(--white); }
+
+        .video-badge { position:absolute; z-index:4; top:8px; left:8px;
             background:rgba(177,151,252,0.18); border:1px solid rgba(177,151,252,0.35);
             color:var(--purple); font-size:0.7rem; font-weight:700; padding:4px 9px; border-radius:20px;
-            display:flex; align-items:center; gap:5px; backdrop-filter:blur(8px); }
+            display:flex; align-items:center; gap:5px; backdrop-filter:blur(8px); pointer-events:none; }
         .play-btn { position:absolute; z-index:4; inset:0; display:flex; align-items:center; justify-content:center;
             background:rgba(0,0,0,0); transition:background .2s; cursor:pointer; }
         .play-btn:hover { background:rgba(0,0,0,0.18); }
         .play-btn svg { opacity:0.85; filter:drop-shadow(0 2px 8px rgba(0,0,0,.5)); transition:transform .2s,opacity .2s; }
         .play-btn:hover svg { transform:scale(1.1); opacity:1; }
-        .post-media::after { content:''; position:absolute; bottom:0; left:0; right:0; height:40%;
-            background:linear-gradient(to top,rgba(14,14,17,.6),transparent); pointer-events:none; }
-        .post-media video ~ .post-media::after { display:none; }
-        .post-num { position:absolute; z-index:2; bottom:10px; right:10px; font-size:0.68rem; font-weight:700;
-            color:rgba(242,242,241,.6); background:rgba(14,14,17,.65); padding:3px 8px; border-radius:20px; }
+
+        .post-num { position:absolute; z-index:2; bottom:8px; right:8px; font-size:0.68rem; font-weight:700;
+            color:rgba(242,242,241,.6); background:rgba(14,14,17,.65); padding:3px 8px; border-radius:20px;
+            pointer-events:none; }
         .card-status-overlay { position:absolute; inset:0; z-index:3; display:flex; align-items:center;
             justify-content:center; font-size:5rem; opacity:0; pointer-events:none; transition:opacity .3s; }
         .post-card.approved .card-status-overlay { opacity:1; background:rgba(78,202,139,.1); }
@@ -146,8 +153,44 @@
             transition:all .2s; display:flex; align-items:center; gap:7px; }
         .btn-send-wa:hover { background:rgba(37,211,102,.22); border-color:rgba(37,211,102,.55); }
 
-        /* ── MODAL ── */
-        .modal-backdrop { position:fixed; inset:0; z-index:500; background:rgba(0,0,0,.72);
+        /* ── LIGHTBOX ── */
+        .lb-backdrop { position:fixed; inset:0; z-index:600; background:rgba(0,0,0,.9);
+            backdrop-filter:blur(12px); display:flex; flex-direction:column; align-items:center; justify-content:center;
+            opacity:0; pointer-events:none; transition:opacity .22s; }
+        .lb-backdrop.open { opacity:1; pointer-events:all; }
+        .lb-topbar { position:absolute; top:0; left:0; right:0; display:flex; align-items:center;
+            justify-content:space-between; padding:14px 20px; z-index:2;
+            background:linear-gradient(to bottom,rgba(0,0,0,.65),transparent); }
+        .lb-info { font-size:0.82rem; color:var(--white70); }
+        .lb-info strong { color:var(--white); }
+        .lb-btn-row { display:flex; gap:8px; }
+        .lb-btn { height:36px; padding:0 16px; border-radius:10px; border:1px solid rgba(242,242,241,.18);
+            background:rgba(242,242,241,.08); color:var(--white70); cursor:pointer;
+            font-family:'Cairo',sans-serif; font-size:0.82rem; font-weight:600;
+            display:flex; align-items:center; gap:7px; transition:all .2s; }
+        .lb-btn:hover { background:rgba(242,242,241,.18); color:var(--white); }
+        .lb-btn.download { background:rgba(116,186,225,.12); border-color:rgba(116,186,225,.35); color:var(--blue); }
+        .lb-btn.download:hover { background:rgba(116,186,225,.25); }
+        .lb-btn.close-btn { background:rgba(224,90,90,.1); border-color:rgba(224,90,90,.3); color:var(--red); }
+        .lb-btn.close-btn:hover { background:rgba(224,90,90,.22); }
+        .lb-media-wrap { max-width:92vw; max-height:82vh; display:flex; align-items:center; justify-content:center; }
+        .lb-media-wrap img { max-width:100%; max-height:82vh; border-radius:10px; object-fit:contain;
+            box-shadow:0 20px 80px rgba(0,0,0,.6); }
+        .lb-media-wrap video { max-width:100%; max-height:82vh; border-radius:10px;
+            box-shadow:0 20px 80px rgba(0,0,0,.6); }
+        .lb-caption { position:absolute; bottom:0; left:0; right:0; padding:20px 28px 22px;
+            background:linear-gradient(to top,rgba(0,0,0,.7),transparent); text-align:center;
+            font-size:0.85rem; color:var(--white70); line-height:1.75; max-width:700px; margin:0 auto; }
+        .lb-nav { position:absolute; top:50%; transform:translateY(-50%); z-index:2;
+            width:42px; height:42px; border-radius:50%; background:rgba(242,242,241,.1);
+            border:1px solid rgba(242,242,241,.18); color:var(--white); cursor:pointer; font-size:1.1rem;
+            display:flex; align-items:center; justify-content:center; transition:all .2s; backdrop-filter:blur(4px); }
+        .lb-nav:hover { background:rgba(242,242,241,.22); }
+        .lb-nav.prev { right:16px; }
+        .lb-nav.next { left:16px; }
+
+        /* ── REJECT MODAL ── */
+        .modal-backdrop { position:fixed; inset:0; z-index:700; background:rgba(0,0,0,.72);
             backdrop-filter:blur(6px); display:flex; align-items:center; justify-content:center;
             padding:20px; opacity:0; pointer-events:none; transition:opacity .22s; }
         .modal-backdrop.open { opacity:1; pointer-events:all; }
@@ -198,6 +241,7 @@
             .header{padding:14px 16px} .hero{padding:34px 16px 20px} .stats-bar{margin:14px}
             .calendar-grid{padding:0 12px 30px;gap:16px;grid-template-columns:1fr}
             .approve-all-bar{padding:12px 16px}
+            .lb-nav{display:none}
         }
     </style>
 </head>
@@ -250,6 +294,24 @@
     </div>
 </div>
 
+<!-- LIGHTBOX -->
+<div class="lb-backdrop" id="lb-backdrop">
+    <div class="lb-topbar">
+        <div class="lb-info"><strong id="lb-title"></strong> &nbsp;·&nbsp; <span id="lb-date"></span></div>
+        <div class="lb-btn-row">
+            <a class="lb-btn download" id="lb-download" download>
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                تحميل
+            </a>
+            <button class="lb-btn close-btn" onclick="closeLightbox()">✕ إغلاق</button>
+        </div>
+    </div>
+    <div class="lb-media-wrap" id="lb-media"></div>
+    <div class="lb-caption" id="lb-caption"></div>
+    <button class="lb-nav prev" onclick="lbNav(1)">&#8249;</button>
+    <button class="lb-nav next" onclick="lbNav(-1)">&#8250;</button>
+</div>
+
 <!-- REJECT MODAL -->
 <div class="modal-backdrop" id="modal-backdrop">
     <div class="modal">
@@ -271,86 +333,79 @@
 <footer class="page-footer">صُمِّم بـ ♥ من <a href="https://loopjo.com" target="_blank">Loop Marketing Solutions</a> &nbsp;·&nbsp; <a href="https://wa.me/962792020388">واتساب</a></footer>
 
 <script>
-// ── POST DATA ──
-// type: 'image' | 'video'
-// img: path for image posts
-// video: path for video posts (thumbnail shows first frame)
-// caption: caption text from PPTX
+const LS_KEY = 'gendome_calendar_v1';
+
 const POSTS = [
   { num:1,  date:"20/5/2026", dayAr:"الأربعاء", type:"image", img:"images/gendome/go300-1.jpg",
     caption:"شغّل أجهزتك الأساسية بكل راحة مع منافذ متعددة وشحن سريع — سواء بالبيت، الكافيه، المكتب أو حتى بالرحلات. طاقة موثوقة 285Wh ⚡", product:"Go 300" },
-
   { num:2,  date:"21/5/2026", dayAr:"الخميس",   type:"image", img:"images/gendome/go300-2.jpg",
     caption:"المولدات القديمة كانت بتعطيك طاقة، لكن معها إزعاج، حرارة، ووجود دائم بالخلفية بذكّرك بالمشكلة. 🔇", product:"Go 300" },
-
   { num:3,  date:"22/5/2026", dayAr:"الجمعة",   type:"image", img:"images/gendome/go300-3.jpg",
     caption:"في فرق بين بطارية إضافية، وبين شعور إنك مرتاح طول اليوم لأن الطاقة معك فعلاً. 🔋", product:"Go 300" },
-
   { num:4,  date:"23/5/2026", dayAr:"السبت",    type:"image", img:"images/gendome/go300-4.jpg",
     caption:"✔ قدرة تشغيل مستقرة\n✔ منافذ متعددة لاستخدام أسهل\n✔ بطارية آمنة بعمر طويل", product:"Go 300" },
-
   { num:5,  date:"24/5/2026", dayAr:"الأحد",    type:"image", img:"images/gendome/micro30-1.jpg",
     caption:"شحن فائق السرعة، وراحة دائمة — بدون أي مجهود. ⚡✨", product:"Micro 30" },
-
   { num:6,  date:"25/5/2026", dayAr:"الاثنين",  type:"video", video:"images/gendome/video-1.mp4",
     caption:"الرفاهية الحقيقية ليست في الأجهزة الذكية فقط .. بل في أن تبقى ذكية حتى وقت الانقطاع. 💡", product:"فيديو" },
-
   { num:7,  date:"26/5/2026", dayAr:"الثلاثاء", type:"image", img:"images/gendome/home3000-1.jpg",
     caption:"الشاحن واصل، والإنترنت شغال، وشغلك ماشي تمام.. حتى لو فصلت الكهرباء.\nخيارك الأضمن لإنتاجية بدون مقاطعة — Gendome UPS. ALWAYS ON. 🔌", product:"Home 3000" },
-
   { num:8,  date:"28/5/2026", dayAr:"الخميس",   type:"image", img:"images/gendome/micro30-2.jpg",
     caption:"الشحن المغناطيسي يعمل بالطريقة التي نحب أن تسير بها الأشياء اليوم — ببساطة، بسرعة، وبدون أي تعقيد. 🧲", product:"Micro 30" },
-
   { num:9,  date:"29/5/2026", dayAr:"الجمعة",   type:"image", img:"images/gendome/go300-5.jpg",
     caption:"جهاز مصمم يعطيك أداء ثابت وحماية كاملة لكل أجهزتك الحساسة (لاب توب، راوتر، شواحن) — عشان تشتغل وتنجز وأنت مرتاح البال. 🛡️", product:"Go 300" },
-
   { num:10, date:"30/5/2026", dayAr:"السبت",    type:"video", video:"images/gendome/video-2.mp4",
     caption:"كفاءة وفعالية استثنائية، وقدرة فائقة على الأداء العالي. 🚀", product:"فيديو" },
-
   { num:11, date:"1/6/2026",  dayAr:"الاثنين",  type:"image", img:"images/gendome/home3000-2.jpg",
     caption:"3000W مش مجرد رقم مكتوب على الجهاز — بيهمك إذا الكهرباء قطعت أن البيت يحتفظ بإيقاعه الطبيعي بهدوء كامل. 🏠", product:"Home 3000" },
-
   { num:12, date:"3/6/2026",  dayAr:"الأربعاء", type:"image", img:"images/gendome/home3000-3.jpg",
     caption:"بعض المواصفات تبدو تقنية على الورق، لكنك تلاحظ أثرها الحقيقي بعد أشهر من الاستخدام اليومي. 📊", product:"Home 3000" },
-
   { num:13, date:"5/6/2026",  dayAr:"الجمعة",   type:"image", img:"images/gendome/home3000-4.jpg",
     caption:"مش بس تيار كهربائي بديل — هو حماية ذكية لكل أجهزتك. 🛡️⚡", product:"Home 3000" },
-
   { num:14, date:"6/6/2026",  dayAr:"السبت",    type:"image", img:"images/gendome/home3000-5.jpg",
     caption:"ليست مجرد شاشة تعرض أرقاماً، بل نافذتك لمعرفة كيف تتحرك الطاقة داخل يومك. كم تستهلك؟ كم تبقى؟ كل شيء أمامك بلمسة واحدة. 📱", product:"Home 3000" },
-
   { num:15, date:"7/6/2026",  dayAr:"الأحد",    type:"image", img:"images/gendome/micro30-3.jpg",
     caption:"All in one charger — واحد بدل كل شي. 🔌✨", product:"Micro 30" },
-
   { num:16, date:"8/6/2026",  dayAr:"الاثنين",  type:"image", img:"images/gendome/micro30-4.jpg",
     caption:"السرعة لم تعد رفاهية، بل جزء من إيقاع يومنا. وقت أقل بجانب الشاحن، وطاقة أكثر تكمل يومك بهدوء. ⚡", product:"Micro 30" },
-
   { num:17, date:"10/6/2026", dayAr:"الأربعاء", type:"image", img:"images/gendome/go300-6.jpg",
     caption:"مشهد يبدو كإجازة .. لكنه مكتب كامل بيشتغل بالطاقة الشمسية. الفكرة مش إنك تشحن جهازك — الفكرة إن يومك يضل شغال مهما تغير المكان. ☀️💻", product:"Go 300" },
-
   { num:18, date:"11/6/2026", dayAr:"الخميس",   type:"video", video:"images/gendome/video-3.mp4",
     caption:"حين تصبح الحماية جزءاً من الطاقة، تتغير طريقة اعتمادك على أجهزتك بالكامل. 🔒⚡", product:"فيديو" },
-
   { num:19, date:"13/6/2026", dayAr:"السبت",    type:"image", img:"images/gendome/go300-7.jpg",
     caption:"بعض الأشياء بتعطيك طاقة. بس هذا الجهاز بيعطيك حرية. 🕊️⚡", product:"Go 300" },
-
   { num:20, date:"15/6/2026", dayAr:"الاثنين",  type:"image", img:"images/gendome/micro30-5.jpg",
     caption:"أفضل أنواع التكنولوجيا هي التي تجعل التفاصيل اليومية أخف، دون ضجيج أو تعقيد. 🌿", product:"Micro 30" },
-
   { num:21, date:"16/6/2026", dayAr:"الثلاثاء", type:"image", img:"images/gendome/micro30-6.jpg",
     caption:"ما رح تضل تدور في الشنطة ولا تسأل حدا «معك شاحن؟» — بس رح تسحب الكيبل، وتكمل يومك بهدوء. 🎒✌️", product:"Micro 30" },
-
   { num:22, date:"18/6/2026", dayAr:"الخميس",   type:"image", img:"images/gendome/micro30-7.jpg",
     caption:"صغير بما يكفي لينسى داخل الحقيبة، لكن حضوره يظهر تماماً عندما تحتاجه. 🎯", product:"Micro 30" },
-
   { num:23, date:"20/6/2026", dayAr:"السبت",    type:"image", img:"images/gendome/micro30-8.jpg",
     caption:"بالطريق، بالجامعة، بالشغل، بالمطار، أو حتى بين مواعيدك — اشحن، تحرك، كمل يومك بسلاسة. 🌍", product:"Micro 30" },
 ];
 
-// ── STATE ──
-const state = {};
-POSTS.forEach(p => state[p.num] = { status:'pending', note:'' });
+// ── STATE + localStorage ──
+function loadState() {
+    try {
+        const saved = JSON.parse(localStorage.getItem(LS_KEY) || '{}');
+        const s = {};
+        POSTS.forEach(p => {
+            s[p.num] = saved[p.num] || { status:'pending', note:'' };
+        });
+        return s;
+    } catch(e) {
+        const s = {};
+        POSTS.forEach(p => s[p.num] = { status:'pending', note:'' });
+        return s;
+    }
+}
+function saveState() {
+    try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch(e) {}
+}
+
+const state = loadState();
 let currentModal = null;
+let lbCurrentNum = null;
 
 // ── RENDER ──
 const grid = document.getElementById('grid');
@@ -361,19 +416,21 @@ POSTS.forEach(post => {
     card.className = 'post-card';
     card.id = `card-${post.num}`;
 
-    // media area
+    const expandIcon = `<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>`;
+
     let mediaHtml;
     if (post.type === 'video') {
         mediaHtml = `
-        <div class="post-media">
+        <div class="post-media" onclick="openLightbox(${post.num},event)">
             <video id="vid-${post.num}" src="${post.video}" preload="metadata" playsinline muted loop></video>
-            <div class="play-btn" onclick="toggleVideo(${post.num})" id="playbtn-${post.num}">
+            <div class="play-btn" id="playbtn-${post.num}" onclick="toggleVideo(${post.num},event)">
                 <svg id="playicon-${post.num}" width="52" height="52" viewBox="0 0 52 52" fill="none">
                     <circle cx="26" cy="26" r="26" fill="rgba(177,151,252,0.2)"/>
                     <circle cx="26" cy="26" r="25" stroke="rgba(177,151,252,0.45)" stroke-width="1.5" fill="none"/>
                     <polygon points="21,18 38,26 21,34" fill="white" opacity="0.9"/>
                 </svg>
             </div>
+            <button class="media-expand-btn" onclick="openLightbox(${post.num},event)" title="عرض كامل">${expandIcon}</button>
             <div class="video-badge">
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
                 فيديو
@@ -383,8 +440,9 @@ POSTS.forEach(post => {
         </div>`;
     } else {
         mediaHtml = `
-        <div class="post-media">
+        <div class="post-media" onclick="openLightbox(${post.num},event)">
             <img src="${post.img}" loading="lazy" alt="بوست ${post.num}">
+            <button class="media-expand-btn" onclick="openLightbox(${post.num},event)" title="عرض كامل">${expandIcon}</button>
             <div class="card-status-overlay" id="overlay-${post.num}"></div>
             <span class="post-num">#${post.num}</span>
         </div>`;
@@ -423,8 +481,41 @@ POSTS.forEach(post => {
     grid.appendChild(card);
 });
 
-// ── VIDEO TOGGLE ──
-function toggleVideo(num) {
+// ── RESTORE SAVED STATE ──
+POSTS.forEach(p => {
+    const s = state[p.num];
+    if (s.status === 'approved') {
+        applyApproved(p.num);
+    } else if (s.status === 'rejected') {
+        applyRejected(p.num, s.note);
+    }
+});
+updateCounters();
+
+// ── APPLY VISUAL STATE (without saving again) ──
+function applyApproved(num) {
+    document.getElementById(`card-${num}`).className = 'post-card approved';
+    document.getElementById(`overlay-${num}`).textContent = '✓';
+    document.getElementById(`ba-${num}`).classList.add('active');
+    document.getElementById(`br-${num}`).classList.remove('active');
+    document.getElementById(`note-${num}`).classList.remove('visible');
+}
+function applyRejected(num, note) {
+    document.getElementById(`card-${num}`).className = 'post-card rejected';
+    document.getElementById(`overlay-${num}`).textContent = '✗';
+    document.getElementById(`br-${num}`).classList.add('active');
+    document.getElementById(`ba-${num}`).classList.remove('active');
+    if (note) {
+        document.getElementById(`note-${num}`).classList.add('visible');
+        document.getElementById(`note-text-${num}`).textContent = note;
+    } else {
+        document.getElementById(`note-${num}`).classList.remove('visible');
+    }
+}
+
+// ── VIDEO TOGGLE (inline in card) ──
+function toggleVideo(num, e) {
+    if (e) e.stopPropagation();
     const vid = document.getElementById(`vid-${num}`);
     const icon = document.getElementById(`playicon-${num}`);
     if (vid.paused) {
@@ -441,14 +532,57 @@ function toggleVideo(num) {
     }
 }
 
+// ── LIGHTBOX ──
+function openLightbox(num, e) {
+    // Don't open if play button clicked (for video)
+    if (e && e.target.closest('.play-btn')) return;
+    if (e) e.stopPropagation();
+
+    lbCurrentNum = num;
+    const post = POSTS.find(p => p.num === num);
+
+    document.getElementById('lb-title').textContent = `بوست #${num} · ${post.product}`;
+    document.getElementById('lb-date').textContent = `${post.dayAr}، ${post.date}`;
+    document.getElementById('lb-caption').textContent = post.caption;
+
+    const mediaEl = document.getElementById('lb-media');
+    if (post.type === 'video') {
+        mediaEl.innerHTML = `<video src="${post.video}" controls autoplay style="max-width:100%;max-height:82vh;border-radius:10px;"></video>`;
+        const dl = document.getElementById('lb-download');
+        dl.href = post.video;
+        dl.download = `gendome-post-${num}.mp4`;
+    } else {
+        mediaEl.innerHTML = `<img src="${post.img}" alt="بوست ${num}">`;
+        const dl = document.getElementById('lb-download');
+        dl.href = post.img;
+        dl.download = `gendome-post-${num}.jpg`;
+    }
+
+    document.getElementById('lb-backdrop').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+    document.getElementById('lb-backdrop').classList.remove('open');
+    document.body.style.overflow = '';
+    // stop any video playing in lightbox
+    const v = document.querySelector('#lb-media video');
+    if (v) v.pause();
+    lbCurrentNum = null;
+}
+
+function lbNav(dir) {
+    // dir: +1 = previous post, -1 = next post (RTL)
+    const idx = POSTS.findIndex(p => p.num === lbCurrentNum);
+    const next = POSTS[idx + dir];
+    if (next) openLightbox(next.num, null);
+}
+
 // ── APPROVE / REJECT ──
 function approve(num) {
     state[num] = { status:'approved', note:'' };
-    document.getElementById(`card-${num}`).className = 'post-card approved';
-    document.getElementById(`overlay-${num}`).textContent = '✓';
-    document.getElementById(`ba-${num}`).classList.add('active');
-    document.getElementById(`br-${num}`).classList.remove('active');
-    document.getElementById(`note-${num}`).classList.remove('visible');
+    saveState();
+    applyApproved(num);
     updateCounters();
     showToast(`✓ موافق على البوست #${num}`);
 }
@@ -456,7 +590,6 @@ function approve(num) {
 function openRejectModal(num) {
     currentModal = num;
     const post = POSTS.find(p => p.num === num);
-    // build preview
     const previewImg = post.type === 'video'
         ? `<div class="vid-thumb"><svg width="22" height="22" viewBox="0 0 24 24" fill="rgba(177,151,252,0.8)"><polygon points="5,3 19,12 5,21"/></svg></div>`
         : `<img src="${post.img}" alt="">`;
@@ -481,22 +614,22 @@ function confirmReject() {
     const num = currentModal;
     const note = document.getElementById('modal-textarea').value.trim();
     state[num] = { status:'rejected', note };
-    document.getElementById(`card-${num}`).className = 'post-card rejected';
-    document.getElementById(`overlay-${num}`).textContent = '✗';
-    document.getElementById(`br-${num}`).classList.add('active');
-    document.getElementById(`ba-${num}`).classList.remove('active');
-    if (note) {
-        document.getElementById(`note-${num}`).classList.add('visible');
-        document.getElementById(`note-text-${num}`).textContent = note;
-    } else {
-        document.getElementById(`note-${num}`).classList.remove('visible');
-    }
-    closeModal(); updateCounters();
+    saveState();
+    applyRejected(num, note);
+    closeModal();
+    updateCounters();
     showToast(`✗ تم تسجيل ملاحظتك على البوست #${num}`);
 }
 
 function approveAll() {
-    POSTS.forEach(p => { if (state[p.num].status === 'pending') approve(p.num); });
+    POSTS.forEach(p => {
+        if (state[p.num].status === 'pending') {
+            state[p.num] = { status:'approved', note:'' };
+            applyApproved(p.num);
+        }
+    });
+    saveState();
+    updateCounters();
     showToast('✓ تمت الموافقة على جميع البوستات');
 }
 
@@ -522,8 +655,7 @@ function sendViaWhatsapp() {
     const approved = POSTS.filter(p => state[p.num].status==='approved');
     const rejected  = POSTS.filter(p => state[p.num].status==='rejected');
     const pending   = POSTS.filter(p => state[p.num].status==='pending');
-    let msg = `🗓️ *رزنامة محتوى Gendome — مايو/يونيو 2026*\n`;
-    msg += `موافق: ${approved.length} | تعديل: ${rejected.length} | لم تُراجع: ${pending.length}\n`;
+    let msg = `🗓️ *رزنامة محتوى Gendome — مايو/يونيو 2026*\nموافق: ${approved.length} | تعديل: ${rejected.length} | لم تُراجع: ${pending.length}\n`;
     if (approved.length) {
         msg += `\n✅ *موافق عليها:*\n`;
         approved.forEach(p => { msg += `• بوست #${p.num} (${p.date}) — ${p.product}\n`; });
@@ -543,10 +675,20 @@ function sendViaWhatsapp() {
     window.open(`https://wa.me/962792020388?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
+// ── EVENT LISTENERS ──
+document.getElementById('lb-backdrop').addEventListener('click', e => {
+    if (e.target.id === 'lb-backdrop') closeLightbox();
+});
 document.getElementById('modal-backdrop').addEventListener('click', e => {
     if (e.target.id === 'modal-backdrop') closeModal();
 });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeLightbox(); closeModal(); }
+    if (document.getElementById('lb-backdrop').classList.contains('open')) {
+        if (e.key === 'ArrowRight') lbNav(1);
+        if (e.key === 'ArrowLeft')  lbNav(-1);
+    }
+});
 
 let toastTimer;
 function showToast(msg) {
