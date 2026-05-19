@@ -522,8 +522,8 @@ function renderPosts() {
     const isRejected = st && st.status === 'rejected' && st.note;
     const rejectHtml = isRejected ? `
       <div class="reject-strip">
-        <div class="reject-label">✗ طلب تعديل من الكلاينت</div>
-        <div class="reject-note">${escHtml(st.note)}</div>
+        <div class="reject-label">✗ طلب تعديل من الكلاينت ${getEditTypeTag(st.note)}</div>
+        <div class="reject-note">${escHtml(stripEditPrefix(st.note))}</div>
         <button class="btn-done" onclick="clearRejection(${post.num})">✓ تم التعديل</button>
       </div>` : '';
 
@@ -544,6 +544,18 @@ function renderPosts() {
     `;
     grid.appendChild(card);
   });
+}
+
+function getEditTypeTag(note) {
+  if (!note) return '';
+  if (note.startsWith('[كابشن]')) return '<span style="background:rgba(116,186,225,.15);color:var(--blue);padding:2px 7px;border-radius:8px;font-size:11px;font-weight:700;margin-right:4px">📝 كابشن</span>';
+  if (note.startsWith('[ميديا]')) return '<span style="background:rgba(177,151,252,.15);color:var(--purple);padding:2px 7px;border-radius:8px;font-size:11px;font-weight:700;margin-right:4px">🖼 ميديا</span>';
+  if (note.startsWith('[الاثنين]')) return '<span style="background:rgba(240,192,96,.12);color:var(--gold);padding:2px 7px;border-radius:8px;font-size:11px;font-weight:700;margin-right:4px">✏ الاثنين</span>';
+  return '';
+}
+function stripEditPrefix(note) {
+  if (!note) return '';
+  return note.replace(/^\[[^\]]+\]\s*/, '');
 }
 
 async function clearRejection(postNum) {
