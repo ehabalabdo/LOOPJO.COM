@@ -333,7 +333,7 @@
 <footer class="page-footer">صُمِّم بـ ♥ من <a href="https://loopjo.com" target="_blank">Loop Marketing Solutions</a> &nbsp;·&nbsp; <a href="https://wa.me/962792020388">واتساب</a></footer>
 
 <script>
-const LS_KEY = 'gendome_calendar_v1';
+const API = 'https://gendome-calendar-api.loopehab.workers.dev';
 
 const POSTS = [
   { num:1,  date:"20/5/2026", dayAr:"الأربعاء", type:"image", img:"images/gendome/go300-1.jpg",
@@ -384,26 +384,31 @@ const POSTS = [
     caption:"بالطريق، بالجامعة، بالشغل، بالمطار، أو حتى بين مواعيدك — اشحن، تحرك، كمل يومك بسلاسة. 🌍", product:"Micro 30" },
 ];
 
-// ── STATE + localStorage ──
-function loadState() {
+// ── STATE + Cloudflare KV ──
+function initState() {
+    const s = {};
+    POSTS.forEach(p => s[p.num] = { status:'pending', note:'' });
+    return s;
+}
+async function loadState() {
     try {
-        const saved = JSON.parse(localStorage.getItem(LS_KEY) || '{}');
-        const s = {};
+        const res = await fetch(`${API}/state`);
+        const saved = await res.json();
         POSTS.forEach(p => {
-            s[p.num] = saved[p.num] || { status:'pending', note:'' };
+            if (!state[p.num]) state[p.num] = { status:'pending', note:'' };
+            if (saved[p.num]) state[p.num] = saved[p.num];
         });
-        return s;
-    } catch(e) {
-        const s = {};
-        POSTS.forEach(p => s[p.num] = { status:'pending', note:'' });
-        return s;
-    }
+    } catch(e) { /* offline fallback — keep defaults */ }
 }
 function saveState() {
-    try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch(e) {}
+    fetch(`${API}/state`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(state),
+    }).catch(() => {});
 }
 
-const state = loadState();
+const state = initState();
 let currentModal = null;
 let lbCurrentNum = null;
 
@@ -481,16 +486,15 @@ POSTS.forEach(post => {
     grid.appendChild(card);
 });
 
-// ── RESTORE SAVED STATE ──
-POSTS.forEach(p => {
-    const s = state[p.num];
-    if (s.status === 'approved') {
-        applyApproved(p.num);
-    } else if (s.status === 'rejected') {
-        applyRejected(p.num, s.note);
-    }
+// ── RESTORE SAVED STATE from server ──
+loadState().then(() => {
+    POSTS.forEach(p => {
+        const s = state[p.num];
+        if (s.status === 'approved') applyApproved(p.num);
+        else if (s.status === 'rejected') applyRejected(p.num, s.note);
+    });
+    updateCounters();
 });
-updateCounters();
 
 // ── APPLY VISUAL STATE (without saving again) ──
 function applyApproved(num) {
