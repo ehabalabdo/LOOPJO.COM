@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Content Calendar — Gendome</title>
+    <title>رزنامة المحتوى — Gendome</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #0e0e11;
             --bg2: #141418;
+            --bg3: #1a1a20;
             --white: #f2f2f1;
             --white70: rgba(242,242,241,0.7);
             --white40: rgba(242,242,241,0.35);
@@ -18,8 +19,9 @@
             --pink: #eea9c9;
             --blue: #74bae1;
             --mint: #9ddad0;
-            --purple: #998dc0;
             --gold: #f0c060;
+            --green: #4eca8b;
+            --red: #e05a5a;
             --holo: linear-gradient(135deg, #eea9c9, #74bae1, #9ddad0);
         }
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -31,1098 +33,540 @@
             min-height: 100vh;
             overflow-x: hidden;
         }
-
-        /* noise */
         body::before {
             content: '';
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 9999;
-            opacity: 0.25;
+            position: fixed; inset: 0;
+            pointer-events: none; z-index: 9999; opacity: 0.18;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
         }
-
-        /* aurora bg */
         body::after {
-            content: '';
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            background:
-                radial-gradient(ellipse 80% 50% at 20% 0%, rgba(116,186,225,0.05) 0%, transparent 60%),
-                radial-gradient(ellipse 60% 40% at 80% 100%, rgba(238,169,201,0.04) 0%, transparent 60%);
+            content: ''; position: fixed; inset: 0; z-index: -1;
+            background: radial-gradient(ellipse 80% 50% at 20% 0%, rgba(116,186,225,0.06) 0%, transparent 60%),
+                        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(238,169,201,0.04) 0%, transparent 60%);
         }
 
-        /* ── HEADER ── */
+        /* HEADER */
         .header {
-            padding: 22px 40px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            padding: 18px 36px;
+            display: flex; align-items: center; justify-content: space-between;
             border-bottom: 1px solid var(--white10);
             backdrop-filter: blur(16px);
-            background: rgba(14,14,17,0.85);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            gap: 12px;
+            background: rgba(14,14,17,0.88);
+            position: sticky; top: 0; z-index: 200; gap: 12px;
         }
         .logo-text {
-            font-family: 'Tajawal', sans-serif;
-            font-weight: 700;
-            font-size: 1.2rem;
-            background: var(--holo);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: 2px;
+            font-family: 'Tajawal', sans-serif; font-weight: 700; font-size: 1.15rem;
+            background: var(--holo); -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: 2px;
         }
+        .header-right { display: flex; align-items: center; gap: 10px; }
         .client-badge {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: var(--white05);
-            border: 1px solid var(--white10);
-            border-radius: 50px;
-            padding: 7px 16px 7px 10px;
+            display: flex; align-items: center; gap: 8px;
+            background: var(--white05); border: 1px solid var(--white10);
+            border-radius: 50px; padding: 6px 14px 6px 8px;
         }
         .client-avatar {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: var(--holo);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            font-weight: 900;
-            color: var(--bg);
-            flex-shrink: 0;
+            width: 28px; height: 28px; border-radius: 50%;
+            background: var(--holo); display: flex; align-items: center; justify-content: center;
+            font-size: 0.78rem; font-weight: 900; color: var(--bg); flex-shrink: 0;
         }
-        .client-name { font-size: 0.88rem; font-weight: 700; }
+        .client-name { font-size: 0.85rem; font-weight: 700; }
+        .counter-badge {
+            font-size: 0.75rem; font-weight: 700; padding: 5px 12px;
+            border-radius: 50px; background: var(--white05); border: 1px solid var(--white10);
+            color: var(--white40); white-space: nowrap;
+        }
+        .counter-badge .c-approved { color: var(--green); }
+        .counter-badge .c-rejected { color: var(--red); }
+        .counter-badge .c-pending  { color: var(--gold); }
 
-        /* ── HERO ── */
-        .hero {
-            padding: 52px 40px 36px;
-            text-align: center;
-        }
+        /* HERO */
+        .hero { padding: 48px 36px 30px; text-align: center; }
         .month-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 5px 18px;
-            border-radius: 50px;
-            border: 1px solid rgba(116,186,225,0.3);
-            color: var(--blue);
-            font-size: 0.78rem;
-            font-weight: 700;
-            letter-spacing: 2px;
-            margin-bottom: 18px;
-            text-transform: uppercase;
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 5px 18px; border-radius: 50px; border: 1px solid rgba(116,186,225,0.3);
+            color: var(--blue); font-size: 0.75rem; font-weight: 700;
+            letter-spacing: 2px; margin-bottom: 16px; text-transform: uppercase;
         }
         .hero h1 {
             font-family: 'Tajawal', sans-serif;
-            font-size: clamp(1.8rem, 4vw, 2.8rem);
-            font-weight: 900;
-            margin-bottom: 10px;
-            line-height: 1.3;
+            font-size: clamp(1.7rem, 4vw, 2.6rem); font-weight: 900;
+            margin-bottom: 10px; line-height: 1.3;
         }
-        .hero h1 span {
-            background: var(--holo);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .hero p {
-            color: var(--white40);
-            font-size: 0.92rem;
-            max-width: 500px;
-            margin: 0 auto;
-            line-height: 1.9;
-        }
+        .hero h1 span { background: var(--holo); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero p { color: var(--white40); font-size: 0.88rem; max-width: 480px; margin: 0 auto; line-height: 1.9; }
 
-        /* ── STATS ── */
-        .stats-bar {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin: 28px 40px;
-            flex-wrap: wrap;
-        }
+        /* STATS */
+        .stats-bar { display: flex; justify-content: center; gap: 8px; margin: 22px 36px; flex-wrap: wrap; }
         .stat-pill {
-            padding: 7px 16px;
-            border-radius: 50px;
-            background: var(--white05);
-            border: 1px solid var(--white10);
-            font-size: 0.8rem;
-            color: var(--white70);
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            padding: 6px 14px; border-radius: 50px; background: var(--white05);
+            border: 1px solid var(--white10); font-size: 0.78rem; color: var(--white70);
+            display: flex; align-items: center; gap: 6px;
         }
         .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-        .dot-gold   { background: var(--gold); }
-        .dot-mint   { background: var(--mint); }
-        .dot-blue   { background: var(--blue); }
+        .dot-gold { background: var(--gold); }
+        .dot-mint { background: var(--mint); }
+        .dot-blue { background: var(--blue); }
 
-        /* ── GRID ── */
+        /* GRID */
         .calendar-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-            gap: 22px;
-            padding: 0 40px 80px;
-            max-width: 1440px;
-            margin: 0 auto;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px; padding: 0 36px 40px;
+            max-width: 1440px; margin: 0 auto;
         }
 
-        /* ── POST CARD ── */
+        /* POST CARD */
         .post-card {
-            background: var(--bg2);
-            border: 1px solid var(--white10);
-            border-radius: 18px;
-            overflow: hidden;
+            background: var(--bg2); border: 1px solid var(--white10);
+            border-radius: 18px; overflow: hidden;
             transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
-        .post-card:hover {
-            transform: translateY(-3px);
-            border-color: rgba(116,186,225,0.2);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-        }
+        .post-card:hover { transform: translateY(-3px); border-color: rgba(116,186,225,0.2); box-shadow: 0 8px 32px rgba(0,0,0,0.35); }
+        .post-card.approved { border-color: rgba(78,202,139,0.4) !important; box-shadow: 0 0 0 1px rgba(78,202,139,0.12) !important; }
+        .post-card.rejected  { border-color: rgba(224,90,90,0.4)  !important; box-shadow: 0 0 0 1px rgba(224,90,90,0.12)  !important; }
 
-        /* media */
-        .post-media {
-            position: relative;
-            aspect-ratio: 1/1;
-            background: #16161c;
-            overflow: hidden;
-        }
-        .post-media img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-            transition: transform 0.4s ease;
-        }
+        .post-media { position: relative; aspect-ratio: 1/1; background: #13131a; overflow: hidden; }
+        .post-media img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s ease; }
         .post-card:hover .post-media img { transform: scale(1.02); }
-
-        /* overlay gradient */
         .post-media::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 50%;
-            background: linear-gradient(to top, rgba(14,14,17,0.7), transparent);
-            pointer-events: none;
+            content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 45%;
+            background: linear-gradient(to top, rgba(14,14,17,0.65), transparent); pointer-events: none;
         }
-
-        /* badges */
-        .media-type-badge, .status-badge {
-            position: absolute;
-            z-index: 2;
-            padding: 4px 11px;
-            border-radius: 50px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
-        .media-type-badge { top: 11px; right: 11px; }
-        .status-badge     { top: 11px; left: 11px; }
-
-        .badge-image  { background: rgba(157,218,208,0.15); color: var(--mint);   border: 1px solid rgba(157,218,208,0.3); }
-        .badge-video  { background: rgba(238,169,201,0.15); color: var(--pink);   border: 1px solid rgba(238,169,201,0.3); }
-        .badge-reel   { background: rgba(153,141,192,0.15); color: var(--purple); border: 1px solid rgba(153,141,192,0.3); }
-        .badge-story  { background: rgba(116,186,225,0.15); color: var(--blue);   border: 1px solid rgba(116,186,225,0.3); }
-        .badge-design { background: rgba(240,192,96,0.15);  color: var(--gold);   border: 1px solid rgba(240,192,96,0.3); }
-
-        .status-pending  { background: rgba(240,192,96,0.15);  color: var(--gold); border: 1px solid rgba(240,192,96,0.35); }
-        .status-approved { background: rgba(157,218,208,0.15); color: var(--mint); border: 1px solid rgba(157,218,208,0.35); }
-        .status-revised  { background: rgba(238,169,201,0.15); color: var(--pink); border: 1px solid rgba(238,169,201,0.35); }
-
-        /* post number */
         .post-num {
-            position: absolute;
-            z-index: 2;
-            bottom: 11px;
-            right: 11px;
-            font-size: 0.68rem;
-            font-weight: 700;
-            color: rgba(242,242,241,0.5);
-            background: rgba(14,14,17,0.6);
-            padding: 3px 8px;
-            border-radius: 20px;
+            position: absolute; z-index: 2; bottom: 10px; right: 10px;
+            font-size: 0.68rem; font-weight: 700; color: rgba(242,242,241,0.6);
+            background: rgba(14,14,17,0.65); padding: 3px 8px; border-radius: 20px;
         }
+        .card-status-overlay {
+            position: absolute; inset: 0; z-index: 3;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 5rem; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+        }
+        .post-card.approved .card-status-overlay { opacity: 1; background: rgba(78,202,139,0.1); }
+        .post-card.rejected  .card-status-overlay { opacity: 1; background: rgba(224,90,90,0.1);  }
 
-        /* ── CARD BODY ── */
-        .post-body { padding: 15px 16px 0; }
-        .post-date-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 9px;
-        }
-        .post-date {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.8rem;
-            color: var(--blue);
-            font-weight: 700;
-        }
+        /* CARD BODY */
+        .post-body { padding: 14px 15px 0; }
+        .post-date-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+        .post-date { display: flex; align-items: center; gap: 5px; font-size: 0.78rem; color: var(--blue); font-weight: 700; }
         .post-platforms { display: flex; gap: 4px; }
         .platform-icon {
-            width: 22px;
-            height: 22px;
-            border-radius: 5px;
-            background: var(--white10);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.62rem;
-            font-weight: 700;
-            color: var(--white40);
+            width: 21px; height: 21px; border-radius: 5px;
+            background: var(--white10); display: flex; align-items: center;
+            justify-content: center; font-size: 0.6rem; font-weight: 700; color: var(--white40);
         }
         .post-caption {
-            font-size: 0.84rem;
-            color: var(--white70);
-            line-height: 1.75;
-            margin-bottom: 14px;
+            font-size: 0.83rem; color: var(--white70); line-height: 1.75; margin-bottom: 4px;
+            display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
         }
+        .post-caption.expanded { -webkit-line-clamp: unset; overflow: visible; }
+        .expand-btn {
+            background: none; border: none; color: var(--blue);
+            font-size: 0.72rem; cursor: pointer; font-family: 'Cairo', sans-serif;
+            padding: 2px 0 12px; display: block;
+        }
+        .expand-btn:hover { text-decoration: underline; }
 
-        /* ── COMMENT SECTION ── */
-        .comment-section {
+        /* ACTION BUTTONS */
+        .action-row {
+            display: flex; gap: 8px; padding: 12px 15px 15px;
             border-top: 1px solid var(--white10);
-            padding: 12px 16px 16px;
         }
-        .comment-label {
-            font-size: 0.72rem;
-            color: var(--white40);
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
+        .btn-approve, .btn-reject {
+            flex: 1; padding: 9px 8px; border-radius: 10px; border: none; cursor: pointer;
+            font-family: 'Cairo', sans-serif; font-size: 0.85rem; font-weight: 700;
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+            transition: all 0.2s ease;
         }
-        .existing-comments { display: flex; flex-direction: column; gap: 7px; margin-bottom: 9px; }
-        .comment-bubble {
-            background: var(--white05);
-            border: 1px solid var(--white10);
-            border-radius: 9px;
-            padding: 9px 11px;
-            font-size: 0.8rem;
-            color: var(--white70);
-            line-height: 1.65;
+        .btn-approve { background: rgba(78,202,139,0.1); color: var(--green); border: 1.5px solid rgba(78,202,139,0.25); }
+        .btn-approve:hover { background: rgba(78,202,139,0.22); border-color: rgba(78,202,139,0.5); }
+        .btn-approve.active { background: rgba(78,202,139,0.28); border-color: rgba(78,202,139,0.55); }
+        .btn-reject { background: rgba(224,90,90,0.1); color: var(--red); border: 1.5px solid rgba(224,90,90,0.25); }
+        .btn-reject:hover { background: rgba(224,90,90,0.22); border-color: rgba(224,90,90,0.5); }
+        .btn-reject.active { background: rgba(224,90,90,0.28); border-color: rgba(224,90,90,0.55); }
+
+        /* REJECTION NOTE */
+        .rejection-note {
+            margin: 0 15px 14px;
+            background: rgba(224,90,90,0.07); border: 1px solid rgba(224,90,90,0.2);
+            border-radius: 10px; padding: 10px 12px;
+            font-size: 0.78rem; color: rgba(242,242,241,0.65); line-height: 1.65;
+            display: none;
         }
-        .comment-meta {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 5px;
-            font-size: 0.68rem;
-            color: var(--white40);
+        .rejection-note.visible { display: block; }
+        .note-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+        .note-label { font-size: 0.68rem; color: var(--red); font-weight: 700; }
+        .note-edit-btn { background: none; border: none; color: var(--white40); cursor: pointer; font-size: 0.68rem; font-family: 'Cairo', sans-serif; }
+        .note-edit-btn:hover { color: var(--white); }
+
+        /* APPROVE ALL BAR */
+        .approve-all-bar {
+            position: sticky; bottom: 0; z-index: 150;
+            background: rgba(14,14,17,0.94); backdrop-filter: blur(20px);
+            border-top: 1px solid var(--white10);
+            padding: 14px 36px;
+            display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
         }
-        .comment-meta .loop-reply { color: var(--mint); }
-        .comment-input-wrap { display: flex; gap: 7px; align-items: flex-end; }
-        .comment-textarea {
-            flex: 1;
-            background: var(--white05);
-            border: 1px solid var(--white10);
-            border-radius: 9px;
-            padding: 9px 11px;
-            color: var(--white);
-            font-family: 'Cairo', sans-serif;
-            font-size: 0.8rem;
-            resize: none;
-            min-height: 54px;
+        .approve-summary { font-size: 0.82rem; color: var(--white40); display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+        .bar-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+        .btn-approve-all {
+            padding: 10px 22px; border-radius: 10px; border: none; cursor: pointer;
+            font-family: 'Cairo', sans-serif; font-size: 0.88rem; font-weight: 700;
+            background: var(--holo); color: var(--bg); transition: opacity 0.2s, transform 0.15s;
+        }
+        .btn-approve-all:hover { opacity: 0.85; transform: scale(1.03); }
+        .btn-send-wa {
+            padding: 10px 22px; border-radius: 10px; cursor: pointer;
+            font-family: 'Cairo', sans-serif; font-size: 0.88rem; font-weight: 700;
+            background: rgba(37,211,102,0.1); color: #25d366;
+            border: 1.5px solid rgba(37,211,102,0.3);
+            transition: all 0.2s; display: flex; align-items: center; gap: 7px;
+        }
+        .btn-send-wa:hover { background: rgba(37,211,102,0.2); border-color: rgba(37,211,102,0.55); }
+
+        /* MODAL */
+        .modal-backdrop {
+            position: fixed; inset: 0; z-index: 500;
+            background: rgba(0,0,0,0.72); backdrop-filter: blur(6px);
+            display: flex; align-items: center; justify-content: center; padding: 20px;
+            opacity: 0; pointer-events: none; transition: opacity 0.22s;
+        }
+        .modal-backdrop.open { opacity: 1; pointer-events: all; }
+        .modal {
+            background: var(--bg3); border: 1px solid var(--white10);
+            border-radius: 20px; padding: 26px; width: 100%; max-width: 440px;
+            transform: translateY(20px); transition: transform 0.22s;
+        }
+        .modal-backdrop.open .modal { transform: translateY(0); }
+        .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+        .modal-title { font-size: 1rem; font-weight: 700; color: var(--red); }
+        .modal-close {
+            width: 30px; height: 30px; border-radius: 8px;
+            background: var(--white05); border: 1px solid var(--white10);
+            cursor: pointer; color: var(--white40); font-size: 1rem;
+            display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+        }
+        .modal-close:hover { background: var(--white10); color: var(--white); }
+        .modal-post-preview {
+            display: flex; align-items: center; gap: 12px;
+            background: var(--white05); border: 1px solid var(--white10);
+            border-radius: 12px; padding: 10px 12px; margin-bottom: 18px;
+        }
+        .modal-post-preview img { width: 52px; height: 52px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
+        .modal-post-num { font-size: 0.68rem; color: var(--white40); margin-bottom: 3px; }
+        .modal-post-date { font-size: 0.82rem; font-weight: 700; color: var(--blue); }
+        .modal-label { font-size: 0.78rem; color: var(--white40); margin-bottom: 8px; }
+        .modal-textarea {
+            width: 100%; background: var(--white05); border: 1px solid var(--white10);
+            border-radius: 12px; padding: 12px; color: var(--white);
+            font-family: 'Cairo', sans-serif; font-size: 0.85rem;
+            resize: none; min-height: 100px; outline: none; direction: rtl;
             transition: border-color 0.2s;
-            outline: none;
-            direction: rtl;
         }
-        .comment-textarea::placeholder { color: var(--white40); }
-        .comment-textarea:focus { border-color: rgba(116,186,225,0.4); }
-        .send-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 9px;
-            background: var(--holo);
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            transition: opacity 0.2s, transform 0.15s;
+        .modal-textarea::placeholder { color: var(--white40); }
+        .modal-textarea:focus { border-color: rgba(224,90,90,0.4); }
+        .modal-actions { display: flex; gap: 8px; margin-top: 14px; }
+        .modal-btn-cancel {
+            flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--white10);
+            background: var(--white05); color: var(--white70); cursor: pointer;
+            font-family: 'Cairo', sans-serif; font-size: 0.85rem; font-weight: 600; transition: all 0.2s;
         }
-        .send-btn:hover { opacity: 0.85; transform: scale(1.06); }
-        .no-comments {
-            font-size: 0.75rem;
-            color: var(--white40);
-            text-align: center;
-            padding: 4px 0 8px;
-            font-style: italic;
+        .modal-btn-cancel:hover { background: var(--white10); }
+        .modal-btn-confirm {
+            flex: 2; padding: 10px; border-radius: 10px;
+            background: rgba(224,90,90,0.15); color: var(--red); cursor: pointer;
+            font-family: 'Cairo', sans-serif; font-size: 0.85rem; font-weight: 700;
+            border: 1.5px solid rgba(224,90,90,0.35); transition: all 0.2s;
         }
+        .modal-btn-confirm:hover { background: rgba(224,90,90,0.28); }
 
-        /* ── FOOTER ── */
-        .page-footer {
-            text-align: center;
-            padding: 28px;
-            border-top: 1px solid var(--white10);
-            color: var(--white40);
-            font-size: 0.78rem;
-        }
-        .page-footer a { color: var(--blue); text-decoration: none; }
-        .page-footer a:hover { text-decoration: underline; }
-
-        /* ── TOAST ── */
+        /* TOAST */
         .toast {
-            position: fixed;
-            bottom: 28px;
-            left: 50%;
+            position: fixed; bottom: 88px; left: 50%;
             transform: translateX(-50%) translateY(16px);
-            background: rgba(157,218,208,0.12);
-            border: 1px solid rgba(157,218,208,0.4);
-            color: var(--mint);
-            padding: 10px 22px;
-            border-radius: 50px;
-            font-size: 0.82rem;
-            font-weight: 600;
-            opacity: 0;
-            transition: all 0.25s ease;
-            z-index: 9998;
-            pointer-events: none;
-            white-space: nowrap;
+            background: rgba(14,14,17,0.95); border: 1px solid var(--white10);
+            color: var(--white70); padding: 9px 20px; border-radius: 50px;
+            font-size: 0.8rem; font-weight: 600; opacity: 0;
+            transition: all 0.22s ease; z-index: 9998; pointer-events: none; white-space: nowrap;
         }
         .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+        /* FOOTER */
+        .page-footer { text-align: center; padding: 20px; color: var(--white40); font-size: 0.76rem; }
+        .page-footer a { color: var(--blue); text-decoration: none; }
+
         @media (max-width: 600px) {
-            .header { padding: 16px 18px; }
-            .hero { padding: 36px 18px 24px; }
-            .stats-bar { margin: 18px; }
-            .calendar-grid { padding: 0 14px 60px; gap: 14px; grid-template-columns: 1fr; }
+            .header { padding: 14px 16px; }
+            .hero { padding: 34px 16px 22px; }
+            .stats-bar { margin: 16px; }
+            .calendar-grid { padding: 0 12px 30px; gap: 16px; grid-template-columns: 1fr; }
+            .approve-all-bar { padding: 12px 16px; }
         }
     </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <header class="header">
     <div class="logo-text">LOOP</div>
-    <div class="client-badge">
-        <div class="client-avatar">G</div>
-        <span class="client-name">Gendome</span>
+    <div class="header-right">
+        <div class="counter-badge">
+            ✓ <span class="c-approved" id="hdr-approved">0</span>
+            &nbsp;·&nbsp;
+            ✗ <span class="c-rejected" id="hdr-rejected">0</span>
+            &nbsp;·&nbsp;
+            ⏳ <span class="c-pending" id="hdr-pending">23</span>
+        </div>
+        <div class="client-badge">
+            <div class="client-avatar">G</div>
+            <span class="client-name">Gendome</span>
+        </div>
     </div>
 </header>
 
-<!-- HERO -->
 <section class="hero">
     <div class="month-tag">مايو · يونيو 2026</div>
-    <h1>كونتنت كالندر<br><span>Gendome</span></h1>
-    <p>راجع البوستات المجدولة من 20 مايو حتى 20 يونيو، وشاركنا ملاحظاتك على كل بوست.</p>
+    <h1>رزنامة المحتوى<br><span>Gendome</span></h1>
+    <p>راجع البوستات المجدولة، وافق أو أضف ملاحظاتك — ثم أرسل ردودك مرة واحدة عبر واتساب.</p>
 </section>
 
-<!-- STATS -->
 <div class="stats-bar">
-    <div class="stat-pill"><span class="dot dot-gold"></span> 23 بوست بانتظار موافقتك</div>
+    <div class="stat-pill"><span class="dot dot-gold"></span> 23 بوست</div>
     <div class="stat-pill"><span class="dot dot-blue"></span> 20 مايو — 20 يونيو 2026</div>
     <div class="stat-pill"><span class="dot dot-mint"></span> Instagram · Facebook</div>
 </div>
 
-<!-- POSTS GRID -->
-<div class="calendar-grid" id="grid">
+<div class="calendar-grid" id="grid"></div>
 
-    <!-- 1 -->
-    <div class="post-card">
-        <div class="post-media">
-            <img src="https://picsum.photos/seed/gd1/600/600" loading="lazy" alt="">
-            <span class="media-type-badge badge-image">صورة</span>
-            <span class="status-badge status-pending">⏳ بانتظار موافقتك</span>
-            <span class="post-num">#1</span>
-        </div>
-        <div class="post-body">
-            <div class="post-date-row">
-                <div class="post-date">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    الأربعاء، 20 مايو 2026
-                </div>
-                <div class="post-platforms"><div class="platform-icon">IG</div><div class="platform-icon">FB</div></div>
-            </div>
-            <p class="post-caption">شغّل أجهزتك الأساسية بكل راحة مع منافذ متعددة وشحن سريع — سواء بالبيت، الكافيه، المكتب أو حتى بالرحلات. طاقة موثوقة 285Wh ⚡</p>
-        </div>
-        <div class="comment-section">
-            <div class="comment-label"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> تعليقاتك</div>
-            <p class="no-comments">لا يوجد تعليقات بعد — شاركنا رأيك!</p>
-            <div class="comment-input-wrap">
-                <textarea class="comment-textarea" placeholder="موافق؟ عندك تعديل؟ اكتب هنا..." rows="2"></textarea>
-                <button class="send-btn" onclick="sendComment(this)"><svg width="14" height="14" fill="none" stroke="#0e0e11" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
-            </div>
-        </div>
+<div class="approve-all-bar">
+    <div class="approve-summary">
+        <span>موافق: <strong style="color:var(--green)" id="bar-approved">0</strong></span>
+        <span>تعديل: <strong style="color:var(--red)" id="bar-rejected">0</strong></span>
+        <span>لم تُراجع: <strong style="color:var(--gold)" id="bar-pending">23</strong></span>
     </div>
-
-    <!-- 2 -->
-    <div class="post-card">
-        <div class="post-media">
-            <img src="https://picsum.photos/seed/gd2/600/600" loading="lazy" alt="">
-            <span class="media-type-badge badge-design">تصميم</span>
-            <span class="status-badge status-pending">⏳ بانتظار موافقتك</span>
-            <span class="post-num">#2</span>
-        </div>
-        <div class="post-body">
-            <div class="post-date-row">
-                <div class="post-date">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    الخميس، 21 مايو 2026
-                </div>
-                <div class="post-platforms"><div class="platform-icon">IG</div><div class="platform-icon">FB</div></div>
-            </div>
-            <p class="post-caption">المولدات القديمة كانت بتعطيك طاقة، لكن معها إزعاج، حرارة، ووجود دائم بالخلفية بذكرك بالمشكلة. 🔇</p>
-        </div>
-        <div class="comment-section">
-            <div class="comment-label"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> تعليقاتك</div>
-            <p class="no-comments">لا يوجد تعليقات بعد — شاركنا رأيك!</p>
-            <div class="comment-input-wrap">
-                <textarea class="comment-textarea" placeholder="موافق؟ عندك تعديل؟ اكتب هنا..." rows="2"></textarea>
-                <button class="send-btn" onclick="sendComment(this)"><svg width="14" height="14" fill="none" stroke="#0e0e11" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
-            </div>
-        </div>
+    <div class="bar-actions">
+        <button class="btn-approve-all" onclick="approveAll()">✓ موافق على الكل</button>
+        <button class="btn-send-wa" onclick="sendViaWhatsapp()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+            إرسال الردود
+        </button>
     </div>
-
-    <!-- 3 -->
-    <div class="post-card">
-        <div class="post-media">
-            <img src="https://picsum.photos/seed/gd3/600/600" loading="lazy" alt="">
-            <span class="media-type-badge badge-image">صورة</span>
-            <span class="status-badge status-pending">⏳ بانتظار موافقتك</span>
-            <span class="post-num">#3</span>
-        </div>
-        <div class="post-body">
-            <div class="post-date-row">
-                <div class="post-date">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    الجمعة، 22 مايو 2026
-                </div>
-                <div class="post-platforms"><div class="platform-icon">IG</div><div class="platform-icon">FB</div></div>
-            </div>
-            <p class="post-caption">في فرق بين بطارية إضافية، وبين شعور إنك مرتاح طول اليوم لأنه الطاقة معك فعلاً. 🔋</p>
-        </div>
-        <div class="comment-section">
-            <div class="comment-label"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> تعليقاتك</div>
-            <p class="no-comments">لا يوجد تعليقات بعد — شاركنا رأيك!</p>
-            <div class="comment-input-wrap">
-                <textarea class="comment-textarea" placeholder="موافق؟ عندك تعديل؟ اكتب هنا..." rows="2"></textarea>
-                <button class="send-btn" onclick="sendComment(this)"><svg width="14" height="14" fill="none" stroke="#0e0e11" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 4 -->
-    <div class="post-card">
-        <div class="post-media">
-            <img src="https://picsum.photos/seed/gd4/600/600" loading="lazy" alt="">
-            <span class="media-type-badge badge-design">تصميم</span>
-            <span class="status-badge status-pending">⏳ بانتظار موافقتك</span>
-            <span class="post-num">#4</span>
-        </div>
-        <div class="post-body">
-            <div class="post-date-row">
-                <div class="post-date">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    السبت، 23 مايو 2026
-                </div>
-                <div class="post-platforms"><div class="platform-icon">IG</div><div class="platform-icon">FB</div></div>
-            </div>
-            <p class="post-caption">✔ قدرة تشغيل مستقرة<br>✔ منافذ متعددة لاستخدام أسهل<br>✔ بطارية آمنة بعمر طويل</p>
-        </div>
-        <div class="comment-section">
-            <div class="comment-label"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> تعليقاتك</div>
-            <p class="no-comments">لا يوجد تعليقات بعد — شاركنا رأيك!</p>
-            <div class="comment-input-wrap">
-                <textarea class="comment-textarea" placeholder="موافق؟ عندك تعديل؟ اكتب هنا..." rows="2"></textarea>
-                <button class="send-btn" onclick="sendComment(this)"><svg width="14" height="14" fill="none" stroke="#0e0e11" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 5 -->
-    <div class="post-card">
-        <div class="post-media">
-            <img src="https://picsum.photos/seed/gd5/600/600" loading="lazy" alt="">
-            <span class="media-type-badge badge-image">صورة</span>
-            <span class="status-badge status-pending">⏳ بانتظار موافقتك</span>
-            <span class="post-num">#5</span>
-        </div>
-        <div class="post-body">
-            <div class="post-date-row">
-                <div class="post-date">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    الأحد، 24 مايو 2026
-                </div>
-                <div class="post-platforms"><div class="platform-icon">IG</div><div class="platform-icon">FB</div></div>
-            </div>
-            <p class="post-caption">شحن فائق السرعة، وراحة دائمة — بدون أي مجهود. ⚡✨</p>
-        </div>
-        <div class="comment-section">
-            <div class="comment-label"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> تعليقاتك</div>
-            <p class="no-comments">لا يوجد تعليقات بعد — شاركنا رأيك!</p>
-            <div class="comment-input-wrap">
-                <textarea class="comment-textarea" placeholder="موافق؟ عندك تعديل؟ اكتب هنا..." rows="2"></textarea>
-                <button class="send-btn" onclick="sendComment(this)"><svg width="14" height="14" fill="none" stroke="#0e0e11" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 6 -->
-    <div class="post-card">
-        <div class="post-media">
-            <img src="https://picsum.photos/seed/gd6/600/600" loading="lazy" alt="">
-            <span class="media-type-badge badge-design">تصميم</span>
-            <span class="status-badge status-pending">⏳ بانتظار موافقتك</span>
-            <span class="post-num">#6</span>
-        </div>
-        <div class="post-body">
-            <div class="post-date-row">
-                <div class="post-date">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    الاثنين، 25 مايو 2026
-                </div>
-                <div class="post-platforms"><div class="platform-icon">IG</div><div class="platform-icon">FB</div></div>
-            </div>
-            <p class="post-caption">الرفاهية الحقيقية ليست في الأجهزة الذكية فقط .. بل في أن تبقى ذكية حتى وقت الانقطاع. 💡</p>
-        </div>
-        <div class="comment-section">
-            <div class="comment-label"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> تعليقاتك</div>
-            <p class="no-comments">لا يوجد تعليقات بعد — شاركنا رأيك!</p>
-            <div class="comment-input-wrap">
-                <textarea class="comment-textarea" placeholder="موافق؟ عندك تعديل؟ اكتب هنا..." rows="2"></textarea>
-                <button class="send-btn" onclick="sendComment(this)"><svg width="14" height="14" fill="none" stroke="#0e0e11" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 7 -->
-    <div class="post-card">
-        <div class="post-media">
-            <img src="https://picsum.photos/seed/gd7/600/600" loading="lazy" alt="">
-            <span class="media-type-badge badge-image">صورة</span>
-            <span class="status-badge status-pending">⏳ بانتظار موافقتك</span>
-            <span class="post-num">#7</span>
-        </div>
-        <div class="post-body">
-            <div class="post-date-row">
-                <div class="post-date">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    الثلاثاء، 26 مايو 2026
-                </div>
-                <div class="post-platforms"><div class="platform-icon">IG</div><div class="platform-icon">FB</div></div>
-            </div>
-            <p class="post-caption">الشاحن واصل، والإنترنت شغال، وشغلك ماشي تمام .. حتى لو فصلت الكهرباء.<br>خيارك الأضمن لإنتاجية بدون مقاطعة — <strong>Gendome UPS. ALWAYS ON.</strong> 🔌</p>
-        </div>
-        <div class="comment-section">
-            <div class="comment-label"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> تعليقاتك</div>
-            <p class="no-comments">لا يوجد تعليقات بعد — شاركنا رأيك!</p>
-            <div class="comment-input-wrap">
-                <textarea class="comment-textarea" placeholder="موافق؟ عندك تعديل؟ اكتب هنا..." rows="2"></textarea>
-                <button class="send-btn" onclick="sendComment(this)"><svg width="14" height="14" fill="none" stroke="#0e0e11" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 8 -->
-    <div class="post-card">
-        <div class="post-media">
-            <img src="https://picsum.photos/seed/gd8/600/600" loading="lazy" alt="">
-            <span class="media-type-badge badge-design">تصميم</span>
-            <span class="status-badge status-pending">⏳ بانتظار موافقتك</span>
-            <span class="post-num">#8</span>
-        </div>
-        <div class="post-body">
-            <div class="post-date-row">
-                <div class="post-date">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    الخميس، 28 مايو 2026
-                </div>
-                <div class="post-platforms"><div class="platform-icon">IG</div><div class="platform-icon">FB</div></div>
-            </div>
-            <p class="post-caption">الشحن المغناطيسي يعمل بالطريقة التي نحب أن تسير بها الأشياء اليوم — ببساطة، بسرعة، وبدون أي تعقيد. 🧲</p>
-        </div>
-        <div class="comment-section">
-            <div class="comment-label"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> تعليقاتك</div>
-            <p class="no-comments">لا يوجد تعليقات بعد — شاركنا رأيك!</p>
-            <div class="comment-input-wrap">
-                <textarea class="comment-textarea" placeholder="موافق؟ عندك تعديل؟ اكتب هنا..." rows="2"></textarea>
-                <button class="send-btn" onclick="sendComment(this)"><svg width="14" height="14" fill="none" stroke="#0e0e11" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 9 -->
-    <div class="post-card">
-        <div class="post-media">
-            <img src="https://picsum.photos/seed/gd9/600/600" loading="lazy" alt="">
-            <span class="media-type-badge badge-image">صورة</span>
-            <span class="status-badge status-pending">⏳ بانتظار موافقتك</span>
-            <span class="post-num">#9</span>
-        </div>
-        <div class="post-body">
-            <div class="post-date-row">
-                <div class="post-date">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    الجمعة، 29 مايو 2026
-                </div>
-                <div class="post-platforms"><div class="platform-icon">IG</div><div class="platform-icon">FB</div></div>
-            </div>
-            <p class="post-caption">جهاز مصمم يعطيك أداء ثابت وحماية كاملة لكل أجهزتك الحساسة (اللابتوب، الراوتر، الشواحن) — عشان تشتغل وتنجز وأنت مرتاح البال. 🛡️</p>
-        </div>
-        <div class="comment-section">
-            <div class="comment-label"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> تعليقاتك</div>
-            <p class="no-comments">لا يوجد تعليقات بعد — شاركنا رأيك!</p>
-            <div class="comment-input-wrap">
-                <textarea class="comment-textarea" placeholder="موافق؟ عندك تعديل؟ اكتب هنا..." rows="2"></textarea>
-                <button class="send-btn" onclick="sendComment(this)"><svg width="14" height="14" fill="none" stroke="#0e0e11" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 10 -->
-    <div class="post-card">
-        <div class="post-media">
-            <img src="https://picsum.photos/seed/gd10/600/600" loading="lazy" alt="">
-            <span class="media-type-badge badge-design">تصميم</span>
-            <span class="status-badge status-pending">⏳ بانتظار موافقتك</span>
-            <span class="post-num">#10</span>
-        </div>
-        <div class="post-body">
-            <div class="post-date-row">
-                <div class="post-date">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    السبت، 30 مايو 2026
-                </div>
-                <div class="post-platforms"><div class="platform-icon">IG</div><div class="platform-icon">FB</div></div>
-            </div>
-            <p class="post-caption">كفاءة وفعالية استثنائية، وقدرة فائقة على الأداء العالي. 🚀</p>
-        </div>
-        <div class="comment-section">
-            <div class="comment-label"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> تعليقاتك</div>
-            <p class="no-comments">لا يوجد تعليقات بعد — شاركنا رأيك!</p>
-            <div class="comment-input-wrap">
-                <textarea class="comment-textarea" placeholder="موافق؟ عندك تعديل؟ اكتب هنا..." rows="2"></textarea>
-                <button class="send-btn" onclick="sendComment(this)"><svg width="14" height="14" fill="none" stroke="#0e0e11" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 11 -->
-    <div class="post-card">
-        <div class="post-media">
-            <img src="https://picsum.photos/seed/gd11/600/600" loading="lazy" alt="">
-            <span class="media-type-badge badge-image">صورة</span>
-            <span class="status-badge status-pending">⏳ بانتظار موافقتك</span>
-            <span class="post-num">#11</span>
-        </div>
-        <div class="post-body">
-            <div class="post-date-row">
-                <div class="post-date">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    الاثنين، 1 يونيو 2026
-                </div>
-                <div class="post-platforms"><div class="platform-icon">IG</div><div class="platform-icon">FB</div></div>
-            </div>
-            <p class="post-caption"><strong>3000W</strong> مش مجرد رقم مكتوب على الجهاز — بيهمك إذا الكهرباء قطعت أن البيت يحتفظ بإيقاعه الطبيعي بهدوء كامل. 🏠</p>
-        </div>
-        <div class="comment-section">
-            <div class="comment-label"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> تعليقاتك</div>
-            <p class="no-comments">لا يوجد تعليقات بعد — شاركنا رأيك!</p>
-            <div class="comment-input-wrap">
-                <textarea class="comment-textarea" placeholder="موافق؟ عندك تعديل؟ اكتب هنا..." rows="2"></textarea>
-                <button class="send-btn" onclick="sendComment(this)"><svg width="14" height="14" fill="none" stroke="#0e0e11" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 12 -->
-    <div class="post-card">
-        <div class="post-media">
-            <img src="https://picsum.photos/seed/gd12/600/600" loading="lazy" alt="">
-            <span class="media-type-badge badge-design">تصميم</span>
-            <span class="status-badge status-pending">⏳ بانتظار موافقتك</span>
-            <span class="post-num">#12</span>
-        </div>
-        <div class="post-body">
-            <div class="post-date-row">
-                <div class="post-date">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    الأربعاء، 3 يونيو 2026
-                </div>
-                <div class="post-platforms"><div class="platform-icon">IG</div><div class="platform-icon">FB</div></div>
-            </div>
-            <p class="post-caption">بعض المواصفات تبدو تقنية على الورق، لكنك تلاحظ أثرها الحقيقي بعد أشهر من الاستخدام اليومي. 📊</p>
-        </div>
-        <div class="comment-section">
-            <div class="comment-label"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> تعليقاتك</div>
-            <p class="no-comments">لا يوجد تعليقات بعد — شاركنا رأيك!</p>
-            <div class="comment-input-wrap">
-                <textarea class="comment-textarea" placeholder="موافق؟ عندك تعديل؟ اكتب هنا..." rows="2"></textarea>
-                <button class="send-btn" onclick="sendComment(this)"><svg width="14" height="14" fill="none" stroke="#0e0e11" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 13 -->
-    <div class="post-card">
-        <div class="post-media">
-            <img src="https://picsum.photos/seed/gd13/600/600" loading="lazy" alt="">
-            <span class="media-type-badge badge-image">صورة</span>
-            <span class="status-badge status-pending">⏳ بانتظار موافقتك</span>
-            <span class="post-num">#13</span>
-        </div>
-        <div class="post-body">
-            <div class="post-date-row">
-                <div class="post-date">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    الجمعة، 5 يونيو 2026
-                </div>
-                <div class="post-platforms"><div class="platform-icon">IG</div><div class="platform-icon">FB</div></div>
-            </div>
-            <p class="post-caption">مش بس تيار كهربائي بديل — هو حماية ذكية لكل أجهزتك. 🛡️⚡</p>
-        </div>
-        <div class="comment-section">
-            <div class="comment-label"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> تعليقاتك</div>
-            <p class="no-comments">لا يوجد تعليقات بعد — شاركنا رأيك!</p>
-            <div class="comment-input-wrap">
-                <textarea class="comment-textarea" placeholder="موافق؟ عندك تعديل؟ اكتب هنا..." rows="2"></textarea>
-                <button class="send-btn" onclick="sendComment(this)"><svg width="14" height="14" fill="none" stroke="#0e0e11" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 14 -->
-    <div class="post-card">
-        <div class="post-media">
-            <img src="https://picsum.photos/seed/gd14/600/600" loading="lazy" alt="">
-            <span class="media-type-badge badge-design">تصميم</span>
-            <span class="status-badge status-pending">⏳ بانتظار موافقتك</span>
-            <span class="post-num">#14</span>
-        </div>
-        <div class="post-body">
-            <div class="post-date-row">
-                <div class="post-date">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    السبت، 6 يونيو 2026
-                </div>
-                <div class="post-platforms"><div class="platform-icon">IG</div><div class="platform-icon">FB</div></div>
-            </div>
-            <p class="post-caption">ليست مجرد شاشة تعرض أرقاماً، بل نافذتك لمعرفة كيف تتحرك الطاقة داخل يومك. كم تستهلك؟ كم تبقى؟ وكم يستطيع البيت أن يستمر بهدوء؟ — كل شيء أمامك بلغة واضحة وبلمسة واحدة. 📱</p>
-        </div>
-        <div class="comment-section">
-            <div class="comment-label"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> تعليقاتك</div>
-            <p class="no-comments">لا يوجد تعليقات بعد — شاركنا رأيك!</p>
-            <div class="comment-input-wrap">
-                <textarea class="comment-textarea" placeholder="موافق؟ عندك تعديل؟ اكتب هنا..." rows="2"></textarea>
-                <button class="send-btn" onclick="sendComment(this)"><svg width="14" height="14" fill="none" stroke="#0e0e11" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 15 -->
-    <div class="post-card">
-        <div class="post-media">
-            <img src="https://picsum.photos/seed/gd15/600/600" loading="lazy" alt="">
-            <span class="media-type-badge badge-image">صورة</span>
-            <span class="status-badge status-pending">⏳ بانتظار موافقتك</span>
-            <span class="post-num">#15</span>
-        </div>
-        <div class="post-body">
-            <div class="post-date-row">
-                <div class="post-date">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    الأحد، 7 يونيو 2026
-                </div>
-                <div class="post-platforms"><div class="platform-icon">IG</div><div class="platform-icon">FB</div></div>
-            </div>
-            <p class="post-caption"><strong>All in one charger</strong> — واحد بدل كل شي. 🔌✨</p>
-        </div>
-        <div class="comment-section">
-            <div class="comment-label"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> تعليقاتك</div>
-            <p class="no-comments">لا يوجد تعليقات بعد — شاركنا رأيك!</p>
-            <div class="comment-input-wrap">
-                <textarea class="comment-textarea" placeholder="موافق؟ عندك تعديل؟ اكتب هنا..." rows="2"></textarea>
-                <button class="send-btn" onclick="sendComment(this)"><svg width="14" height="14" fill="none" stroke="#0e0e11" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 16 -->
-    <div class="post-card">
-        <div class="post-media">
-            <img src="https://picsum.photos/seed/gd16/600/600" loading="lazy" alt="">
-            <span class="media-type-badge badge-design">تصميم</span>
-            <span class="status-badge status-pending">⏳ بانتظار موافقتك</span>
-            <span class="post-num">#16</span>
-        </div>
-        <div class="post-body">
-            <div class="post-date-row">
-                <div class="post-date">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    الاثنين، 8 يونيو 2026
-                </div>
-                <div class="post-platforms"><div class="platform-icon">IG</div><div class="platform-icon">FB</div></div>
-            </div>
-            <p class="post-caption">السرعة لم تعد رفاهية، بل جزء من إيقاع يومنا. وقت أقل بجانب الشاحن، وطاقة أكثر تكمل يومك بهدوء. ⚡</p>
-        </div>
-        <div class="comment-section">
-            <div class="comment-label"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> تعليقاتك</div>
-            <p class="no-comments">لا يوجد تعليقات بعد — شاركنا رأيك!</p>
-            <div class="comment-input-wrap">
-                <textarea class="comment-textarea" placeholder="موافق؟ عندك تعديل؟ اكتب هنا..." rows="2"></textarea>
-                <button class="send-btn" onclick="sendComment(this)"><svg width="14" height="14" fill="none" stroke="#0e0e11" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 17 -->
-    <div class="post-card">
-        <div class="post-media">
-            <img src="https://picsum.photos/seed/gd17/600/600" loading="lazy" alt="">
-            <span class="media-type-badge badge-image">صورة</span>
-            <span class="status-badge status-pending">⏳ بانتظار موافقتك</span>
-            <span class="post-num">#17</span>
-        </div>
-        <div class="post-body">
-            <div class="post-date-row">
-                <div class="post-date">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    الأربعاء، 10 يونيو 2026
-                </div>
-                <div class="post-platforms"><div class="platform-icon">IG</div><div class="platform-icon">FB</div></div>
-            </div>
-            <p class="post-caption">مشهد يبدو كإجازة .. لكنه مكتب كامل بيشتغل بالطاقة الشمسية. الفكرة مش إنك تشحن جهازك — الفكرة إن يومك يضل شغال مهما تغير المكان. ☀️💻</p>
-        </div>
-        <div class="comment-section">
-            <div class="comment-label"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> تعليقاتك</div>
-            <p class="no-comments">لا يوجد تعليقات بعد — شاركنا رأيك!</p>
-            <div class="comment-input-wrap">
-                <textarea class="comment-textarea" placeholder="موافق؟ عندك تعديل؟ اكتب هنا..." rows="2"></textarea>
-                <button class="send-btn" onclick="sendComment(this)"><svg width="14" height="14" fill="none" stroke="#0e0e11" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 18 -->
-    <div class="post-card">
-        <div class="post-media">
-            <img src="https://picsum.photos/seed/gd18/600/600" loading="lazy" alt="">
-            <span class="media-type-badge badge-design">تصميم</span>
-            <span class="status-badge status-pending">⏳ بانتظار موافقتك</span>
-            <span class="post-num">#18</span>
-        </div>
-        <div class="post-body">
-            <div class="post-date-row">
-                <div class="post-date">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    الخميس، 11 يونيو 2026
-                </div>
-                <div class="post-platforms"><div class="platform-icon">IG</div><div class="platform-icon">FB</div></div>
-            </div>
-            <p class="post-caption">حين تصبح الحماية جزءاً من الطاقة، تتغير طريقة اعتمادك على أجهزتك بالكامل. 🔒⚡</p>
-        </div>
-        <div class="comment-section">
-            <div class="comment-label"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> تعليقاتك</div>
-            <p class="no-comments">لا يوجد تعليقات بعد — شاركنا رأيك!</p>
-            <div class="comment-input-wrap">
-                <textarea class="comment-textarea" placeholder="موافق؟ عندك تعديل؟ اكتب هنا..." rows="2"></textarea>
-                <button class="send-btn" onclick="sendComment(this)"><svg width="14" height="14" fill="none" stroke="#0e0e11" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 19 -->
-    <div class="post-card">
-        <div class="post-media">
-            <img src="https://picsum.photos/seed/gd19/600/600" loading="lazy" alt="">
-            <span class="media-type-badge badge-image">صورة</span>
-            <span class="status-badge status-pending">⏳ بانتظار موافقتك</span>
-            <span class="post-num">#19</span>
-        </div>
-        <div class="post-body">
-            <div class="post-date-row">
-                <div class="post-date">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    السبت، 13 يونيو 2026
-                </div>
-                <div class="post-platforms"><div class="platform-icon">IG</div><div class="platform-icon">FB</div></div>
-            </div>
-            <p class="post-caption">بعض الأشياء بتعطيك طاقة. بس هذا الجهاز بيعطيك <strong>حرية</strong>. 🕊️⚡</p>
-        </div>
-        <div class="comment-section">
-            <div class="comment-label"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> تعليقاتك</div>
-            <p class="no-comments">لا يوجد تعليقات بعد — شاركنا رأيك!</p>
-            <div class="comment-input-wrap">
-                <textarea class="comment-textarea" placeholder="موافق؟ عندك تعديل؟ اكتب هنا..." rows="2"></textarea>
-                <button class="send-btn" onclick="sendComment(this)"><svg width="14" height="14" fill="none" stroke="#0e0e11" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 20 -->
-    <div class="post-card">
-        <div class="post-media">
-            <img src="https://picsum.photos/seed/gd20/600/600" loading="lazy" alt="">
-            <span class="media-type-badge badge-design">تصميم</span>
-            <span class="status-badge status-pending">⏳ بانتظار موافقتك</span>
-            <span class="post-num">#20</span>
-        </div>
-        <div class="post-body">
-            <div class="post-date-row">
-                <div class="post-date">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    الاثنين، 15 يونيو 2026
-                </div>
-                <div class="post-platforms"><div class="platform-icon">IG</div><div class="platform-icon">FB</div></div>
-            </div>
-            <p class="post-caption">أفضل أنواع التكنولوجيا هي التي تجعل التفاصيل اليومية أخف، دون ضجيج أو تعقيد. 🌿</p>
-        </div>
-        <div class="comment-section">
-            <div class="comment-label"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> تعليقاتك</div>
-            <p class="no-comments">لا يوجد تعليقات بعد — شاركنا رأيك!</p>
-            <div class="comment-input-wrap">
-                <textarea class="comment-textarea" placeholder="موافق؟ عندك تعديل؟ اكتب هنا..." rows="2"></textarea>
-                <button class="send-btn" onclick="sendComment(this)"><svg width="14" height="14" fill="none" stroke="#0e0e11" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 21 -->
-    <div class="post-card">
-        <div class="post-media">
-            <img src="https://picsum.photos/seed/gd21/600/600" loading="lazy" alt="">
-            <span class="media-type-badge badge-image">صورة</span>
-            <span class="status-badge status-pending">⏳ بانتظار موافقتك</span>
-            <span class="post-num">#21</span>
-        </div>
-        <div class="post-body">
-            <div class="post-date-row">
-                <div class="post-date">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    الثلاثاء، 16 يونيو 2026
-                </div>
-                <div class="post-platforms"><div class="platform-icon">IG</div><div class="platform-icon">FB</div></div>
-            </div>
-            <p class="post-caption">ما رح تضل تدور بالشنطة ولا تسأل "معك شاحن؟" — بس رح تسحب الكيبل، وتكمل يومك بهدوء. 🎒✌️</p>
-        </div>
-        <div class="comment-section">
-            <div class="comment-label"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> تعليقاتك</div>
-            <p class="no-comments">لا يوجد تعليقات بعد — شاركنا رأيك!</p>
-            <div class="comment-input-wrap">
-                <textarea class="comment-textarea" placeholder="موافق؟ عندك تعديل؟ اكتب هنا..." rows="2"></textarea>
-                <button class="send-btn" onclick="sendComment(this)"><svg width="14" height="14" fill="none" stroke="#0e0e11" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 22 -->
-    <div class="post-card">
-        <div class="post-media">
-            <img src="https://picsum.photos/seed/gd22/600/600" loading="lazy" alt="">
-            <span class="media-type-badge badge-design">تصميم</span>
-            <span class="status-badge status-pending">⏳ بانتظار موافقتك</span>
-            <span class="post-num">#22</span>
-        </div>
-        <div class="post-body">
-            <div class="post-date-row">
-                <div class="post-date">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    الأربعاء، 18 يونيو 2026
-                </div>
-                <div class="post-platforms"><div class="platform-icon">IG</div><div class="platform-icon">FB</div></div>
-            </div>
-            <p class="post-caption">صغير بما يكفي لينسى داخل الحقيبة، لكن حضوره يظهر تماماً عندما تحتاجه. 🎯</p>
-        </div>
-        <div class="comment-section">
-            <div class="comment-label"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> تعليقاتك</div>
-            <p class="no-comments">لا يوجد تعليقات بعد — شاركنا رأيك!</p>
-            <div class="comment-input-wrap">
-                <textarea class="comment-textarea" placeholder="موافق؟ عندك تعديل؟ اكتب هنا..." rows="2"></textarea>
-                <button class="send-btn" onclick="sendComment(this)"><svg width="14" height="14" fill="none" stroke="#0e0e11" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 23 -->
-    <div class="post-card">
-        <div class="post-media">
-            <img src="https://picsum.photos/seed/gd23/600/600" loading="lazy" alt="">
-            <span class="media-type-badge badge-image">صورة</span>
-            <span class="status-badge status-pending">⏳ بانتظار موافقتك</span>
-            <span class="post-num">#23</span>
-        </div>
-        <div class="post-body">
-            <div class="post-date-row">
-                <div class="post-date">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    السبت، 20 يونيو 2026
-                </div>
-                <div class="post-platforms"><div class="platform-icon">IG</div><div class="platform-icon">FB</div></div>
-            </div>
-            <p class="post-caption">بالطريق، بالجامعة، بالشغل، بالمطار، أو حتى بين مواعيدك — اشحن، تحرك، كمل يومك بسلاسة. 🌍</p>
-        </div>
-        <div class="comment-section">
-            <div class="comment-label"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> تعليقاتك</div>
-            <p class="no-comments">لا يوجد تعليقات بعد — شاركنا رأيك!</p>
-            <div class="comment-input-wrap">
-                <textarea class="comment-textarea" placeholder="موافق؟ عندك تعديل؟ اكتب هنا..." rows="2"></textarea>
-                <button class="send-btn" onclick="sendComment(this)"><svg width="14" height="14" fill="none" stroke="#0e0e11" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
-            </div>
-        </div>
-    </div>
-
 </div>
 
-<!-- FOOTER -->
+<!-- MODAL -->
+<div class="modal-backdrop" id="modal-backdrop">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="modal-title">✗ تعديل / رفض البوست</span>
+            <button class="modal-close" onclick="closeModal()">✕</button>
+        </div>
+        <div class="modal-post-preview">
+            <img id="modal-img" src="" alt="">
+            <div>
+                <div class="modal-post-num" id="modal-post-num"></div>
+                <div class="modal-post-date" id="modal-post-date"></div>
+            </div>
+        </div>
+        <div class="modal-label">اكتب ملاحظتك أو التعديل المطلوب:</div>
+        <textarea class="modal-textarea" id="modal-textarea" placeholder="مثال: تعديل النص، تغيير الصورة، تأجيل تاريخ النشر..." rows="4"></textarea>
+        <div class="modal-actions">
+            <button class="modal-btn-cancel" onclick="closeModal()">إلغاء</button>
+            <button class="modal-btn-confirm" onclick="confirmReject()">✗ تأكيد مع الملاحظة</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
 <footer class="page-footer">
-    صُمِّم بـ ♥ من <a href="https://loopjo.com" target="_blank">Loop Marketing Solutions</a> &nbsp;·&nbsp; للاستفسار: <a href="https://wa.me/962792020388">واتساب</a>
+    صُمِّم بـ ♥ من <a href="https://loopjo.com" target="_blank">Loop Marketing Solutions</a> &nbsp;·&nbsp; <a href="https://wa.me/962792020388">واتساب</a>
 </footer>
 
-<!-- TOAST -->
-<div class="toast" id="toast">تم إرسال تعليقك ✓</div>
-
 <script>
-    function sendComment(btn) {
-        const wrap = btn.closest('.comment-input-wrap');
-        const textarea = wrap.querySelector('.comment-textarea');
-        const text = textarea.value.trim();
-        if (!text) return;
+const POSTS = [
+  { num:1,  date:"20/5/2026", dayAr:"الأربعاء", img:"images/gendome/slide-02.jpg", caption:"شغّل أجهزتك الأساسية بكل راحة مع منافذ متعددة وشحن سريع — سواء بالبيت، الكافيه، المكتب أو حتى بالرحلات. طاقة موثوقة 285Wh ⚡" },
+  { num:2,  date:"21/5/2026", dayAr:"الخميس",   img:"images/gendome/slide-03.jpg", caption:"المولدات القديمة كانت بتعطيك طاقة، لكن معها إزعاج، حرارة، ووجود دائم بالخلفية بذكّرك بالمشكلة. 🔇" },
+  { num:3,  date:"22/5/2026", dayAr:"الجمعة",   img:"images/gendome/slide-04.jpg", caption:"في فرق بين بطارية إضافية، وبين شعور إنك مرتاح طول اليوم لأن الطاقة معك فعلاً. 🔋" },
+  { num:4,  date:"23/5/2026", dayAr:"السبت",    img:"images/gendome/slide-05.jpg", caption:"✔ قدرة تشغيل مستقرة\n✔ منافذ متعددة لاستخدام أسهل\n✔ بطارية آمنة بعمر طويل" },
+  { num:5,  date:"24/5/2026", dayAr:"الأحد",    img:"images/gendome/slide-06.png", caption:"شحن فائق السرعة، وراحة دائمة — بدون أي مجهود. ⚡✨" },
+  { num:6,  date:"25/5/2026", dayAr:"الاثنين",  img:"images/gendome/slide-07.jpg", caption:"الرفاهية الحقيقية ليست في الأجهزة الذكية فقط .. بل في أن تبقى ذكية حتى وقت الانقطاع. 💡" },
+  { num:7,  date:"26/5/2026", dayAr:"الثلاثاء", img:"images/gendome/slide-08.jpg", caption:"الشاحن واصل، والإنترنت شغال، وشغلك ماشي تمام.. حتى لو فصلت الكهرباء.\nخيارك الأضمن لإنتاجية بدون مقاطعة — Gendome UPS. ALWAYS ON. 🔌" },
+  { num:8,  date:"28/5/2026", dayAr:"الخميس",   img:"images/gendome/slide-09.jpg", caption:"الشحن المغناطيسي يعمل بالطريقة التي نحب أن تسير بها الأشياء اليوم — ببساطة، بسرعة، وبدون أي تعقيد. 🧲" },
+  { num:9,  date:"29/5/2026", dayAr:"الجمعة",   img:"images/gendome/slide-10.jpg", caption:"جهاز مصمم يعطيك أداء ثابت وحماية كاملة لكل أجهزتك الحساسة (لاب توب، راوتر، شواحن) — عشان تشتغل وتنجز وأنت مرتاح البال. 🛡️" },
+  { num:10, date:"30/5/2026", dayAr:"السبت",    img:"images/gendome/slide-11.png", caption:"كفاءة وفعالية استثنائية، وقدرة فائقة على الأداء العالي. 🚀" },
+  { num:11, date:"1/6/2026",  dayAr:"الاثنين",  img:"images/gendome/slide-12.jpg", caption:"3000W مش مجرد رقم مكتوب على الجهاز — بيهمك إذا الكهرباء قطعت أن البيت يحتفظ بإيقاعه الطبيعي بهدوء كامل. 🏠" },
+  { num:12, date:"3/6/2026",  dayAr:"الأربعاء", img:"images/gendome/slide-13.jpg", caption:"بعض المواصفات تبدو تقنية على الورق، لكنك تلاحظ أثرها الحقيقي بعد أشهر من الاستخدام اليومي. 📊" },
+  { num:13, date:"5/6/2026",  dayAr:"الجمعة",   img:"images/gendome/slide-14.jpg", caption:"مش بس تيار كهربائي بديل — هو حماية ذكية لكل أجهزتك. 🛡️⚡" },
+  { num:14, date:"6/6/2026",  dayAr:"السبت",    img:"images/gendome/slide-15.jpg", caption:"ليست مجرد شاشة تعرض أرقاماً، بل نافذتك لمعرفة كيف تتحرك الطاقة داخل يومك. كم تستهلك؟ كم تبقى؟ كل شيء أمامك بلمسة واحدة. 📱" },
+  { num:15, date:"7/6/2026",  dayAr:"الأحد",    img:"images/gendome/slide-16.png", caption:"All in one charger — واحد بدل كل شي. 🔌✨" },
+  { num:16, date:"8/6/2026",  dayAr:"الاثنين",  img:"images/gendome/slide-17.jpg", caption:"السرعة لم تعد رفاهية، بل جزء من إيقاع يومنا. وقت أقل بجانب الشاحن، وطاقة أكثر تكمل يومك بهدوء. ⚡" },
+  { num:17, date:"10/6/2026", dayAr:"الأربعاء", img:"images/gendome/slide-18.jpg", caption:"مشهد يبدو كإجازة .. لكنه مكتب كامل بيشتغل بالطاقة الشمسية. الفكرة مش إنك تشحن جهازك — الفكرة إن يومك يضل شغال مهما تغير المكان. ☀️💻" },
+  { num:18, date:"11/6/2026", dayAr:"الخميس",   img:"images/gendome/slide-19.jpg", caption:"حين تصبح الحماية جزءاً من الطاقة، تتغير طريقة اعتمادك على أجهزتك بالكامل. 🔒⚡" },
+  { num:19, date:"13/6/2026", dayAr:"السبت",    img:"images/gendome/slide-20.jpg", caption:"بعض الأشياء بتعطيك طاقة. بس هذا الجهاز بيعطيك حرية. 🕊️⚡" },
+  { num:20, date:"15/6/2026", dayAr:"الاثنين",  img:"images/gendome/slide-21.jpg", caption:"أفضل أنواع التكنولوجيا هي التي تجعل التفاصيل اليومية أخف، دون ضجيج أو تعقيد. 🌿" },
+  { num:21, date:"16/6/2026", dayAr:"الثلاثاء", img:"images/gendome/slide-22.jpg", caption:"ما رح تضل تدور في الشنطة ولا تسأل حدا «معك شاحن؟» — بس رح تسحب الكيبل، وتكمل يومك بهدوء. 🎒✌️" },
+  { num:22, date:"18/6/2026", dayAr:"الخميس",   img:"images/gendome/slide-23.jpg", caption:"صغير بما يكفي لينسى داخل الحقيبة، لكن حضوره يظهر تماماً عندما تحتاجه. 🎯" },
+  { num:23, date:"20/6/2026", dayAr:"السبت",    img:"images/gendome/slide-24.jpg", caption:"بالطريق، بالجامعة، بالشغل، بالمطار، أو حتى بين مواعيدك — اشحن، تحرك، كمل يومك بسلاسة. 🌍" },
+];
 
-        const section = btn.closest('.comment-section');
-        let container = section.querySelector('.existing-comments');
-        const noComments = section.querySelector('.no-comments');
+const state = {};
+POSTS.forEach(p => state[p.num] = { status:'pending', note:'' });
+let currentModal = null;
 
-        if (!container) {
-            container = document.createElement('div');
-            container.className = 'existing-comments';
-            section.insertBefore(container, wrap);
-        }
-        if (noComments) noComments.remove();
+// Render cards
+const grid = document.getElementById('grid');
+POSTS.forEach(post => {
+    const lines = post.caption.replace(/\n/g,'<br>');
+    const isLong = post.caption.length > 130;
+    const card = document.createElement('div');
+    card.className = 'post-card';
+    card.id = `card-${post.num}`;
+    card.innerHTML = `
+        <div class="post-media">
+            <img src="${post.img}" loading="lazy" alt="بوست ${post.num}">
+            <div class="card-status-overlay" id="overlay-${post.num}"></div>
+            <span class="post-num">#${post.num}</span>
+        </div>
+        <div class="post-body">
+            <div class="post-date-row">
+                <div class="post-date">
+                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    ${post.dayAr}، ${post.date}
+                </div>
+                <div class="post-platforms"><div class="platform-icon">IG</div><div class="platform-icon">FB</div></div>
+            </div>
+            <p class="post-caption" id="cap-${post.num}">${lines}</p>
+            ${isLong ? `<button class="expand-btn" id="expbtn-${post.num}" onclick="toggleExpand(${post.num})">عرض المزيد ▾</button>` : ''}
+        </div>
+        <div class="action-row">
+            <button class="btn-approve" id="ba-${post.num}" onclick="approve(${post.num})">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                موافق
+            </button>
+            <button class="btn-reject" id="br-${post.num}" onclick="openRejectModal(${post.num})">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                تعديل / رفض
+            </button>
+        </div>
+        <div class="rejection-note" id="note-${post.num}">
+            <div class="note-header">
+                <span class="note-label">✗ ملاحظتك:</span>
+                <button class="note-edit-btn" onclick="openRejectModal(${post.num})">تعديل</button>
+            </div>
+            <div id="note-text-${post.num}"></div>
+        </div>`;
+    grid.appendChild(card);
+});
 
-        const timeStr = new Date().toLocaleTimeString('ar-JO', { hour: '2-digit', minute: '2-digit' });
-        const bubble = document.createElement('div');
-        bubble.className = 'comment-bubble';
-        bubble.innerHTML = text.replace(/\n/g, '<br>') +
-            `<div class="comment-meta"><span>أنت</span><span>${timeStr}</span></div>`;
-        container.appendChild(bubble);
-        textarea.value = '';
+function approve(num) {
+    state[num] = { status:'approved', note:'' };
+    document.getElementById(`card-${num}`).className = 'post-card approved';
+    document.getElementById(`overlay-${num}`).textContent = '✓';
+    document.getElementById(`ba-${num}`).classList.add('active');
+    document.getElementById(`br-${num}`).classList.remove('active');
+    document.getElementById(`note-${num}`).classList.remove('visible');
+    updateCounters();
+    showToast(`✓ موافق على البوست #${num}`);
+}
 
-        const toast = document.getElementById('toast');
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 2500);
+function openRejectModal(num) {
+    currentModal = num;
+    const post = POSTS.find(p => p.num === num);
+    document.getElementById('modal-img').src = post.img;
+    document.getElementById('modal-post-num').textContent = `بوست #${num}`;
+    document.getElementById('modal-post-date').textContent = `${post.dayAr}، ${post.date}`;
+    document.getElementById('modal-textarea').value = state[num].note || '';
+    document.getElementById('modal-backdrop').classList.add('open');
+    setTimeout(() => document.getElementById('modal-textarea').focus(), 200);
+}
+
+function closeModal() {
+    document.getElementById('modal-backdrop').classList.remove('open');
+    currentModal = null;
+}
+
+function confirmReject() {
+    if (!currentModal) return;
+    const num = currentModal;
+    const note = document.getElementById('modal-textarea').value.trim();
+    state[num] = { status:'rejected', note };
+    document.getElementById(`card-${num}`).className = 'post-card rejected';
+    document.getElementById(`overlay-${num}`).textContent = '✗';
+    document.getElementById(`br-${num}`).classList.add('active');
+    document.getElementById(`ba-${num}`).classList.remove('active');
+    if (note) {
+        document.getElementById(`note-${num}`).classList.add('visible');
+        document.getElementById(`note-text-${num}`).textContent = note;
+    } else {
+        document.getElementById(`note-${num}`).classList.remove('visible');
     }
+    closeModal();
+    updateCounters();
+    showToast(`✗ تم تسجيل ملاحظتك على البوست #${num}`);
+}
 
-    document.addEventListener('keydown', e => {
-        if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-            const active = document.activeElement;
-            if (active && active.classList.contains('comment-textarea')) {
-                active.closest('.comment-input-wrap').querySelector('.send-btn').click();
-            }
-        }
-    });
+function approveAll() {
+    POSTS.forEach(p => { if (state[p.num].status === 'pending') approve(p.num); });
+    showToast('✓ تمت الموافقة على جميع البوستات');
+}
+
+function toggleExpand(num) {
+    const cap = document.getElementById(`cap-${num}`);
+    const btn = document.getElementById(`expbtn-${num}`);
+    if (!btn) return;
+    const exp = cap.classList.toggle('expanded');
+    btn.textContent = exp ? 'عرض أقل ▴' : 'عرض المزيد ▾';
+}
+
+function updateCounters() {
+    const vals = Object.values(state);
+    const a = vals.filter(s => s.status === 'approved').length;
+    const r = vals.filter(s => s.status === 'rejected').length;
+    const p = POSTS.length - a - r;
+    ['bar-approved','hdr-approved'].forEach(id => document.getElementById(id).textContent = a);
+    ['bar-rejected','hdr-rejected'].forEach(id => document.getElementById(id).textContent = r);
+    ['bar-pending','hdr-pending'].forEach(id => document.getElementById(id).textContent = p);
+}
+
+function sendViaWhatsapp() {
+    const approved = POSTS.filter(p => state[p.num].status === 'approved');
+    const rejected  = POSTS.filter(p => state[p.num].status === 'rejected');
+    const pending   = POSTS.filter(p => state[p.num].status === 'pending');
+    let msg = `🗓️ *رزنامة محتوى Gendome — مايو/يونيو 2026*\n`;
+    msg += `موافق: ${approved.length} | تعديل: ${rejected.length} | لم تُراجع: ${pending.length}\n`;
+    if (approved.length) {
+        msg += `\n✅ *موافق عليها:*\n`;
+        approved.forEach(p => { msg += `• بوست #${p.num} (${p.date})\n`; });
+    }
+    if (rejected.length) {
+        msg += `\n✏️ *تعديلات مطلوبة:*\n`;
+        rejected.forEach(p => {
+            msg += `• بوست #${p.num} (${p.date})`;
+            if (state[p.num].note) msg += `\n  ↳ ${state[p.num].note}`;
+            msg += '\n';
+        });
+    }
+    if (pending.length) {
+        msg += `\n⏳ *لم تُراجع:*\n`;
+        pending.forEach(p => { msg += `• بوست #${p.num} (${p.date})\n`; });
+    }
+    window.open(`https://wa.me/962792020388?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+// Close modal on backdrop
+document.getElementById('modal-backdrop').addEventListener('click', e => {
+    if (e.target.id === 'modal-backdrop') closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+let toastTimer;
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+}
 </script>
 </body>
 </html>
