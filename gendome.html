@@ -601,7 +601,10 @@ POSTS.forEach(post => {
     <div class="rejection-note" id="note-${post.num}">
         <div class="note-header">
             <span class="note-label">✗ ملاحظتك:</span>
-            <button class="note-edit-btn" onclick="openRejectModal(${post.num})">تعديل</button>
+            <div style="display:flex;gap:6px;">
+                <button class="note-edit-btn" onclick="openRejectModal(${post.num})">تعديل</button>
+                <button class="note-edit-btn" style="color:var(--red);" onclick="clearStatus(${post.num})">✕ حذف</button>
+            </div>
         </div>
         <div id="note-text-${post.num}"></div>
     </div>`;
@@ -619,15 +622,20 @@ loadState().then(() => {
 });
 
 // ── APPLY VISUAL STATE (without saving again) ──
+function _setCardMod(num, mod) {
+    const c = document.getElementById(`card-${num}`);
+    c.classList.remove('approved', 'rejected');
+    if (mod) c.classList.add(mod);
+}
 function applyApproved(num) {
-    document.getElementById(`card-${num}`).className = 'post-card approved';
+    _setCardMod(num, 'approved');
     document.getElementById(`overlay-${num}`).textContent = '✓';
     document.getElementById(`ba-${num}`).classList.add('active');
     document.getElementById(`br-${num}`).classList.remove('active');
     document.getElementById(`note-${num}`).classList.remove('visible');
 }
 function applyRejected(num, note) {
-    document.getElementById(`card-${num}`).className = 'post-card rejected';
+    _setCardMod(num, 'rejected');
     document.getElementById(`overlay-${num}`).textContent = '✗';
     document.getElementById(`br-${num}`).classList.add('active');
     document.getElementById(`ba-${num}`).classList.remove('active');
@@ -637,6 +645,21 @@ function applyRejected(num, note) {
     } else {
         document.getElementById(`note-${num}`).classList.remove('visible');
     }
+}
+function applyPending(num) {
+    _setCardMod(num, null);
+    document.getElementById(`overlay-${num}`).textContent = '';
+    document.getElementById(`ba-${num}`).classList.remove('active');
+    document.getElementById(`br-${num}`).classList.remove('active');
+    document.getElementById(`note-${num}`).classList.remove('visible');
+    document.getElementById(`note-text-${num}`).textContent = '';
+}
+function clearStatus(num) {
+    state[num] = { status:'pending', note:'' };
+    saveState();
+    applyPending(num);
+    updateCounters();
+    showToast(`↺ تم إلغاء التعديل على البوست #${num}`);
 }
 
 // ── VIDEO TOGGLE (inline in card) ──
