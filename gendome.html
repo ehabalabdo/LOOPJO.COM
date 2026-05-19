@@ -275,7 +275,7 @@
             .stats-bar { display:none; }
 
             /* Grid */
-            .calendar-grid { padding:0 10px 130px; gap:14px; grid-template-columns:1fr; }
+            .calendar-grid { padding:0 10px 20px; gap:14px; grid-template-columns:1fr; }
 
             /* Card */
             .post-body { padding:12px 12px 0; }
@@ -284,12 +284,15 @@
             .action-row { padding:10px 12px 12px; gap:8px; }
             .btn-approve, .btn-reject { padding:12px 8px; font-size:0.88rem; border-radius:12px; }
 
-            /* Bottom bar — stack vertically */
+            /* Bottom bar — static flow on mobile (below content, not fixed) */
             .approve-all-bar {
-                padding:10px 12px 12px;
+                position:static;
+                padding:16px 14px 20px;
                 flex-direction:column;
                 align-items:stretch;
                 gap:8px;
+                border-top:1px solid var(--white10);
+                border-radius:0;
             }
             .approve-summary {
                 justify-content:center;
@@ -314,7 +317,7 @@
             .lb-caption { font-size:0.8rem; padding:14px 16px 16px; }
 
             /* Toast */
-            .toast { bottom:140px; font-size:0.76rem; padding:8px 16px;
+            .toast { bottom:20px; font-size:0.76rem; padding:8px 16px;
                 max-width:88vw; white-space:normal; text-align:center; line-height:1.5; }
 
             /* Modal */
