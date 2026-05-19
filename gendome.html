@@ -735,6 +735,10 @@ function lbNav(dir) {
 
 // ── APPROVE / REJECT ──
 function approve(num) {
+    if (state[num] && state[num].status === 'approved') {
+        clearStatus(num);
+        return;
+    }
     state[num] = { status:'approved', note:'' };
     saveState();
     applyApproved(num);
