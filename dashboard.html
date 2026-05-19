@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LOOP CMS — لوحة التحكم</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:    #0e0e11;
+  --bg2:   #141418;
+  --bg3:   #1a1a20;
+  --bg4:   #22222a;
+  --border:#2a2a35;
+  --blue:  #74bae1;
+  --mint:  #9ddad0;
+  --gold:  #f0c060;
+  --green: #4eca8b;
+  --red:   #e05a5a;
+  --purple:#b197fc;
+  --text:  #e8e8f0;
+  --muted: #888;
+  --holo: linear-gradient(135deg,#eea9c9,#74bae1,#9ddad0);
+}
+body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+/* ── SCREENS ── */
+.screen { display:none; }
+.screen.active { display:block; }
+
+/* ── LOGIN ── */
+#login-screen {
+  display:flex; align-items:center; justify-content:center; min-height:100vh;
+  background: radial-gradient(ellipse at 50% 40%, #1a1340 0%, var(--bg) 70%);
+}
+.login-box {
+  background:var(--bg2); border:1px solid var(--border); border-radius:18px;
+  padding:40px 36px; width:340px; text-align:center;
+}
+.login-logo { font-size:28px; font-weight:700; background:var(--holo); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:6px; }
+.login-sub { color:var(--muted); font-size:13px; margin-bottom:28px; }
+.login-box input {
+  width:100%; padding:12px 14px; background:var(--bg3); border:1px solid var(--border);
+  border-radius:10px; color:var(--text); font-family:inherit; font-size:15px; margin-bottom:12px;
+  outline:none; transition:border .2s;
+}
+.login-box input:focus { border-color:var(--blue); }
+.login-box button {
+  width:100%; padding:12px; background:var(--blue); color:#0e0e11; font-weight:700;
+  font-size:15px; font-family:inherit; border:none; border-radius:10px; cursor:pointer;
+  transition:opacity .2s;
+}
+.login-box button:hover { opacity:.85; }
+.login-err { color:var(--red); font-size:13px; margin-top:10px; min-height:20px; }
+
+/* ── TOP NAV ── */
+.topnav {
+  background:var(--bg2); border-bottom:1px solid var(--border);
+  padding:0 24px; height:56px; display:flex; align-items:center; gap:16px;
+  position:sticky; top:0; z-index:100;
+}
+.topnav .logo { font-weight:700; font-size:18px; background:var(--holo); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.topnav .breadcrumb { color:var(--muted); font-size:13px; flex:1; }
+.topnav .breadcrumb span { color:var(--text); }
+.btn-nav { padding:7px 14px; border-radius:8px; border:1px solid var(--border); background:transparent; color:var(--text); font-family:inherit; font-size:13px; cursor:pointer; transition:.15s; }
+.btn-nav:hover { background:var(--bg3); }
+.btn-primary { background:var(--blue) !important; border-color:var(--blue) !important; color:#0e0e11 !important; font-weight:700; }
+.btn-danger { background:rgba(224,90,90,.12) !important; border-color:var(--red) !important; color:var(--red) !important; }
+
+/* ── CLIENTS SCREEN ── */
+#clients-screen { padding:32px 24px; max-width:900px; margin:0 auto; }
+.page-title { font-size:22px; font-weight:700; margin-bottom:6px; }
+.page-sub { color:var(--muted); font-size:13px; margin-bottom:28px; }
+.clients-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:16px; }
+.client-card {
+  background:var(--bg2); border:1px solid var(--border); border-radius:14px;
+  padding:20px; cursor:pointer; transition:.2s; position:relative;
+}
+.client-card:hover { border-color:var(--blue); transform:translateY(-2px); }
+.client-name { font-size:17px; font-weight:700; margin-bottom:4px; }
+.client-meta { color:var(--muted); font-size:12px; }
+.client-badge { position:absolute; top:14px; left:14px; background:var(--bg3); border:1px solid var(--border); border-radius:20px; padding:3px 10px; font-size:11px; color:var(--mint); }
+.add-client-card {
+  background:transparent; border:1px dashed var(--border); border-radius:14px;
+  padding:20px; cursor:pointer; transition:.2s; display:flex; align-items:center;
+  justify-content:center; gap:8px; color:var(--muted); font-size:14px;
+}
+.add-client-card:hover { border-color:var(--blue); color:var(--blue); }
+
+/* ── POSTS SCREEN ── */
+#posts-screen { padding:24px; max-width:1100px; margin:0 auto; }
+.posts-toolbar { display:flex; align-items:center; gap:10px; margin-bottom:20px; flex-wrap:wrap; }
+.posts-toolbar .left { flex:1; }
+.posts-count { color:var(--muted); font-size:13px; }
+
+.posts-table { width:100%; border-collapse:collapse; }
+.posts-table th { text-align:right; padding:10px 12px; color:var(--muted); font-size:12px; font-weight:600; border-bottom:1px solid var(--border); white-space:nowrap; }
+.posts-table td { padding:10px 12px; border-bottom:1px solid rgba(255,255,255,.04); vertical-align:middle; }
+.posts-table tr:hover td { background:rgba(255,255,255,.02); }
+
+.thumb { width:52px; height:52px; object-fit:cover; border-radius:8px; display:block; }
+.thumb-vid { width:52px; height:52px; background:var(--bg3); border-radius:8px; display:flex; align-items:center; justify-content:center; color:var(--purple); }
+.caption-cell { max-width:280px; font-size:13px; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.type-badge { padding:3px 9px; border-radius:20px; font-size:11px; }
+.type-image { background:rgba(116,186,225,.12); color:var(--blue); }
+.type-video { background:rgba(177,151,252,.12); color:var(--purple); }
+.product-badge { padding:3px 9px; border-radius:20px; font-size:11px; background:var(--bg3); color:var(--mint); }
+.row-actions { display:flex; gap:6px; }
+.btn-sm { padding:5px 11px; border-radius:7px; border:1px solid var(--border); background:transparent; color:var(--text); font-family:inherit; font-size:12px; cursor:pointer; white-space:nowrap; transition:.15s; }
+.btn-sm:hover { background:var(--bg3); }
+.btn-sm.edit { border-color:var(--blue); color:var(--blue); }
+.btn-sm.del { border-color:var(--red); color:var(--red); }
+.drag-handle { cursor:grab; color:var(--muted); font-size:18px; padding:0 4px; }
+
+/* ── MODAL ── */
+.modal-backdrop {
+  position:fixed; inset:0; background:rgba(0,0,0,.6); backdrop-filter:blur(4px);
+  z-index:200; display:flex; align-items:center; justify-content:center;
+  padding:16px; opacity:0; pointer-events:none; transition:opacity .2s;
+}
+.modal-backdrop.open { opacity:1; pointer-events:all; }
+.modal {
+  background:var(--bg2); border:1px solid var(--border); border-radius:18px;
+  width:100%; max-width:560px; max-height:90vh; overflow-y:auto;
+  transform:translateY(20px); transition:transform .2s;
+}
+.modal-backdrop.open .modal { transform:translateY(0); }
+.modal-header { padding:20px 22px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.modal-title { font-size:17px; font-weight:700; }
+.modal-close { background:none; border:none; color:var(--muted); font-size:22px; cursor:pointer; line-height:1; }
+.modal-body { padding:20px 22px; display:flex; flex-direction:column; gap:16px; }
+.modal-footer { padding:14px 22px; border-top:1px solid var(--border); display:flex; justify-content:flex-end; gap:10px; }
+
+.field label { display:block; font-size:12px; color:var(--muted); margin-bottom:6px; }
+.field input, .field textarea, .field select {
+  width:100%; padding:10px 12px; background:var(--bg3); border:1px solid var(--border);
+  border-radius:9px; color:var(--text); font-family:inherit; font-size:14px; outline:none;
+  transition:border .2s; resize:vertical;
+}
+.field input:focus, .field textarea:focus, .field select:focus { border-color:var(--blue); }
+.field textarea { min-height:90px; }
+.field-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+
+.media-preview {
+  width:100%; aspect-ratio:16/9; background:var(--bg3); border:1px solid var(--border);
+  border-radius:10px; overflow:hidden; display:flex; align-items:center; justify-content:center;
+  color:var(--muted); font-size:13px; position:relative;
+}
+.media-preview img, .media-preview video { width:100%; height:100%; object-fit:contain; }
+.upload-zone {
+  border:1.5px dashed var(--border); border-radius:10px; padding:20px; text-align:center;
+  cursor:pointer; transition:.2s; color:var(--muted); font-size:13px;
+}
+.upload-zone:hover { border-color:var(--blue); color:var(--blue); }
+.upload-zone input { display:none; }
+.upload-progress { font-size:12px; color:var(--mint); margin-top:6px; }
+
+/* ── ADD CLIENT MODAL ── */
+.or-divider { text-align:center; color:var(--muted); font-size:12px; margin:4px 0; }
+
+/* ── TOAST ── */
+.toast {
+  position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(60px);
+  background:var(--bg2); border:1px solid var(--border); border-radius:10px;
+  padding:10px 20px; font-size:14px; z-index:300; transition:transform .3s;
+  pointer-events:none;
+}
+.toast.show { transform:translateX(-50%) translateY(0); }
+
+/* ── EMPTY ── */
+.empty-state { text-align:center; padding:60px 20px; color:var(--muted); }
+.empty-icon { font-size:40px; margin-bottom:12px; }
+
+/* ── RESPONSIVE ── */
+@media(max-width:640px) {
+  .posts-table th:nth-child(4), .posts-table td:nth-child(4),
+  .posts-table th:nth-child(5), .posts-table td:nth-child(5) { display:none; }
+  .field-row { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN ══════════════════════════════════════════════════════════════════ -->
+<div id="login-screen" class="screen active">
+  <div class="login-box">
+    <div class="login-logo">LOOP CMS</div>
+    <div class="login-sub">لوحة تحكم المحتوى</div>
+    <input type="password" id="pw-input" placeholder="كلمة المرور" autocomplete="current-password">
+    <button onclick="doLogin()">دخول</button>
+    <div class="login-err" id="login-err"></div>
+  </div>
+</div>
+
+<!-- ══ NAV (shared) ════════════════════════════════════════════════════════════ -->
+<nav class="topnav" id="topnav" style="display:none">
+  <span class="logo">LOOP CMS</span>
+  <span class="breadcrumb" id="breadcrumb">الزبائن</span>
+  <button class="btn-nav" id="btn-back" style="display:none" onclick="showClients()">→ رجوع</button>
+  <button class="btn-nav btn-primary" id="btn-add-post" style="display:none" onclick="openPostModal()">+ بوست جديد</button>
+  <button class="btn-nav" onclick="doLogout()">خروج</button>
+</nav>
+
+<!-- ══ CLIENTS ════════════════════════════════════════════════════════════════ -->
+<div id="clients-screen" class="screen">
+  <div class="page-title">الزبائن</div>
+  <div class="page-sub">اختر زبون لإدارة تقويم محتواه</div>
+  <div class="clients-grid" id="clients-grid"></div>
+</div>
+
+<!-- ══ POSTS ══════════════════════════════════════════════════════════════════ -->
+<div id="posts-screen" class="screen">
+  <div class="posts-toolbar">
+    <div class="left">
+      <span class="posts-count" id="posts-count"></span>
+    </div>
+  </div>
+  <div style="overflow-x:auto">
+    <table class="posts-table">
+      <thead>
+        <tr>
+          <th style="width:64px"></th>
+          <th>التاريخ</th>
+          <th>المنتج</th>
+          <th>الكابشن</th>
+          <th>النوع</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="posts-tbody"></tbody>
+    </table>
+  </div>
+  <div class="empty-state" id="posts-empty" style="display:none">
+    <div class="empty-icon">📭</div>
+    <div>لا يوجد بوستات بعد — أضف أول بوست</div>
+  </div>
+</div>
+
+<!-- ══ POST MODAL ════════════════════════════════════════════════════════════ -->
+<div class="modal-backdrop" id="post-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-title">بوست جديد</span>
+      <button class="modal-close" onclick="closePostModal()">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <!-- Media preview -->
+      <div class="media-preview" id="media-preview">
+        <span id="media-placeholder">لا توجد صورة / فيديو</span>
+      </div>
+
+      <!-- Upload zone -->
+      <div class="upload-zone" onclick="document.getElementById('file-input').click()">
+        <div>📁 اسحب ملف أو اضغط للرفع (صورة أو فيديو)</div>
+        <div style="font-size:11px;margin-top:4px">JPG, PNG, MP4, MOV — حتى 50MB</div>
+        <input type="file" id="file-input" accept="image/*,video/*" onchange="handleFileSelect(this)">
+        <div class="upload-progress" id="upload-progress"></div>
+      </div>
+
+      <div class="or-divider">— أو أدخل رابط مباشر —</div>
+      <div class="field">
+        <label>رابط الصورة / الفيديو</label>
+        <input type="url" id="f-url" placeholder="https://..." oninput="handleUrlInput(this.value)">
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>التاريخ</label>
+          <input type="date" id="f-date">
+        </div>
+        <div class="field">
+          <label>اليوم بالعربي</label>
+          <input type="text" id="f-day" placeholder="الاثنين" readonly>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>المنتج</label>
+        <input type="text" id="f-product" placeholder="مثلاً: Go 300 أو Home 3000">
+      </div>
+
+      <div class="field">
+        <label>نوع البوست</label>
+        <select id="f-type">
+          <option value="image">صورة</option>
+          <option value="video">فيديو</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>الكابشن</label>
+        <textarea id="f-caption" placeholder="نص البوست..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-nav btn-danger" id="btn-delete-post" style="display:none" onclick="deletePost()">🗑 حذف</button>
+      <button class="btn-nav" onclick="closePostModal()">إلغاء</button>
+      <button class="btn-nav btn-primary" onclick="savePost()">💾 حفظ</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ADD CLIENT MODAL ═══════════════════════════════════════════════════════ -->
+<div class="modal-backdrop" id="client-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">إضافة زبون جديد</span>
+      <button class="modal-close" onclick="closeClientModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>اسم الزبون</label>
+        <input type="text" id="c-name" placeholder="مثلاً: Gendome">
+      </div>
+      <div class="field">
+        <label>ID (بالإنجليزي بدون مسافات)</label>
+        <input type="text" id="c-id" placeholder="مثلاً: gendome">
+      </div>
+      <div class="field">
+        <label>رابط صفحة التقويم</label>
+        <input type="url" id="c-url" placeholder="https://loopjo.com/...">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-nav" onclick="closeClientModal()">إلغاء</button>
+      <button class="btn-nav btn-primary" onclick="saveClient()">إضافة</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TOAST ══════════════════════════════════════════════════════════════════ -->
+<div class="toast" id="toast"></div>
+
+<script>
+const API = 'https://gendome-calendar-api.loopehab.workers.dev';
+const DAYS_AR = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+let adminToken = '';
+let clients    = [];
+let currentClient = null;
+let posts      = [];
+let editingIdx = null;   // index in posts[] or null for new
+
+// ── AUTH ─────────────────────────────────────────────────────────────────────
+async function doLogin() {
+  const pw = document.getElementById('pw-input').value.trim();
+  if (!pw) return;
+  const err = document.getElementById('login-err');
+  err.textContent = '';
+  // Verify by calling /clients
+  try {
+    const res = await fetch(API + '/clients', { headers: { Authorization: 'Bearer ' + pw } });
+    if (!res.ok) { err.textContent = 'كلمة المرور غلط'; return; }
+    const data = await res.json();
+    adminToken = pw;
+    clients = data.clients;
+    sessionStorage.setItem('cms_token', pw);
+    showApp();
+  } catch {
+    err.textContent = 'تعذر الاتصال بالسيرفر';
+  }
+}
+
+function doLogout() {
+  adminToken = '';
+  sessionStorage.removeItem('cms_token');
+  document.getElementById('login-screen').classList.add('active');
+  document.getElementById('topnav').style.display = 'none';
+  ['clients-screen','posts-screen'].forEach(id => document.getElementById(id).classList.remove('active'));
+  document.getElementById('login-screen').style.display = '';
+  document.getElementById('pw-input').value = '';
+}
+
+async function tryAutoLogin() {
+  const saved = sessionStorage.getItem('cms_token');
+  if (!saved) return;
+  try {
+    const res = await fetch(API + '/clients', { headers: { Authorization: 'Bearer ' + saved } });
+    if (!res.ok) return;
+    const data = await res.json();
+    adminToken = saved;
+    clients = data.clients;
+    showApp();
+  } catch {}
+}
+
+function showApp() {
+  document.getElementById('login-screen').classList.remove('active');
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('topnav').style.display = 'flex';
+  showClients();
+}
+
+document.getElementById('pw-input').addEventListener('keydown', e => e.key === 'Enter' && doLogin());
+
+// ── CLIENTS ──────────────────────────────────────────────────────────────────
+function showClients() {
+  setScreen('clients-screen');
+  document.getElementById('btn-back').style.display = 'none';
+  document.getElementById('btn-add-post').style.display = 'none';
+  document.getElementById('breadcrumb').innerHTML = 'الزبائن';
+  renderClients();
+}
+
+function renderClients() {
+  const grid = document.getElementById('clients-grid');
+  grid.innerHTML = '';
+  clients.forEach(c => {
+    const div = document.createElement('div');
+    div.className = 'client-card';
+    div.innerHTML = `
+      <span class="client-badge">${c.id}</span>
+      <div class="client-name">${c.name}</div>
+      <div class="client-meta" style="margin-top:24px">${c.pageUrl || ''}</div>
+    `;
+    div.onclick = () => openClient(c);
+    grid.appendChild(div);
+  });
+  // Add client button
+  const add = document.createElement('div');
+  add.className = 'add-client-card';
+  add.innerHTML = '＋ إضافة زبون';
+  add.onclick = () => openClientModal();
+  grid.appendChild(add);
+}
+
+// ── OPEN CLIENT ──────────────────────────────────────────────────────────────
+async function openClient(client) {
+  currentClient = client;
+  setScreen('posts-screen');
+  document.getElementById('btn-back').style.display = '';
+  document.getElementById('btn-add-post').style.display = '';
+  document.getElementById('breadcrumb').innerHTML = `الزبائن / <span>${client.name}</span>`;
+
+  // Load posts from API, fall back to empty
+  try {
+    const res = await fetch(API + `/posts?client=${client.id}`);
+    const data = await res.json();
+    posts = data.posts || [];
+  } catch {
+    posts = [];
+  }
+  renderPosts();
+}
+
+// ── POSTS TABLE ───────────────────────────────────────────────────────────────
+function renderPosts() {
+  // Sort by date
+  posts.sort((a, b) => parseDMY(a.date) - parseDMY(b.date));
+  // Re-number
+  posts.forEach((p, i) => p.num = i + 1);
+
+  const tbody = document.getElementById('posts-tbody');
+  tbody.innerHTML = '';
+  document.getElementById('posts-empty').style.display = posts.length ? 'none' : 'block';
+  document.getElementById('posts-count').textContent = `${posts.length} بوست`;
+
+  posts.forEach((post, idx) => {
+    const tr = document.createElement('tr');
+    const thumb = post.type === 'video'
+      ? `<div class="thumb-vid"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg></div>`
+      : `<img class="thumb" src="${escHtml(post.img || '')}" alt="" loading="lazy">`;
+
+    tr.innerHTML = `
+      <td>${thumb}</td>
+      <td style="white-space:nowrap;font-size:13px">${escHtml(post.date)}<br><span style="color:var(--muted);font-size:11px">${escHtml(post.dayAr||'')}</span></td>
+      <td><span class="product-badge">${escHtml(post.product||'')}</span></td>
+      <td class="caption-cell">${escHtml((post.caption||'').replace(/\n/g,' '))}</td>
+      <td><span class="type-badge type-${post.type}">${post.type === 'video' ? '🎬 فيديو' : '🖼 صورة'}</span></td>
+      <td>
+        <div class="row-actions">
+          <button class="btn-sm edit" onclick="openPostModal(${idx})">تعديل</button>
+          <button class="btn-sm del" onclick="confirmDelete(${idx})">حذف</button>
+        </div>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function parseDMY(str) {
+  if (!str) return 0;
+  const parts = str.split('/');
+  if (parts.length === 3) {
+    return new Date(+parts[2], +parts[1]-1, +parts[0]).getTime();
+  }
+  return new Date(str).getTime();
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── POST MODAL ────────────────────────────────────────────────────────────────
+function openPostModal(idx) {
+  editingIdx = (idx !== undefined) ? idx : null;
+  const isNew = editingIdx === null;
+  document.getElementById('modal-title').textContent = isNew ? 'بوست جديد' : 'تعديل بوست';
+  document.getElementById('btn-delete-post').style.display = isNew ? 'none' : '';
+  document.getElementById('upload-progress').textContent = '';
+
+  if (isNew) {
+    document.getElementById('f-url').value = '';
+    document.getElementById('f-date').value = '';
+    document.getElementById('f-day').value = '';
+    document.getElementById('f-product').value = '';
+    document.getElementById('f-caption').value = '';
+    document.getElementById('f-type').value = 'image';
+    setMediaPreview(null, 'image');
+  } else {
+    const p = posts[idx];
+    document.getElementById('f-url').value = p.img || p.video || '';
+    const dateVal = dmyToISO(p.date);
+    document.getElementById('f-date').value = dateVal;
+    document.getElementById('f-day').value = p.dayAr || '';
+    document.getElementById('f-product').value = p.product || '';
+    document.getElementById('f-caption').value = p.caption || '';
+    document.getElementById('f-type').value = p.type || 'image';
+    setMediaPreview(p.img || p.video, p.type);
+  }
+
+  document.getElementById('post-modal').classList.add('open');
+}
+
+function closePostModal() {
+  document.getElementById('post-modal').classList.remove('open');
+}
+
+function dmyToISO(dmy) {
+  if (!dmy) return '';
+  const p = dmy.split('/');
+  if (p.length === 3) return `${p[2]}-${p[1].padStart(2,'0')}-${p[0].padStart(2,'0')}`;
+  return dmy;
+}
+function isoDMY(iso) {
+  if (!iso) return '';
+  const d = new Date(iso + 'T00:00:00');
+  return `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;
+}
+
+document.getElementById('f-date').addEventListener('input', function() {
+  if (!this.value) { document.getElementById('f-day').value = ''; return; }
+  const d = new Date(this.value + 'T00:00:00');
+  document.getElementById('f-day').value = DAYS_AR[d.getDay()];
+});
+
+function setMediaPreview(url, type) {
+  const prev = document.getElementById('media-preview');
+  const ph   = document.getElementById('media-placeholder');
+  if (!url) { prev.innerHTML = '<span id="media-placeholder">لا توجد صورة / فيديو</span>'; return; }
+  if (type === 'video') {
+    prev.innerHTML = `<video src="${escHtml(url)}" controls style="width:100%;height:100%;object-fit:contain"></video>`;
+  } else {
+    prev.innerHTML = `<img src="${escHtml(url)}" alt="" style="width:100%;height:100%;object-fit:contain">`;
+  }
+}
+
+function handleUrlInput(val) {
+  const type = document.getElementById('f-type').value;
+  if (val) setMediaPreview(val, type);
+}
+
+// ── FILE UPLOAD ───────────────────────────────────────────────────────────────
+async function handleFileSelect(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const prog = document.getElementById('upload-progress');
+  prog.textContent = 'جاري الرفع...';
+
+  // Detect type from MIME
+  if (file.type.startsWith('video/')) {
+    document.getElementById('f-type').value = 'video';
+  } else {
+    document.getElementById('f-type').value = 'image';
+  }
+
+  try {
+    const res = await fetch(
+      `${API}/upload?client=${currentClient.id}&filename=${encodeURIComponent(file.name)}`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: 'Bearer ' + adminToken,
+          'Content-Type': file.type,
+        },
+        body: file,
+      }
+    );
+    if (!res.ok) throw new Error(await res.text());
+    const data = await res.json();
+    document.getElementById('f-url').value = data.url;
+    setMediaPreview(data.url, document.getElementById('f-type').value);
+    prog.textContent = '✓ تم الرفع';
+    prog.style.color = 'var(--green)';
+  } catch (e) {
+    prog.textContent = 'فشل الرفع: ' + e.message;
+    prog.style.color = 'var(--red)';
+    // Fall back: show local preview without upload
+    const localUrl = URL.createObjectURL(file);
+    setMediaPreview(localUrl, document.getElementById('f-type').value);
+    document.getElementById('f-url').value = localUrl;
+  }
+}
+
+// ── SAVE POST ─────────────────────────────────────────────────────────────────
+async function savePost() {
+  const dateISO = document.getElementById('f-date').value;
+  const url     = document.getElementById('f-url').value.trim();
+  const caption = document.getElementById('f-caption').value.trim();
+  const type    = document.getElementById('f-type').value;
+
+  if (!dateISO) { showToast('اختر التاريخ'); return; }
+  if (!url)     { showToast('أضف صورة أو رابط'); return; }
+
+  const dayAr  = document.getElementById('f-day').value || DAYS_AR[new Date(dateISO+'T00:00:00').getDay()];
+  const dmy    = isoDMY(dateISO);
+  const product = document.getElementById('f-product').value.trim();
+
+  const post = {
+    num:     editingIdx !== null ? posts[editingIdx].num : (posts.length + 1),
+    date:    dmy,
+    dayAr:   dayAr,
+    type:    type,
+    caption: caption,
+    product: product,
+  };
+  if (type === 'video') post.video = url;
+  else post.img = url;
+
+  if (editingIdx !== null) {
+    posts[editingIdx] = post;
+  } else {
+    posts.push(post);
+  }
+
+  await persistPosts();
+  renderPosts();
+  closePostModal();
+  showToast(editingIdx !== null ? '✓ تم التعديل' : '✓ تمت الإضافة');
+}
+
+function confirmDelete(idx) {
+  if (confirm(`حذف البوست "${posts[idx].date}"؟`)) {
+    posts.splice(idx, 1);
+    persistPosts();
+    renderPosts();
+    closePostModal();
+    showToast('تم الحذف');
+  }
+}
+
+function deletePost() {
+  if (editingIdx === null) return;
+  confirmDelete(editingIdx);
+}
+
+async function persistPosts() {
+  try {
+    await fetch(API + `/posts?client=${currentClient.id}`, {
+      method: 'PUT',
+      headers: {
+        Authorization: 'Bearer ' + adminToken,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ posts }),
+    });
+  } catch {
+    showToast('⚠ فشل الحفظ على السيرفر', true);
+  }
+}
+
+// ── CLIENTS CRUD ──────────────────────────────────────────────────────────────
+function openClientModal() {
+  document.getElementById('c-name').value = '';
+  document.getElementById('c-id').value = '';
+  document.getElementById('c-url').value = '';
+  document.getElementById('client-modal').classList.add('open');
+}
+function closeClientModal() {
+  document.getElementById('client-modal').classList.remove('open');
+}
+async function saveClient() {
+  const name = document.getElementById('c-name').value.trim();
+  const id   = document.getElementById('c-id').value.trim().toLowerCase().replace(/\s+/g,'-');
+  const url  = document.getElementById('c-url').value.trim();
+  if (!name || !id) { showToast('أدخل الاسم والـ ID'); return; }
+  clients.push({ id, name, pageUrl: url });
+  await fetch(API + '/clients', {
+    method: 'PUT',
+    headers: { Authorization: 'Bearer ' + adminToken, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ clients }),
+  });
+  renderClients();
+  closeClientModal();
+  showToast('✓ تمت الإضافة');
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+function setScreen(id) {
+  ['clients-screen','posts-screen'].forEach(s => {
+    document.getElementById(s).classList.remove('active');
+  });
+  document.getElementById(id).classList.add('active');
+}
+
+function showToast(msg, isErr) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.borderColor = isErr ? 'var(--red)' : 'var(--green)';
+  t.classList.add('show');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// Close modals on backdrop click
+document.getElementById('post-modal').addEventListener('click', function(e) {
+  if (e.target === this) closePostModal();
+});
+document.getElementById('client-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeClientModal();
+});
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+tryAutoLogin();
+</script>
+</body>
+</html>

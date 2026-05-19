@@ -519,6 +519,27 @@ async function loadState() {
         });
     } catch(e) { /* offline fallback — keep defaults */ }
 }
+
+async function loadRemotePosts() {
+    try {
+        const res = await fetch(`${API}/posts?client=gendome`);
+        const data = await res.json();
+        if (data.posts && Array.isArray(data.posts) && data.posts.length > 0) {
+            // Replace POSTS with remote version, sorted by date
+            POSTS.length = 0;
+            data.posts.forEach(p => POSTS.push(p));
+            POSTS.sort((a, b) => parseDateDMY(a.date) - parseDateDMY(b.date));
+            POSTS.forEach((p, i) => p.num = i + 1);
+        }
+    } catch(e) { /* use hardcoded POSTS */ }
+}
+
+function parseDateDMY(str) {
+    if (!str) return 0;
+    const p = str.split('/');
+    if (p.length === 3) return new Date(+p[2], +p[1]-1, +p[0]).getTime();
+    return new Date(str).getTime();
+}
 function saveState() {
     fetch(`${API}/state`, {
         method: 'POST',
@@ -532,7 +553,9 @@ let currentModal = null;
 let lbCurrentNum = null;
 
 // ── RENDER ──
+function renderGrid() {
 const grid = document.getElementById('grid');
+grid.innerHTML = '';
 POSTS.forEach(post => {
     const isLong = post.caption.length > 130;
     const captionHtml = post.caption.replace(/\n/g, '<br>');
@@ -611,15 +634,32 @@ POSTS.forEach(post => {
     grid.appendChild(card);
 });
 
+// Re-attach IntersectionObserver for entrance animations
+const _obs = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+            setTimeout(() => entry.target.classList.add('in-view'), i * 55);
+            _obs.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.06 });
+document.querySelectorAll('.post-card').forEach(c => _obs.observe(c));
+} // end renderGrid()
+
 // ── RESTORE SAVED STATE from server ──
-loadState().then(() => {
+async function initPage() {
+    await loadRemotePosts();
+    renderGrid();
+    await loadState();
     POSTS.forEach(p => {
+        if (!state[p.num]) state[p.num] = { status:'pending', note:'' };
         const s = state[p.num];
         if (s.status === 'approved') applyApproved(p.num);
         else if (s.status === 'rejected') applyRejected(p.num, s.note);
     });
     updateCounters();
-});
+}
+initPage();
 
 // ── APPLY VISUAL STATE (without saving again) ──
 function _setCardMod(num, mod) {
@@ -876,16 +916,7 @@ function showSwipeHint() {
     setTimeout(() => hint.remove(), 3300);
 }
 
-// ── CARD ENTRANCE ANIMATION ──
-const _cardObs = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => {
-        if (entry.isIntersecting) {
-            setTimeout(() => entry.target.classList.add('in-view'), i * 55);
-            _cardObs.unobserve(entry.target);
-        }
-    });
-}, { threshold: 0.06 });
-document.querySelectorAll('.post-card').forEach(c => _cardObs.observe(c));
+// (IntersectionObserver is now inside renderGrid())
 
 let toastTimer;
 function showToast(msg) {
