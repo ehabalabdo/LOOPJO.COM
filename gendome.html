@@ -8,300 +8,196 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0e0e11;
-            --bg2: #141418;
-            --bg3: #1a1a20;
-            --white: #f2f2f1;
-            --white70: rgba(242,242,241,0.7);
-            --white40: rgba(242,242,241,0.35);
-            --white10: rgba(242,242,241,0.08);
+            --bg: #0e0e11; --bg2: #141418; --bg3: #1a1a20;
+            --white: #f2f2f1; --white70: rgba(242,242,241,0.7);
+            --white40: rgba(242,242,241,0.35); --white10: rgba(242,242,241,0.08);
             --white05: rgba(242,242,241,0.04);
-            --pink: #eea9c9;
-            --blue: #74bae1;
-            --mint: #9ddad0;
-            --gold: #f0c060;
-            --green: #4eca8b;
-            --red: #e05a5a;
+            --blue: #74bae1; --mint: #9ddad0; --gold: #f0c060;
+            --green: #4eca8b; --red: #e05a5a; --purple: #b197fc;
             --holo: linear-gradient(135deg, #eea9c9, #74bae1, #9ddad0);
         }
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-        body {
-            font-family: 'Cairo', sans-serif;
-            background: var(--bg);
-            color: var(--white);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-        body::before {
-            content: '';
-            position: fixed; inset: 0;
-            pointer-events: none; z-index: 9999; opacity: 0.18;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
-        }
-        body::after {
-            content: ''; position: fixed; inset: 0; z-index: -1;
-            background: radial-gradient(ellipse 80% 50% at 20% 0%, rgba(116,186,225,0.06) 0%, transparent 60%),
-                        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(238,169,201,0.04) 0%, transparent 60%);
-        }
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior:smooth; }
+        body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--white); min-height:100vh; overflow-x:hidden; }
+        body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index:9999; opacity:0.18;
+            background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E"); }
+        body::after { content:''; position:fixed; inset:0; z-index:-1;
+            background: radial-gradient(ellipse 80% 50% at 20% 0%, rgba(116,186,225,0.06) 0%,transparent 60%),
+                        radial-gradient(ellipse 60% 40% at 80% 100%,rgba(238,169,201,0.04) 0%,transparent 60%); }
 
-        /* HEADER */
-        .header {
-            padding: 18px 36px;
-            display: flex; align-items: center; justify-content: space-between;
-            border-bottom: 1px solid var(--white10);
-            backdrop-filter: blur(16px);
-            background: rgba(14,14,17,0.88);
-            position: sticky; top: 0; z-index: 200; gap: 12px;
-        }
-        .logo-text {
-            font-family: 'Tajawal', sans-serif; font-weight: 700; font-size: 1.15rem;
-            background: var(--holo); -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: 2px;
-        }
-        .header-right { display: flex; align-items: center; gap: 10px; }
-        .client-badge {
-            display: flex; align-items: center; gap: 8px;
-            background: var(--white05); border: 1px solid var(--white10);
-            border-radius: 50px; padding: 6px 14px 6px 8px;
-        }
-        .client-avatar {
-            width: 28px; height: 28px; border-radius: 50%;
-            background: var(--holo); display: flex; align-items: center; justify-content: center;
-            font-size: 0.78rem; font-weight: 900; color: var(--bg); flex-shrink: 0;
-        }
-        .client-name { font-size: 0.85rem; font-weight: 700; }
-        .counter-badge {
-            font-size: 0.75rem; font-weight: 700; padding: 5px 12px;
-            border-radius: 50px; background: var(--white05); border: 1px solid var(--white10);
-            color: var(--white40); white-space: nowrap;
-        }
-        .counter-badge .c-approved { color: var(--green); }
-        .counter-badge .c-rejected { color: var(--red); }
-        .counter-badge .c-pending  { color: var(--gold); }
+        /* ── HEADER ── */
+        .header { padding:18px 36px; display:flex; align-items:center; justify-content:space-between;
+            border-bottom:1px solid var(--white10); backdrop-filter:blur(16px);
+            background:rgba(14,14,17,0.88); position:sticky; top:0; z-index:200; gap:12px; }
+        .logo-text { font-family:'Tajawal',sans-serif; font-weight:700; font-size:1.15rem;
+            background:var(--holo); -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+            background-clip:text; letter-spacing:2px; }
+        .header-right { display:flex; align-items:center; gap:10px; }
+        .client-badge { display:flex; align-items:center; gap:8px; background:var(--white05);
+            border:1px solid var(--white10); border-radius:50px; padding:6px 14px 6px 8px; }
+        .client-avatar { width:28px; height:28px; border-radius:50%; background:var(--holo);
+            display:flex; align-items:center; justify-content:center;
+            font-size:0.78rem; font-weight:900; color:var(--bg); flex-shrink:0; }
+        .client-name { font-size:0.85rem; font-weight:700; }
+        .counter-badge { font-size:0.75rem; font-weight:700; padding:5px 12px; border-radius:50px;
+            background:var(--white05); border:1px solid var(--white10); color:var(--white40); white-space:nowrap; }
+        .c-a{color:var(--green)} .c-r{color:var(--red)} .c-p{color:var(--gold)}
 
-        /* HERO */
-        .hero { padding: 48px 36px 30px; text-align: center; }
-        .month-tag {
-            display: inline-flex; align-items: center; gap: 6px;
-            padding: 5px 18px; border-radius: 50px; border: 1px solid rgba(116,186,225,0.3);
-            color: var(--blue); font-size: 0.75rem; font-weight: 700;
-            letter-spacing: 2px; margin-bottom: 16px; text-transform: uppercase;
-        }
-        .hero h1 {
-            font-family: 'Tajawal', sans-serif;
-            font-size: clamp(1.7rem, 4vw, 2.6rem); font-weight: 900;
-            margin-bottom: 10px; line-height: 1.3;
-        }
-        .hero h1 span { background: var(--holo); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .hero p { color: var(--white40); font-size: 0.88rem; max-width: 480px; margin: 0 auto; line-height: 1.9; }
+        /* ── HERO ── */
+        .hero { padding:48px 36px 26px; text-align:center; }
+        .month-tag { display:inline-flex; align-items:center; gap:6px; padding:5px 18px; border-radius:50px;
+            border:1px solid rgba(116,186,225,0.3); color:var(--blue); font-size:0.75rem; font-weight:700;
+            letter-spacing:2px; margin-bottom:16px; text-transform:uppercase; }
+        .hero h1 { font-family:'Tajawal',sans-serif; font-size:clamp(1.7rem,4vw,2.6rem); font-weight:900;
+            margin-bottom:10px; line-height:1.3; }
+        .hero h1 span { background:var(--holo); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .hero p { color:var(--white40); font-size:0.88rem; max-width:480px; margin:0 auto; line-height:1.9; }
 
-        /* STATS */
-        .stats-bar { display: flex; justify-content: center; gap: 8px; margin: 22px 36px; flex-wrap: wrap; }
-        .stat-pill {
-            padding: 6px 14px; border-radius: 50px; background: var(--white05);
-            border: 1px solid var(--white10); font-size: 0.78rem; color: var(--white70);
-            display: flex; align-items: center; gap: 6px;
-        }
-        .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-        .dot-gold { background: var(--gold); }
-        .dot-mint { background: var(--mint); }
-        .dot-blue { background: var(--blue); }
+        /* ── STATS ── */
+        .stats-bar { display:flex; justify-content:center; gap:8px; margin:20px 36px; flex-wrap:wrap; }
+        .stat-pill { padding:6px 14px; border-radius:50px; background:var(--white05); border:1px solid var(--white10);
+            font-size:0.78rem; color:var(--white70); display:flex; align-items:center; gap:6px; }
+        .dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+        .dot-gold{background:var(--gold)} .dot-mint{background:var(--mint)} .dot-blue{background:var(--blue)} .dot-purple{background:var(--purple)}
 
-        /* GRID */
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 24px; padding: 0 36px 40px;
-            max-width: 1440px; margin: 0 auto;
-        }
+        /* ── GRID ── */
+        .calendar-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+            gap:24px; padding:0 36px 40px; max-width:1440px; margin:0 auto; }
 
-        /* POST CARD */
-        .post-card {
-            background: var(--bg2); border: 1px solid var(--white10);
-            border-radius: 18px; overflow: hidden;
-            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        .post-card:hover { transform: translateY(-3px); border-color: rgba(116,186,225,0.2); box-shadow: 0 8px 32px rgba(0,0,0,0.35); }
-        .post-card.approved { border-color: rgba(78,202,139,0.4) !important; box-shadow: 0 0 0 1px rgba(78,202,139,0.12) !important; }
-        .post-card.rejected  { border-color: rgba(224,90,90,0.4)  !important; box-shadow: 0 0 0 1px rgba(224,90,90,0.12)  !important; }
+        /* ── CARD ── */
+        .post-card { background:var(--bg2); border:1px solid var(--white10); border-radius:18px;
+            overflow:hidden; transition:transform .3s,border-color .3s,box-shadow .3s; }
+        .post-card:hover { transform:translateY(-3px); border-color:rgba(116,186,225,0.2); box-shadow:0 8px 32px rgba(0,0,0,.35); }
+        .post-card.approved { border-color:rgba(78,202,139,.4)!important; box-shadow:0 0 0 1px rgba(78,202,139,.1)!important; }
+        .post-card.rejected  { border-color:rgba(224,90,90,.4)!important;  box-shadow:0 0 0 1px rgba(224,90,90,.1)!important;  }
 
-        .post-media { position: relative; aspect-ratio: 1/1; background: #13131a; overflow: hidden; }
-        .post-media img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s ease; }
-        .post-card:hover .post-media img { transform: scale(1.02); }
-        .post-media::after {
-            content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 45%;
-            background: linear-gradient(to top, rgba(14,14,17,0.65), transparent); pointer-events: none;
-        }
-        .post-num {
-            position: absolute; z-index: 2; bottom: 10px; right: 10px;
-            font-size: 0.68rem; font-weight: 700; color: rgba(242,242,241,0.6);
-            background: rgba(14,14,17,0.65); padding: 3px 8px; border-radius: 20px;
-        }
-        .card-status-overlay {
-            position: absolute; inset: 0; z-index: 3;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 5rem; opacity: 0; pointer-events: none; transition: opacity 0.3s;
-        }
-        .post-card.approved .card-status-overlay { opacity: 1; background: rgba(78,202,139,0.1); }
-        .post-card.rejected  .card-status-overlay { opacity: 1; background: rgba(224,90,90,0.1);  }
+        /* media area */
+        .post-media { position:relative; aspect-ratio:1/1; background:#13131a; overflow:hidden; }
+        .post-media img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .4s; }
+        .post-card:hover .post-media img { transform:scale(1.02); }
+        /* video in card */
+        .post-media video { width:100%; height:100%; object-fit:cover; display:block; }
+        .video-badge { position:absolute; z-index:4; top:10px; left:10px;
+            background:rgba(177,151,252,0.18); border:1px solid rgba(177,151,252,0.35);
+            color:var(--purple); font-size:0.7rem; font-weight:700; padding:4px 9px; border-radius:20px;
+            display:flex; align-items:center; gap:5px; backdrop-filter:blur(8px); }
+        .play-btn { position:absolute; z-index:4; inset:0; display:flex; align-items:center; justify-content:center;
+            background:rgba(0,0,0,0); transition:background .2s; cursor:pointer; }
+        .play-btn:hover { background:rgba(0,0,0,0.18); }
+        .play-btn svg { opacity:0.85; filter:drop-shadow(0 2px 8px rgba(0,0,0,.5)); transition:transform .2s,opacity .2s; }
+        .play-btn:hover svg { transform:scale(1.1); opacity:1; }
+        .post-media::after { content:''; position:absolute; bottom:0; left:0; right:0; height:40%;
+            background:linear-gradient(to top,rgba(14,14,17,.6),transparent); pointer-events:none; }
+        .post-media video ~ .post-media::after { display:none; }
+        .post-num { position:absolute; z-index:2; bottom:10px; right:10px; font-size:0.68rem; font-weight:700;
+            color:rgba(242,242,241,.6); background:rgba(14,14,17,.65); padding:3px 8px; border-radius:20px; }
+        .card-status-overlay { position:absolute; inset:0; z-index:3; display:flex; align-items:center;
+            justify-content:center; font-size:5rem; opacity:0; pointer-events:none; transition:opacity .3s; }
+        .post-card.approved .card-status-overlay { opacity:1; background:rgba(78,202,139,.1); }
+        .post-card.rejected  .card-status-overlay { opacity:1; background:rgba(224,90,90,.1); }
 
-        /* CARD BODY */
-        .post-body { padding: 14px 15px 0; }
-        .post-date-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-        .post-date { display: flex; align-items: center; gap: 5px; font-size: 0.78rem; color: var(--blue); font-weight: 700; }
-        .post-platforms { display: flex; gap: 4px; }
-        .platform-icon {
-            width: 21px; height: 21px; border-radius: 5px;
-            background: var(--white10); display: flex; align-items: center;
-            justify-content: center; font-size: 0.6rem; font-weight: 700; color: var(--white40);
-        }
-        .post-caption {
-            font-size: 0.83rem; color: var(--white70); line-height: 1.75; margin-bottom: 4px;
-            display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
-        }
-        .post-caption.expanded { -webkit-line-clamp: unset; overflow: visible; }
-        .expand-btn {
-            background: none; border: none; color: var(--blue);
-            font-size: 0.72rem; cursor: pointer; font-family: 'Cairo', sans-serif;
-            padding: 2px 0 12px; display: block;
-        }
-        .expand-btn:hover { text-decoration: underline; }
+        /* card body */
+        .post-body { padding:14px 15px 0; }
+        .post-date-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+        .post-date { display:flex; align-items:center; gap:5px; font-size:0.78rem; color:var(--blue); font-weight:700; }
+        .post-platforms { display:flex; gap:4px; }
+        .platform-icon { width:21px; height:21px; border-radius:5px; background:var(--white10);
+            display:flex; align-items:center; justify-content:center; font-size:0.6rem; font-weight:700; color:var(--white40); }
+        .post-caption { font-size:0.83rem; color:var(--white70); line-height:1.75; margin-bottom:4px;
+            display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden; }
+        .post-caption.expanded { -webkit-line-clamp:unset; overflow:visible; }
+        .expand-btn { background:none; border:none; color:var(--blue); font-size:0.72rem; cursor:pointer;
+            font-family:'Cairo',sans-serif; padding:2px 0 10px; display:block; }
+        .expand-btn:hover { text-decoration:underline; }
 
-        /* ACTION BUTTONS */
-        .action-row {
-            display: flex; gap: 8px; padding: 12px 15px 15px;
-            border-top: 1px solid var(--white10);
-        }
-        .btn-approve, .btn-reject {
-            flex: 1; padding: 9px 8px; border-radius: 10px; border: none; cursor: pointer;
-            font-family: 'Cairo', sans-serif; font-size: 0.85rem; font-weight: 700;
-            display: flex; align-items: center; justify-content: center; gap: 6px;
-            transition: all 0.2s ease;
-        }
-        .btn-approve { background: rgba(78,202,139,0.1); color: var(--green); border: 1.5px solid rgba(78,202,139,0.25); }
-        .btn-approve:hover { background: rgba(78,202,139,0.22); border-color: rgba(78,202,139,0.5); }
-        .btn-approve.active { background: rgba(78,202,139,0.28); border-color: rgba(78,202,139,0.55); }
-        .btn-reject { background: rgba(224,90,90,0.1); color: var(--red); border: 1.5px solid rgba(224,90,90,0.25); }
-        .btn-reject:hover { background: rgba(224,90,90,0.22); border-color: rgba(224,90,90,0.5); }
-        .btn-reject.active { background: rgba(224,90,90,0.28); border-color: rgba(224,90,90,0.55); }
+        /* action row */
+        .action-row { display:flex; gap:8px; padding:12px 15px 15px; border-top:1px solid var(--white10); }
+        .btn-approve,.btn-reject { flex:1; padding:9px 8px; border-radius:10px; border:none; cursor:pointer;
+            font-family:'Cairo',sans-serif; font-size:0.85rem; font-weight:700;
+            display:flex; align-items:center; justify-content:center; gap:6px; transition:all .2s; }
+        .btn-approve { background:rgba(78,202,139,.1); color:var(--green); border:1.5px solid rgba(78,202,139,.25); }
+        .btn-approve:hover,.btn-approve.active { background:rgba(78,202,139,.25); border-color:rgba(78,202,139,.55); }
+        .btn-reject  { background:rgba(224,90,90,.1);  color:var(--red);   border:1.5px solid rgba(224,90,90,.25);  }
+        .btn-reject:hover,.btn-reject.active { background:rgba(224,90,90,.25); border-color:rgba(224,90,90,.55); }
 
-        /* REJECTION NOTE */
-        .rejection-note {
-            margin: 0 15px 14px;
-            background: rgba(224,90,90,0.07); border: 1px solid rgba(224,90,90,0.2);
-            border-radius: 10px; padding: 10px 12px;
-            font-size: 0.78rem; color: rgba(242,242,241,0.65); line-height: 1.65;
-            display: none;
-        }
-        .rejection-note.visible { display: block; }
-        .note-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
-        .note-label { font-size: 0.68rem; color: var(--red); font-weight: 700; }
-        .note-edit-btn { background: none; border: none; color: var(--white40); cursor: pointer; font-size: 0.68rem; font-family: 'Cairo', sans-serif; }
-        .note-edit-btn:hover { color: var(--white); }
+        /* rejection note */
+        .rejection-note { margin:0 15px 14px; background:rgba(224,90,90,.07);
+            border:1px solid rgba(224,90,90,.2); border-radius:10px; padding:10px 12px;
+            font-size:0.78rem; color:rgba(242,242,241,.65); line-height:1.65; display:none; }
+        .rejection-note.visible { display:block; }
+        .note-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; }
+        .note-label { font-size:0.68rem; color:var(--red); font-weight:700; }
+        .note-edit-btn { background:none; border:none; color:var(--white40); cursor:pointer; font-size:0.68rem; font-family:'Cairo',sans-serif; }
+        .note-edit-btn:hover { color:var(--white); }
 
-        /* APPROVE ALL BAR */
-        .approve-all-bar {
-            position: sticky; bottom: 0; z-index: 150;
-            background: rgba(14,14,17,0.94); backdrop-filter: blur(20px);
-            border-top: 1px solid var(--white10);
-            padding: 14px 36px;
-            display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
-        }
-        .approve-summary { font-size: 0.82rem; color: var(--white40); display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
-        .bar-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-        .btn-approve-all {
-            padding: 10px 22px; border-radius: 10px; border: none; cursor: pointer;
-            font-family: 'Cairo', sans-serif; font-size: 0.88rem; font-weight: 700;
-            background: var(--holo); color: var(--bg); transition: opacity 0.2s, transform 0.15s;
-        }
-        .btn-approve-all:hover { opacity: 0.85; transform: scale(1.03); }
-        .btn-send-wa {
-            padding: 10px 22px; border-radius: 10px; cursor: pointer;
-            font-family: 'Cairo', sans-serif; font-size: 0.88rem; font-weight: 700;
-            background: rgba(37,211,102,0.1); color: #25d366;
-            border: 1.5px solid rgba(37,211,102,0.3);
-            transition: all 0.2s; display: flex; align-items: center; gap: 7px;
-        }
-        .btn-send-wa:hover { background: rgba(37,211,102,0.2); border-color: rgba(37,211,102,0.55); }
+        /* ── BOTTOM BAR ── */
+        .approve-all-bar { position:sticky; bottom:0; z-index:150; background:rgba(14,14,17,.94);
+            backdrop-filter:blur(20px); border-top:1px solid var(--white10);
+            padding:13px 36px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+        .approve-summary { font-size:0.82rem; color:var(--white40); display:flex; gap:16px; flex-wrap:wrap; }
+        .bar-actions { display:flex; gap:8px; flex-wrap:wrap; }
+        .btn-approve-all { padding:10px 22px; border-radius:10px; border:none; cursor:pointer;
+            font-family:'Cairo',sans-serif; font-size:0.88rem; font-weight:700;
+            background:var(--holo); color:var(--bg); transition:opacity .2s,transform .15s; }
+        .btn-approve-all:hover { opacity:.85; transform:scale(1.03); }
+        .btn-send-wa { padding:10px 22px; border-radius:10px; cursor:pointer;
+            font-family:'Cairo',sans-serif; font-size:0.88rem; font-weight:700;
+            background:rgba(37,211,102,.1); color:#25d366; border:1.5px solid rgba(37,211,102,.3);
+            transition:all .2s; display:flex; align-items:center; gap:7px; }
+        .btn-send-wa:hover { background:rgba(37,211,102,.22); border-color:rgba(37,211,102,.55); }
 
-        /* MODAL */
-        .modal-backdrop {
-            position: fixed; inset: 0; z-index: 500;
-            background: rgba(0,0,0,0.72); backdrop-filter: blur(6px);
-            display: flex; align-items: center; justify-content: center; padding: 20px;
-            opacity: 0; pointer-events: none; transition: opacity 0.22s;
-        }
-        .modal-backdrop.open { opacity: 1; pointer-events: all; }
-        .modal {
-            background: var(--bg3); border: 1px solid var(--white10);
-            border-radius: 20px; padding: 26px; width: 100%; max-width: 440px;
-            transform: translateY(20px); transition: transform 0.22s;
-        }
-        .modal-backdrop.open .modal { transform: translateY(0); }
-        .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
-        .modal-title { font-size: 1rem; font-weight: 700; color: var(--red); }
-        .modal-close {
-            width: 30px; height: 30px; border-radius: 8px;
-            background: var(--white05); border: 1px solid var(--white10);
-            cursor: pointer; color: var(--white40); font-size: 1rem;
-            display: flex; align-items: center; justify-content: center; transition: all 0.2s;
-        }
-        .modal-close:hover { background: var(--white10); color: var(--white); }
-        .modal-post-preview {
-            display: flex; align-items: center; gap: 12px;
-            background: var(--white05); border: 1px solid var(--white10);
-            border-radius: 12px; padding: 10px 12px; margin-bottom: 18px;
-        }
-        .modal-post-preview img { width: 52px; height: 52px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
-        .modal-post-num { font-size: 0.68rem; color: var(--white40); margin-bottom: 3px; }
-        .modal-post-date { font-size: 0.82rem; font-weight: 700; color: var(--blue); }
-        .modal-label { font-size: 0.78rem; color: var(--white40); margin-bottom: 8px; }
-        .modal-textarea {
-            width: 100%; background: var(--white05); border: 1px solid var(--white10);
-            border-radius: 12px; padding: 12px; color: var(--white);
-            font-family: 'Cairo', sans-serif; font-size: 0.85rem;
-            resize: none; min-height: 100px; outline: none; direction: rtl;
-            transition: border-color 0.2s;
-        }
-        .modal-textarea::placeholder { color: var(--white40); }
-        .modal-textarea:focus { border-color: rgba(224,90,90,0.4); }
-        .modal-actions { display: flex; gap: 8px; margin-top: 14px; }
-        .modal-btn-cancel {
-            flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--white10);
-            background: var(--white05); color: var(--white70); cursor: pointer;
-            font-family: 'Cairo', sans-serif; font-size: 0.85rem; font-weight: 600; transition: all 0.2s;
-        }
-        .modal-btn-cancel:hover { background: var(--white10); }
-        .modal-btn-confirm {
-            flex: 2; padding: 10px; border-radius: 10px;
-            background: rgba(224,90,90,0.15); color: var(--red); cursor: pointer;
-            font-family: 'Cairo', sans-serif; font-size: 0.85rem; font-weight: 700;
-            border: 1.5px solid rgba(224,90,90,0.35); transition: all 0.2s;
-        }
-        .modal-btn-confirm:hover { background: rgba(224,90,90,0.28); }
+        /* ── MODAL ── */
+        .modal-backdrop { position:fixed; inset:0; z-index:500; background:rgba(0,0,0,.72);
+            backdrop-filter:blur(6px); display:flex; align-items:center; justify-content:center;
+            padding:20px; opacity:0; pointer-events:none; transition:opacity .22s; }
+        .modal-backdrop.open { opacity:1; pointer-events:all; }
+        .modal { background:var(--bg3); border:1px solid var(--white10); border-radius:20px;
+            padding:26px; width:100%; max-width:440px; transform:translateY(20px); transition:transform .22s; }
+        .modal-backdrop.open .modal { transform:translateY(0); }
+        .modal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+        .modal-title { font-size:1rem; font-weight:700; color:var(--red); }
+        .modal-close { width:30px; height:30px; border-radius:8px; background:var(--white05);
+            border:1px solid var(--white10); cursor:pointer; color:var(--white40); font-size:1rem;
+            display:flex; align-items:center; justify-content:center; transition:all .2s; }
+        .modal-close:hover { background:var(--white10); color:var(--white); }
+        .modal-post-preview { display:flex; align-items:center; gap:12px; background:var(--white05);
+            border:1px solid var(--white10); border-radius:12px; padding:10px 12px; margin-bottom:18px; }
+        .modal-post-preview img { width:52px; height:52px; object-fit:cover; border-radius:8px; flex-shrink:0; }
+        .modal-post-preview .vid-thumb { width:52px; height:52px; border-radius:8px; background:rgba(177,151,252,.12);
+            border:1px solid rgba(177,151,252,.25); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+        .modal-post-num { font-size:0.68rem; color:var(--white40); margin-bottom:3px; }
+        .modal-post-date { font-size:0.82rem; font-weight:700; color:var(--blue); }
+        .modal-label { font-size:0.78rem; color:var(--white40); margin-bottom:8px; }
+        .modal-textarea { width:100%; background:var(--white05); border:1px solid var(--white10);
+            border-radius:12px; padding:12px; color:var(--white); font-family:'Cairo',sans-serif;
+            font-size:0.85rem; resize:none; min-height:100px; outline:none; direction:rtl;
+            transition:border-color .2s; }
+        .modal-textarea::placeholder { color:var(--white40); }
+        .modal-textarea:focus { border-color:rgba(224,90,90,.4); }
+        .modal-actions { display:flex; gap:8px; margin-top:14px; }
+        .modal-btn-cancel { flex:1; padding:10px; border-radius:10px; border:1px solid var(--white10);
+            background:var(--white05); color:var(--white70); cursor:pointer;
+            font-family:'Cairo',sans-serif; font-size:0.85rem; font-weight:600; transition:all .2s; }
+        .modal-btn-cancel:hover { background:var(--white10); }
+        .modal-btn-confirm { flex:2; padding:10px; border-radius:10px; background:rgba(224,90,90,.15);
+            color:var(--red); cursor:pointer; font-family:'Cairo',sans-serif; font-size:0.85rem; font-weight:700;
+            border:1.5px solid rgba(224,90,90,.35); transition:all .2s; }
+        .modal-btn-confirm:hover { background:rgba(224,90,90,.28); }
 
-        /* TOAST */
-        .toast {
-            position: fixed; bottom: 88px; left: 50%;
-            transform: translateX(-50%) translateY(16px);
-            background: rgba(14,14,17,0.95); border: 1px solid var(--white10);
-            color: var(--white70); padding: 9px 20px; border-radius: 50px;
-            font-size: 0.8rem; font-weight: 600; opacity: 0;
-            transition: all 0.22s ease; z-index: 9998; pointer-events: none; white-space: nowrap;
-        }
-        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        /* ── TOAST ── */
+        .toast { position:fixed; bottom:88px; left:50%; transform:translateX(-50%) translateY(16px);
+            background:rgba(14,14,17,.95); border:1px solid var(--white10); color:var(--white70);
+            padding:9px 20px; border-radius:50px; font-size:0.8rem; font-weight:600; opacity:0;
+            transition:all .22s; z-index:9998; pointer-events:none; white-space:nowrap; }
+        .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 
-        /* FOOTER */
-        .page-footer { text-align: center; padding: 20px; color: var(--white40); font-size: 0.76rem; }
-        .page-footer a { color: var(--blue); text-decoration: none; }
+        .page-footer { text-align:center; padding:20px; color:var(--white40); font-size:0.76rem; }
+        .page-footer a { color:var(--blue); text-decoration:none; }
 
-        @media (max-width: 600px) {
-            .header { padding: 14px 16px; }
-            .hero { padding: 34px 16px 22px; }
-            .stats-bar { margin: 16px; }
-            .calendar-grid { padding: 0 12px 30px; gap: 16px; grid-template-columns: 1fr; }
-            .approve-all-bar { padding: 12px 16px; }
+        @media(max-width:600px){
+            .header{padding:14px 16px} .hero{padding:34px 16px 20px} .stats-bar{margin:14px}
+            .calendar-grid{padding:0 12px 30px;gap:16px;grid-template-columns:1fr}
+            .approve-all-bar{padding:12px 16px}
         }
     </style>
 </head>
@@ -311,11 +207,11 @@
     <div class="logo-text">LOOP</div>
     <div class="header-right">
         <div class="counter-badge">
-            ✓ <span class="c-approved" id="hdr-approved">0</span>
+            ✓&nbsp;<span class="c-a" id="hdr-a">0</span>
             &nbsp;·&nbsp;
-            ✗ <span class="c-rejected" id="hdr-rejected">0</span>
+            ✗&nbsp;<span class="c-r" id="hdr-r">0</span>
             &nbsp;·&nbsp;
-            ⏳ <span class="c-pending" id="hdr-pending">23</span>
+            ⏳&nbsp;<span class="c-p" id="hdr-p">23</span>
         </div>
         <div class="client-badge">
             <div class="client-avatar">G</div>
@@ -334,15 +230,16 @@
     <div class="stat-pill"><span class="dot dot-gold"></span> 23 بوست</div>
     <div class="stat-pill"><span class="dot dot-blue"></span> 20 مايو — 20 يونيو 2026</div>
     <div class="stat-pill"><span class="dot dot-mint"></span> Instagram · Facebook</div>
+    <div class="stat-pill"><span class="dot dot-purple"></span> 3 فيديوهات</div>
 </div>
 
 <div class="calendar-grid" id="grid"></div>
 
 <div class="approve-all-bar">
     <div class="approve-summary">
-        <span>موافق: <strong style="color:var(--green)" id="bar-approved">0</strong></span>
-        <span>تعديل: <strong style="color:var(--red)" id="bar-rejected">0</strong></span>
-        <span>لم تُراجع: <strong style="color:var(--gold)" id="bar-pending">23</strong></span>
+        <span>موافق: <strong class="c-a" id="bar-a">0</strong></span>
+        <span>تعديل: <strong class="c-r" id="bar-r">0</strong></span>
+        <span>لم تُراجع: <strong class="c-p" id="bar-p">23</strong></span>
     </div>
     <div class="bar-actions">
         <button class="btn-approve-all" onclick="approveAll()">✓ موافق على الكل</button>
@@ -353,20 +250,14 @@
     </div>
 </div>
 
-<!-- MODAL -->
+<!-- REJECT MODAL -->
 <div class="modal-backdrop" id="modal-backdrop">
     <div class="modal">
         <div class="modal-header">
             <span class="modal-title">✗ تعديل / رفض البوست</span>
             <button class="modal-close" onclick="closeModal()">✕</button>
         </div>
-        <div class="modal-post-preview">
-            <img id="modal-img" src="" alt="">
-            <div>
-                <div class="modal-post-num" id="modal-post-num"></div>
-                <div class="modal-post-date" id="modal-post-date"></div>
-            </div>
-        </div>
+        <div class="modal-post-preview" id="modal-preview"></div>
         <div class="modal-label">اكتب ملاحظتك أو التعديل المطلوب:</div>
         <textarea class="modal-textarea" id="modal-textarea" placeholder="مثال: تعديل النص، تغيير الصورة، تأجيل تاريخ النشر..." rows="4"></textarea>
         <div class="modal-actions">
@@ -377,87 +268,180 @@
 </div>
 
 <div class="toast" id="toast"></div>
-
-<footer class="page-footer">
-    صُمِّم بـ ♥ من <a href="https://loopjo.com" target="_blank">Loop Marketing Solutions</a> &nbsp;·&nbsp; <a href="https://wa.me/962792020388">واتساب</a>
-</footer>
+<footer class="page-footer">صُمِّم بـ ♥ من <a href="https://loopjo.com" target="_blank">Loop Marketing Solutions</a> &nbsp;·&nbsp; <a href="https://wa.me/962792020388">واتساب</a></footer>
 
 <script>
+// ── POST DATA ──
+// type: 'image' | 'video'
+// img: path for image posts
+// video: path for video posts (thumbnail shows first frame)
+// caption: caption text from PPTX
 const POSTS = [
-  { num:1,  date:"20/5/2026", dayAr:"الأربعاء", img:"images/gendome/slide-02.jpg", caption:"شغّل أجهزتك الأساسية بكل راحة مع منافذ متعددة وشحن سريع — سواء بالبيت، الكافيه، المكتب أو حتى بالرحلات. طاقة موثوقة 285Wh ⚡" },
-  { num:2,  date:"21/5/2026", dayAr:"الخميس",   img:"images/gendome/slide-03.jpg", caption:"المولدات القديمة كانت بتعطيك طاقة، لكن معها إزعاج، حرارة، ووجود دائم بالخلفية بذكّرك بالمشكلة. 🔇" },
-  { num:3,  date:"22/5/2026", dayAr:"الجمعة",   img:"images/gendome/slide-04.jpg", caption:"في فرق بين بطارية إضافية، وبين شعور إنك مرتاح طول اليوم لأن الطاقة معك فعلاً. 🔋" },
-  { num:4,  date:"23/5/2026", dayAr:"السبت",    img:"images/gendome/slide-05.jpg", caption:"✔ قدرة تشغيل مستقرة\n✔ منافذ متعددة لاستخدام أسهل\n✔ بطارية آمنة بعمر طويل" },
-  { num:5,  date:"24/5/2026", dayAr:"الأحد",    img:"images/gendome/slide-06.png", caption:"شحن فائق السرعة، وراحة دائمة — بدون أي مجهود. ⚡✨" },
-  { num:6,  date:"25/5/2026", dayAr:"الاثنين",  img:"images/gendome/slide-07.jpg", caption:"الرفاهية الحقيقية ليست في الأجهزة الذكية فقط .. بل في أن تبقى ذكية حتى وقت الانقطاع. 💡" },
-  { num:7,  date:"26/5/2026", dayAr:"الثلاثاء", img:"images/gendome/slide-08.jpg", caption:"الشاحن واصل، والإنترنت شغال، وشغلك ماشي تمام.. حتى لو فصلت الكهرباء.\nخيارك الأضمن لإنتاجية بدون مقاطعة — Gendome UPS. ALWAYS ON. 🔌" },
-  { num:8,  date:"28/5/2026", dayAr:"الخميس",   img:"images/gendome/slide-09.jpg", caption:"الشحن المغناطيسي يعمل بالطريقة التي نحب أن تسير بها الأشياء اليوم — ببساطة، بسرعة، وبدون أي تعقيد. 🧲" },
-  { num:9,  date:"29/5/2026", dayAr:"الجمعة",   img:"images/gendome/slide-10.jpg", caption:"جهاز مصمم يعطيك أداء ثابت وحماية كاملة لكل أجهزتك الحساسة (لاب توب، راوتر، شواحن) — عشان تشتغل وتنجز وأنت مرتاح البال. 🛡️" },
-  { num:10, date:"30/5/2026", dayAr:"السبت",    img:"images/gendome/slide-11.png", caption:"كفاءة وفعالية استثنائية، وقدرة فائقة على الأداء العالي. 🚀" },
-  { num:11, date:"1/6/2026",  dayAr:"الاثنين",  img:"images/gendome/slide-12.jpg", caption:"3000W مش مجرد رقم مكتوب على الجهاز — بيهمك إذا الكهرباء قطعت أن البيت يحتفظ بإيقاعه الطبيعي بهدوء كامل. 🏠" },
-  { num:12, date:"3/6/2026",  dayAr:"الأربعاء", img:"images/gendome/slide-13.jpg", caption:"بعض المواصفات تبدو تقنية على الورق، لكنك تلاحظ أثرها الحقيقي بعد أشهر من الاستخدام اليومي. 📊" },
-  { num:13, date:"5/6/2026",  dayAr:"الجمعة",   img:"images/gendome/slide-14.jpg", caption:"مش بس تيار كهربائي بديل — هو حماية ذكية لكل أجهزتك. 🛡️⚡" },
-  { num:14, date:"6/6/2026",  dayAr:"السبت",    img:"images/gendome/slide-15.jpg", caption:"ليست مجرد شاشة تعرض أرقاماً، بل نافذتك لمعرفة كيف تتحرك الطاقة داخل يومك. كم تستهلك؟ كم تبقى؟ كل شيء أمامك بلمسة واحدة. 📱" },
-  { num:15, date:"7/6/2026",  dayAr:"الأحد",    img:"images/gendome/slide-16.png", caption:"All in one charger — واحد بدل كل شي. 🔌✨" },
-  { num:16, date:"8/6/2026",  dayAr:"الاثنين",  img:"images/gendome/slide-17.jpg", caption:"السرعة لم تعد رفاهية، بل جزء من إيقاع يومنا. وقت أقل بجانب الشاحن، وطاقة أكثر تكمل يومك بهدوء. ⚡" },
-  { num:17, date:"10/6/2026", dayAr:"الأربعاء", img:"images/gendome/slide-18.jpg", caption:"مشهد يبدو كإجازة .. لكنه مكتب كامل بيشتغل بالطاقة الشمسية. الفكرة مش إنك تشحن جهازك — الفكرة إن يومك يضل شغال مهما تغير المكان. ☀️💻" },
-  { num:18, date:"11/6/2026", dayAr:"الخميس",   img:"images/gendome/slide-19.jpg", caption:"حين تصبح الحماية جزءاً من الطاقة، تتغير طريقة اعتمادك على أجهزتك بالكامل. 🔒⚡" },
-  { num:19, date:"13/6/2026", dayAr:"السبت",    img:"images/gendome/slide-20.jpg", caption:"بعض الأشياء بتعطيك طاقة. بس هذا الجهاز بيعطيك حرية. 🕊️⚡" },
-  { num:20, date:"15/6/2026", dayAr:"الاثنين",  img:"images/gendome/slide-21.jpg", caption:"أفضل أنواع التكنولوجيا هي التي تجعل التفاصيل اليومية أخف، دون ضجيج أو تعقيد. 🌿" },
-  { num:21, date:"16/6/2026", dayAr:"الثلاثاء", img:"images/gendome/slide-22.jpg", caption:"ما رح تضل تدور في الشنطة ولا تسأل حدا «معك شاحن؟» — بس رح تسحب الكيبل، وتكمل يومك بهدوء. 🎒✌️" },
-  { num:22, date:"18/6/2026", dayAr:"الخميس",   img:"images/gendome/slide-23.jpg", caption:"صغير بما يكفي لينسى داخل الحقيبة، لكن حضوره يظهر تماماً عندما تحتاجه. 🎯" },
-  { num:23, date:"20/6/2026", dayAr:"السبت",    img:"images/gendome/slide-24.jpg", caption:"بالطريق، بالجامعة، بالشغل، بالمطار، أو حتى بين مواعيدك — اشحن، تحرك، كمل يومك بسلاسة. 🌍" },
+  { num:1,  date:"20/5/2026", dayAr:"الأربعاء", type:"image", img:"images/gendome/go300-1.jpg",
+    caption:"شغّل أجهزتك الأساسية بكل راحة مع منافذ متعددة وشحن سريع — سواء بالبيت، الكافيه، المكتب أو حتى بالرحلات. طاقة موثوقة 285Wh ⚡", product:"Go 300" },
+
+  { num:2,  date:"21/5/2026", dayAr:"الخميس",   type:"image", img:"images/gendome/go300-2.jpg",
+    caption:"المولدات القديمة كانت بتعطيك طاقة، لكن معها إزعاج، حرارة، ووجود دائم بالخلفية بذكّرك بالمشكلة. 🔇", product:"Go 300" },
+
+  { num:3,  date:"22/5/2026", dayAr:"الجمعة",   type:"image", img:"images/gendome/go300-3.jpg",
+    caption:"في فرق بين بطارية إضافية، وبين شعور إنك مرتاح طول اليوم لأن الطاقة معك فعلاً. 🔋", product:"Go 300" },
+
+  { num:4,  date:"23/5/2026", dayAr:"السبت",    type:"image", img:"images/gendome/go300-4.jpg",
+    caption:"✔ قدرة تشغيل مستقرة\n✔ منافذ متعددة لاستخدام أسهل\n✔ بطارية آمنة بعمر طويل", product:"Go 300" },
+
+  { num:5,  date:"24/5/2026", dayAr:"الأحد",    type:"image", img:"images/gendome/micro30-1.jpg",
+    caption:"شحن فائق السرعة، وراحة دائمة — بدون أي مجهود. ⚡✨", product:"Micro 30" },
+
+  { num:6,  date:"25/5/2026", dayAr:"الاثنين",  type:"video", video:"images/gendome/video-1.mp4",
+    caption:"الرفاهية الحقيقية ليست في الأجهزة الذكية فقط .. بل في أن تبقى ذكية حتى وقت الانقطاع. 💡", product:"فيديو" },
+
+  { num:7,  date:"26/5/2026", dayAr:"الثلاثاء", type:"image", img:"images/gendome/home3000-1.jpg",
+    caption:"الشاحن واصل، والإنترنت شغال، وشغلك ماشي تمام.. حتى لو فصلت الكهرباء.\nخيارك الأضمن لإنتاجية بدون مقاطعة — Gendome UPS. ALWAYS ON. 🔌", product:"Home 3000" },
+
+  { num:8,  date:"28/5/2026", dayAr:"الخميس",   type:"image", img:"images/gendome/micro30-2.jpg",
+    caption:"الشحن المغناطيسي يعمل بالطريقة التي نحب أن تسير بها الأشياء اليوم — ببساطة، بسرعة، وبدون أي تعقيد. 🧲", product:"Micro 30" },
+
+  { num:9,  date:"29/5/2026", dayAr:"الجمعة",   type:"image", img:"images/gendome/go300-5.jpg",
+    caption:"جهاز مصمم يعطيك أداء ثابت وحماية كاملة لكل أجهزتك الحساسة (لاب توب، راوتر، شواحن) — عشان تشتغل وتنجز وأنت مرتاح البال. 🛡️", product:"Go 300" },
+
+  { num:10, date:"30/5/2026", dayAr:"السبت",    type:"video", video:"images/gendome/video-2.mp4",
+    caption:"كفاءة وفعالية استثنائية، وقدرة فائقة على الأداء العالي. 🚀", product:"فيديو" },
+
+  { num:11, date:"1/6/2026",  dayAr:"الاثنين",  type:"image", img:"images/gendome/home3000-2.jpg",
+    caption:"3000W مش مجرد رقم مكتوب على الجهاز — بيهمك إذا الكهرباء قطعت أن البيت يحتفظ بإيقاعه الطبيعي بهدوء كامل. 🏠", product:"Home 3000" },
+
+  { num:12, date:"3/6/2026",  dayAr:"الأربعاء", type:"image", img:"images/gendome/home3000-3.jpg",
+    caption:"بعض المواصفات تبدو تقنية على الورق، لكنك تلاحظ أثرها الحقيقي بعد أشهر من الاستخدام اليومي. 📊", product:"Home 3000" },
+
+  { num:13, date:"5/6/2026",  dayAr:"الجمعة",   type:"image", img:"images/gendome/home3000-4.jpg",
+    caption:"مش بس تيار كهربائي بديل — هو حماية ذكية لكل أجهزتك. 🛡️⚡", product:"Home 3000" },
+
+  { num:14, date:"6/6/2026",  dayAr:"السبت",    type:"image", img:"images/gendome/home3000-5.jpg",
+    caption:"ليست مجرد شاشة تعرض أرقاماً، بل نافذتك لمعرفة كيف تتحرك الطاقة داخل يومك. كم تستهلك؟ كم تبقى؟ كل شيء أمامك بلمسة واحدة. 📱", product:"Home 3000" },
+
+  { num:15, date:"7/6/2026",  dayAr:"الأحد",    type:"image", img:"images/gendome/micro30-3.jpg",
+    caption:"All in one charger — واحد بدل كل شي. 🔌✨", product:"Micro 30" },
+
+  { num:16, date:"8/6/2026",  dayAr:"الاثنين",  type:"image", img:"images/gendome/micro30-4.jpg",
+    caption:"السرعة لم تعد رفاهية، بل جزء من إيقاع يومنا. وقت أقل بجانب الشاحن، وطاقة أكثر تكمل يومك بهدوء. ⚡", product:"Micro 30" },
+
+  { num:17, date:"10/6/2026", dayAr:"الأربعاء", type:"image", img:"images/gendome/go300-6.jpg",
+    caption:"مشهد يبدو كإجازة .. لكنه مكتب كامل بيشتغل بالطاقة الشمسية. الفكرة مش إنك تشحن جهازك — الفكرة إن يومك يضل شغال مهما تغير المكان. ☀️💻", product:"Go 300" },
+
+  { num:18, date:"11/6/2026", dayAr:"الخميس",   type:"video", video:"images/gendome/video-3.mp4",
+    caption:"حين تصبح الحماية جزءاً من الطاقة، تتغير طريقة اعتمادك على أجهزتك بالكامل. 🔒⚡", product:"فيديو" },
+
+  { num:19, date:"13/6/2026", dayAr:"السبت",    type:"image", img:"images/gendome/go300-7.jpg",
+    caption:"بعض الأشياء بتعطيك طاقة. بس هذا الجهاز بيعطيك حرية. 🕊️⚡", product:"Go 300" },
+
+  { num:20, date:"15/6/2026", dayAr:"الاثنين",  type:"image", img:"images/gendome/micro30-5.jpg",
+    caption:"أفضل أنواع التكنولوجيا هي التي تجعل التفاصيل اليومية أخف، دون ضجيج أو تعقيد. 🌿", product:"Micro 30" },
+
+  { num:21, date:"16/6/2026", dayAr:"الثلاثاء", type:"image", img:"images/gendome/micro30-6.jpg",
+    caption:"ما رح تضل تدور في الشنطة ولا تسأل حدا «معك شاحن؟» — بس رح تسحب الكيبل، وتكمل يومك بهدوء. 🎒✌️", product:"Micro 30" },
+
+  { num:22, date:"18/6/2026", dayAr:"الخميس",   type:"image", img:"images/gendome/micro30-7.jpg",
+    caption:"صغير بما يكفي لينسى داخل الحقيبة، لكن حضوره يظهر تماماً عندما تحتاجه. 🎯", product:"Micro 30" },
+
+  { num:23, date:"20/6/2026", dayAr:"السبت",    type:"image", img:"images/gendome/micro30-8.jpg",
+    caption:"بالطريق، بالجامعة، بالشغل، بالمطار، أو حتى بين مواعيدك — اشحن، تحرك، كمل يومك بسلاسة. 🌍", product:"Micro 30" },
 ];
 
+// ── STATE ──
 const state = {};
 POSTS.forEach(p => state[p.num] = { status:'pending', note:'' });
 let currentModal = null;
 
-// Render cards
+// ── RENDER ──
 const grid = document.getElementById('grid');
 POSTS.forEach(post => {
-    const lines = post.caption.replace(/\n/g,'<br>');
     const isLong = post.caption.length > 130;
+    const captionHtml = post.caption.replace(/\n/g, '<br>');
     const card = document.createElement('div');
     card.className = 'post-card';
     card.id = `card-${post.num}`;
-    card.innerHTML = `
+
+    // media area
+    let mediaHtml;
+    if (post.type === 'video') {
+        mediaHtml = `
+        <div class="post-media">
+            <video id="vid-${post.num}" src="${post.video}" preload="metadata" playsinline muted loop></video>
+            <div class="play-btn" onclick="toggleVideo(${post.num})" id="playbtn-${post.num}">
+                <svg id="playicon-${post.num}" width="52" height="52" viewBox="0 0 52 52" fill="none">
+                    <circle cx="26" cy="26" r="26" fill="rgba(177,151,252,0.2)"/>
+                    <circle cx="26" cy="26" r="25" stroke="rgba(177,151,252,0.45)" stroke-width="1.5" fill="none"/>
+                    <polygon points="21,18 38,26 21,34" fill="white" opacity="0.9"/>
+                </svg>
+            </div>
+            <div class="video-badge">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+                فيديو
+            </div>
+            <div class="card-status-overlay" id="overlay-${post.num}"></div>
+            <span class="post-num">#${post.num}</span>
+        </div>`;
+    } else {
+        mediaHtml = `
         <div class="post-media">
             <img src="${post.img}" loading="lazy" alt="بوست ${post.num}">
             <div class="card-status-overlay" id="overlay-${post.num}"></div>
             <span class="post-num">#${post.num}</span>
-        </div>
-        <div class="post-body">
-            <div class="post-date-row">
-                <div class="post-date">
-                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    ${post.dayAr}، ${post.date}
-                </div>
-                <div class="post-platforms"><div class="platform-icon">IG</div><div class="platform-icon">FB</div></div>
-            </div>
-            <p class="post-caption" id="cap-${post.num}">${lines}</p>
-            ${isLong ? `<button class="expand-btn" id="expbtn-${post.num}" onclick="toggleExpand(${post.num})">عرض المزيد ▾</button>` : ''}
-        </div>
-        <div class="action-row">
-            <button class="btn-approve" id="ba-${post.num}" onclick="approve(${post.num})">
-                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                موافق
-            </button>
-            <button class="btn-reject" id="br-${post.num}" onclick="openRejectModal(${post.num})">
-                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                تعديل / رفض
-            </button>
-        </div>
-        <div class="rejection-note" id="note-${post.num}">
-            <div class="note-header">
-                <span class="note-label">✗ ملاحظتك:</span>
-                <button class="note-edit-btn" onclick="openRejectModal(${post.num})">تعديل</button>
-            </div>
-            <div id="note-text-${post.num}"></div>
         </div>`;
+    }
+
+    card.innerHTML = `
+    ${mediaHtml}
+    <div class="post-body">
+        <div class="post-date-row">
+            <div class="post-date">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                ${post.dayAr}، ${post.date}
+            </div>
+            <div class="post-platforms"><div class="platform-icon">IG</div><div class="platform-icon">FB</div></div>
+        </div>
+        <p class="post-caption" id="cap-${post.num}">${captionHtml}</p>
+        ${isLong ? `<button class="expand-btn" id="expbtn-${post.num}" onclick="toggleExpand(${post.num})">عرض المزيد ▾</button>` : ''}
+    </div>
+    <div class="action-row">
+        <button class="btn-approve" id="ba-${post.num}" onclick="approve(${post.num})">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            موافق
+        </button>
+        <button class="btn-reject" id="br-${post.num}" onclick="openRejectModal(${post.num})">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            تعديل / رفض
+        </button>
+    </div>
+    <div class="rejection-note" id="note-${post.num}">
+        <div class="note-header">
+            <span class="note-label">✗ ملاحظتك:</span>
+            <button class="note-edit-btn" onclick="openRejectModal(${post.num})">تعديل</button>
+        </div>
+        <div id="note-text-${post.num}"></div>
+    </div>`;
     grid.appendChild(card);
 });
 
+// ── VIDEO TOGGLE ──
+function toggleVideo(num) {
+    const vid = document.getElementById(`vid-${num}`);
+    const icon = document.getElementById(`playicon-${num}`);
+    if (vid.paused) {
+        vid.muted = false;
+        vid.play();
+        icon.innerHTML = `<circle cx="26" cy="26" r="26" fill="rgba(177,151,252,0.15)"/>
+            <rect x="17" y="16" width="6" height="20" rx="2" fill="white" opacity="0.9"/>
+            <rect x="29" y="16" width="6" height="20" rx="2" fill="white" opacity="0.9"/>`;
+    } else {
+        vid.pause();
+        icon.innerHTML = `<circle cx="26" cy="26" r="26" fill="rgba(177,151,252,0.2)"/>
+            <circle cx="26" cy="26" r="25" stroke="rgba(177,151,252,0.45)" stroke-width="1.5" fill="none"/>
+            <polygon points="21,18 38,26 21,34" fill="white" opacity="0.9"/>`;
+    }
+}
+
+// ── APPROVE / REJECT ──
 function approve(num) {
     state[num] = { status:'approved', note:'' };
     document.getElementById(`card-${num}`).className = 'post-card approved';
@@ -472,9 +456,16 @@ function approve(num) {
 function openRejectModal(num) {
     currentModal = num;
     const post = POSTS.find(p => p.num === num);
-    document.getElementById('modal-img').src = post.img;
-    document.getElementById('modal-post-num').textContent = `بوست #${num}`;
-    document.getElementById('modal-post-date').textContent = `${post.dayAr}، ${post.date}`;
+    // build preview
+    const previewImg = post.type === 'video'
+        ? `<div class="vid-thumb"><svg width="22" height="22" viewBox="0 0 24 24" fill="rgba(177,151,252,0.8)"><polygon points="5,3 19,12 5,21"/></svg></div>`
+        : `<img src="${post.img}" alt="">`;
+    document.getElementById('modal-preview').innerHTML = `
+        ${previewImg}
+        <div>
+            <div class="modal-post-num">بوست #${num} · ${post.product}</div>
+            <div class="modal-post-date">${post.dayAr}، ${post.date}</div>
+        </div>`;
     document.getElementById('modal-textarea').value = state[num].note || '';
     document.getElementById('modal-backdrop').classList.add('open');
     setTimeout(() => document.getElementById('modal-textarea').focus(), 200);
@@ -500,8 +491,7 @@ function confirmReject() {
     } else {
         document.getElementById(`note-${num}`).classList.remove('visible');
     }
-    closeModal();
-    updateCounters();
+    closeModal(); updateCounters();
     showToast(`✗ تم تسجيل ملاحظتك على البوست #${num}`);
 }
 
@@ -520,40 +510,39 @@ function toggleExpand(num) {
 
 function updateCounters() {
     const vals = Object.values(state);
-    const a = vals.filter(s => s.status === 'approved').length;
-    const r = vals.filter(s => s.status === 'rejected').length;
+    const a = vals.filter(s => s.status==='approved').length;
+    const r = vals.filter(s => s.status==='rejected').length;
     const p = POSTS.length - a - r;
-    ['bar-approved','hdr-approved'].forEach(id => document.getElementById(id).textContent = a);
-    ['bar-rejected','hdr-rejected'].forEach(id => document.getElementById(id).textContent = r);
-    ['bar-pending','hdr-pending'].forEach(id => document.getElementById(id).textContent = p);
+    ['bar-a','hdr-a'].forEach(id => document.getElementById(id).textContent = a);
+    ['bar-r','hdr-r'].forEach(id => document.getElementById(id).textContent = r);
+    ['bar-p','hdr-p'].forEach(id => document.getElementById(id).textContent = p);
 }
 
 function sendViaWhatsapp() {
-    const approved = POSTS.filter(p => state[p.num].status === 'approved');
-    const rejected  = POSTS.filter(p => state[p.num].status === 'rejected');
-    const pending   = POSTS.filter(p => state[p.num].status === 'pending');
+    const approved = POSTS.filter(p => state[p.num].status==='approved');
+    const rejected  = POSTS.filter(p => state[p.num].status==='rejected');
+    const pending   = POSTS.filter(p => state[p.num].status==='pending');
     let msg = `🗓️ *رزنامة محتوى Gendome — مايو/يونيو 2026*\n`;
     msg += `موافق: ${approved.length} | تعديل: ${rejected.length} | لم تُراجع: ${pending.length}\n`;
     if (approved.length) {
         msg += `\n✅ *موافق عليها:*\n`;
-        approved.forEach(p => { msg += `• بوست #${p.num} (${p.date})\n`; });
+        approved.forEach(p => { msg += `• بوست #${p.num} (${p.date}) — ${p.product}\n`; });
     }
     if (rejected.length) {
         msg += `\n✏️ *تعديلات مطلوبة:*\n`;
         rejected.forEach(p => {
-            msg += `• بوست #${p.num} (${p.date})`;
+            msg += `• بوست #${p.num} (${p.date}) — ${p.product}`;
             if (state[p.num].note) msg += `\n  ↳ ${state[p.num].note}`;
             msg += '\n';
         });
     }
     if (pending.length) {
         msg += `\n⏳ *لم تُراجع:*\n`;
-        pending.forEach(p => { msg += `• بوست #${p.num} (${p.date})\n`; });
+        pending.forEach(p => { msg += `• بوست #${p.num} (${p.date}) — ${p.product}\n`; });
     }
     window.open(`https://wa.me/962792020388?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
-// Close modal on backdrop
 document.getElementById('modal-backdrop').addEventListener('click', e => {
     if (e.target.id === 'modal-backdrop') closeModal();
 });
@@ -562,8 +551,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal()
 let toastTimer;
 function showToast(msg) {
     const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
+    t.textContent = msg; t.classList.add('show');
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
 }
