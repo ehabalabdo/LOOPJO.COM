@@ -141,6 +141,23 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
 .btn-card.edit { border-color:var(--blue); color:var(--blue); }
 .btn-card.del  { border-color:var(--red);  color:var(--red); }
 
+/* Rejection note strip */
+.reject-strip {
+  margin:0 10px 10px; padding:10px 12px;
+  background:rgba(224,90,90,.08); border:1px solid rgba(224,90,90,.3);
+  border-radius:10px; font-size:12px;
+}
+.reject-strip .reject-label {
+  color:var(--red); font-weight:700; margin-bottom:4px; display:flex; align-items:center; gap:5px;
+}
+.reject-strip .reject-note { color:#ddd; line-height:1.6; white-space:pre-wrap; }
+.reject-strip .btn-done {
+  margin-top:8px; width:100%; padding:6px 0; border-radius:8px;
+  background:rgba(78,202,139,.1); border:1px solid var(--green); color:var(--green);
+  font-family:inherit; font-size:12px; font-weight:700; cursor:pointer; transition:.15s;
+}
+.reject-strip .btn-done:hover { background:rgba(78,202,139,.2); }
+
 /* ── MODAL ── */
 .modal-backdrop {
   position:fixed; inset:0; background:rgba(0,0,0,.6); backdrop-filter:blur(4px);
@@ -356,6 +373,7 @@ let clients    = [];
 let currentClient = null;
 let posts      = [];
 let editingIdx = null;   // index in posts[] or null for new
+let clientState = {};    // { [postNum]: { status, note } }
 
 // ── AUTH ─────────────────────────────────────────────────────────────────────
 async function doLogin() {
@@ -448,11 +466,17 @@ async function openClient(client) {
   document.getElementById('btn-add-post').style.display = '';
   document.getElementById('breadcrumb').innerHTML = `الزبائن / <span>${client.name}</span>`;
 
-  // Load posts from API, fall back to empty
+  // Load posts + state in parallel
+  clientState = {};
   try {
-    const res = await fetch(API + `/posts?client=${client.id}`);
-    const data = await res.json();
-    posts = data.posts || [];
+    const [postsRes, stateRes] = await Promise.all([
+      fetch(API + `/posts?client=${client.id}`),
+      fetch(API + `/state?client=${client.id}`),
+    ]);
+    const postsData = await postsRes.json();
+    posts = postsData.posts || [];
+    const stateData = await stateRes.json();
+    clientState = stateData || {};
   } catch {
     posts = [];
   }
@@ -494,6 +518,15 @@ function renderPosts() {
       </div>`;
     }
 
+    const st = clientState[post.num];
+    const isRejected = st && st.status === 'rejected' && st.note;
+    const rejectHtml = isRejected ? `
+      <div class="reject-strip">
+        <div class="reject-label">✗ طلب تعديل من الكلاينت</div>
+        <div class="reject-note">${escHtml(st.note)}</div>
+        <button class="btn-done" onclick="clearRejection(${post.num})">✓ تم التعديل</button>
+      </div>` : '';
+
     card.innerHTML = `
       ${mediaHtml}
       <div class="post-body">
@@ -503,6 +536,7 @@ function renderPosts() {
         </div>
         <p class="post-caption">${escHtml(post.caption||'').replace(/\n/g,'<br>')}</p>
       </div>
+      ${rejectHtml}
       <div class="post-action-row">
         <button class="btn-card edit" onclick="openPostModal(${idx})">✏ تعديل</button>
         <button class="btn-card del"  onclick="confirmDelete(${idx})">🗑 حذف</button>
@@ -510,6 +544,22 @@ function renderPosts() {
     `;
     grid.appendChild(card);
   });
+}
+
+async function clearRejection(postNum) {
+  clientState[postNum] = { status: 'pending', note: '' };
+  // Save state back to server (no auth needed for state POST)
+  try {
+    await fetch(API + `/state?client=${currentClient.id}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(clientState),
+    });
+    showToast('✓ تم مسح ملاحظة التعديل');
+  } catch {
+    showToast('⚠ فشل الحفظ', true);
+  }
+  renderPosts();
 }
 
 function parseDMY(str) {
