@@ -595,7 +595,7 @@ POSTS.forEach(post => {
         if (isDrive(post.video)) {
             // Google Drive video: use iframe embed
             mediaHtml = `
-            <div class="post-media">
+            <div class="post-media" onclick="openLightbox(${post.num},event)" style="cursor:pointer">
                 <iframe src="${driveUrl(post.video)}" style="width:100%;height:100%;border:none;pointer-events:none" allow="autoplay" loading="lazy"></iframe>
                 <div class="card-status-overlay" id="overlay-${post.num}"></div>
                 <span class="post-num">#${post.num}</span>
@@ -777,7 +777,7 @@ function openLightbox(num, e) {
     const mediaEl = document.getElementById('lb-media');
     if (post.type === 'video') {
         if (isDrive(post.video)) {
-            mediaEl.innerHTML = `<iframe src="${driveUrl(post.video)}" style="width:90vw;max-width:860px;height:62vw;max-height:82vh;border:none;border-radius:10px" allowfullscreen allow="autoplay"></iframe>`;
+            mediaEl.innerHTML = `<iframe src="${driveUrl(post.video)}" style="width:min(95vw,1100px);aspect-ratio:16/9;max-height:86vh;border:none;border-radius:10px" allowfullscreen allow="autoplay"></iframe>`;
             const dl = document.getElementById('lb-download');
             dl.href = post.video; dl.download = '';
         } else {
