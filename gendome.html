@@ -595,8 +595,8 @@ POSTS.forEach(post => {
         if (isDrive(post.video)) {
             // Google Drive video: use iframe embed
             mediaHtml = `
-            <div class="post-media" onclick="openLightbox(${post.num},event)" style="cursor:pointer">
-                <iframe src="${driveUrl(post.video)}" style="width:100%;height:100%;border:none;pointer-events:none" allow="autoplay" loading="lazy"></iframe>
+            <div class="post-media" onclick="openLightbox(${post.num},event)" style="cursor:pointer;aspect-ratio:9/16">
+                <iframe src="${driveUrl(post.video)}" style="width:100%;height:100%;border:none;pointer-events:none;display:block" allow="autoplay" loading="lazy"></iframe>
                 <div class="card-status-overlay" id="overlay-${post.num}"></div>
                 <span class="post-num">#${post.num}</span>
                 <button class="media-expand-btn" onclick="openLightbox(${post.num},event)" title="عرض كامل">${expandIcon}</button>
