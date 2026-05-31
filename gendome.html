@@ -478,7 +478,6 @@ function driveUrl(url) {
   return url;
 }
 function isDrive(url) { return url && url.includes('drive.google.com'); }
-function bustUrl(url) { return url && url.includes('loopehab.workers.dev') ? url + '&v=2' : url; }
 
 const POSTS = [
   { num:1,  date:"20/5/2026", dayAr:"الأربعاء", type:"image", img:"images/gendome/go300-1.jpg",
@@ -629,7 +628,7 @@ POSTS.forEach(post => {
     } else {
         mediaHtml = `
         <div class="post-media" onclick="openLightbox(${post.num},event)">
-            <img src="${bustUrl(post.img)}" loading="lazy" alt="بوست ${post.num}">
+            <img src="${post.img}" loading="lazy" alt="بوست ${post.num}">
             <button class="media-expand-btn" onclick="openLightbox(${post.num},event)" title="عرض كامل">${expandIcon}</button>
             <div class="card-status-overlay" id="overlay-${post.num}"></div>
             <span class="post-num">#${post.num}</span>
@@ -787,7 +786,7 @@ function openLightbox(num, e) {
             dl.href = post.video; dl.download = `gendome-post-${num}.mp4`;
         }
     } else {
-        mediaEl.innerHTML = `<img src="${bustUrl(post.img)}" alt="بوست ${num}">`;
+        mediaEl.innerHTML = `<img src="${post.img}" alt="بوست ${num}">`;
         const dl = document.getElementById('lb-download');
         dl.href = post.img;
         dl.download = `gendome-post-${num}.jpg`;
@@ -837,7 +836,7 @@ function openRejectModal(num) {
     const post = POSTS.find(p => p.num === num);
     const previewImg = post.type === 'video'
         ? `<div class="vid-thumb"><svg width="22" height="22" viewBox="0 0 24 24" fill="rgba(177,151,252,0.8)"><polygon points="5,3 19,12 5,21"/></svg></div>`
-        : `<img src="${bustUrl(post.img)}" alt="">`;
+        : `<img src="${post.img}" alt="">`;
     document.getElementById('modal-preview').innerHTML = `
         ${previewImg}
         <div>

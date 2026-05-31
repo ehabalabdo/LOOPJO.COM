@@ -700,11 +700,6 @@ async function handleFileSelect(input) {
 
   prog.textContent = `جاري الرفع... (${(file.size/1024/1024).toFixed(1)}MB)`;
 
-  // Ensure correct Content-Type (file.type can be empty on some browsers)
-  const extMime = { jpg:'image/jpeg', jpeg:'image/jpeg', png:'image/png', gif:'image/gif', webp:'image/webp', mp4:'video/mp4', mov:'video/quicktime', webm:'video/webm' };
-  const ext = file.name.split('.').pop().toLowerCase();
-  const mimeType = file.type || extMime[ext] || 'application/octet-stream';
-
   try {
     const res = await fetch(
       `${API}/upload?client=${currentClient.id}&filename=${encodeURIComponent(file.name)}`,
@@ -712,7 +707,7 @@ async function handleFileSelect(input) {
         method: 'POST',
         headers: {
           Authorization: 'Bearer ' + adminToken,
-          'Content-Type': mimeType,
+          'Content-Type': file.type,
         },
         body: file,
       }
