@@ -640,12 +640,30 @@ document.getElementById('f-date').addEventListener('input', function() {
   document.getElementById('f-day').value = DAYS_AR[d.getDay()];
 });
 
+// Convert any Google Drive share/view URL → embeddable URL
+function driveUrl(url) {
+  if (!url) return url;
+  // https://drive.google.com/file/d/FILE_ID/view... or /open?id=...
+  const m = url.match(/drive\.google\.com\/file\/d\/([^/\?]+)/) ||
+             url.match(/drive\.google\.com\/open\?id=([^&]+)/) ||
+             url.match(/drive\.google\.com\/uc\?.*id=([^&]+)/);
+  if (m) return `https://drive.google.com/file/d/${m[1]}/preview`;
+  return url;
+}
+function isDrive(url) {
+  return url && url.includes('drive.google.com');
+}
+
 function setMediaPreview(url, type) {
   const prev = document.getElementById('media-preview');
-  const ph   = document.getElementById('media-placeholder');
   if (!url) { prev.innerHTML = '<span id="media-placeholder">لا توجد صورة / فيديو</span>'; return; }
   if (type === 'video') {
-    prev.innerHTML = `<video src="${escHtml(url)}" controls style="width:100%;height:100%;object-fit:contain"></video>`;
+    if (isDrive(url)) {
+      const embed = driveUrl(url);
+      prev.innerHTML = `<iframe src="${escHtml(embed)}" style="width:100%;height:100%;border:none" allow="autoplay" allowfullscreen></iframe>`;
+    } else {
+      prev.innerHTML = `<video src="${escHtml(url)}" controls style="width:100%;height:100%;object-fit:contain"></video>`;
+    }
   } else {
     prev.innerHTML = `<img src="${escHtml(url)}" alt="" style="width:100%;height:100%;object-fit:contain">`;
   }
@@ -653,7 +671,9 @@ function setMediaPreview(url, type) {
 
 function handleUrlInput(val) {
   const type = document.getElementById('f-type').value;
-  if (val) setMediaPreview(val, type);
+  // Auto-detect video type from Drive link
+  if (val && isDrive(val)) document.getElementById('f-type').value = 'video';
+  if (val) setMediaPreview(val, document.getElementById('f-type').value);
 }
 
 // ── FILE UPLOAD ───────────────────────────────────────────────────────────────
@@ -732,7 +752,7 @@ async function savePost() {
     caption: caption,
     product: product,
   };
-  if (type === 'video') post.video = url;
+  if (type === 'video') post.video = isDrive(url) ? driveUrl(url) : url;
   else post.img = url;
 
   if (editingIdx !== null) {

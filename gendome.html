@@ -470,6 +470,15 @@
 <script>
 const API = 'https://gendome-calendar-api.loopehab.workers.dev';
 
+// Convert Google Drive share URL → embed URL
+function driveUrl(url) {
+  if (!url) return url;
+  const m = url.match(/drive\.google\.com\/file\/d\/([^/\?]+)/);
+  if (m) return `https://drive.google.com/file/d/${m[1]}/preview`;
+  return url;
+}
+function isDrive(url) { return url && url.includes('drive.google.com'); }
+
 const POSTS = [
   { num:1,  date:"20/5/2026", dayAr:"الأربعاء", type:"image", img:"images/gendome/go300-1.jpg",
     caption:"شغّل أجهزتك الأساسية بكل راحة مع منافذ متعددة وشحن سريع — سواء بالبيت، الكافيه، المكتب أو حتى بالرحلات. طاقة موثوقة 285Wh ⚡", product:"Go 300" },
@@ -583,24 +592,39 @@ POSTS.forEach(post => {
 
     let mediaHtml;
     if (post.type === 'video') {
-        mediaHtml = `
-        <div class="post-media" onclick="openLightbox(${post.num},event)">
-            <video id="vid-${post.num}" src="${post.video}" preload="metadata" playsinline muted loop></video>
-            <div class="play-btn" id="playbtn-${post.num}" onclick="toggleVideo(${post.num},event)">
-                <svg id="playicon-${post.num}" width="52" height="52" viewBox="0 0 52 52" fill="none">
-                    <circle cx="26" cy="26" r="26" fill="rgba(177,151,252,0.2)"/>
-                    <circle cx="26" cy="26" r="25" stroke="rgba(177,151,252,0.45)" stroke-width="1.5" fill="none"/>
-                    <polygon points="21,18 38,26 21,34" fill="white" opacity="0.9"/>
-                </svg>
-            </div>
-            <button class="media-expand-btn" onclick="openLightbox(${post.num},event)" title="عرض كامل">${expandIcon}</button>
-            <div class="video-badge">
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
-                فيديو
-            </div>
-            <div class="card-status-overlay" id="overlay-${post.num}"></div>
-            <span class="post-num">#${post.num}</span>
-        </div>`;
+        if (isDrive(post.video)) {
+            // Google Drive video: use iframe embed
+            mediaHtml = `
+            <div class="post-media">
+                <iframe src="${driveUrl(post.video)}" style="width:100%;height:100%;border:none;pointer-events:none" allow="autoplay" loading="lazy"></iframe>
+                <div class="card-status-overlay" id="overlay-${post.num}"></div>
+                <span class="post-num">#${post.num}</span>
+                <button class="media-expand-btn" onclick="openLightbox(${post.num},event)" title="عرض كامل">${expandIcon}</button>
+                <div class="video-badge">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+                    فيديو
+                </div>
+            </div>`;
+        } else {
+            mediaHtml = `
+            <div class="post-media" onclick="openLightbox(${post.num},event)">
+                <video id="vid-${post.num}" src="${post.video}" preload="metadata" playsinline muted loop></video>
+                <div class="play-btn" id="playbtn-${post.num}" onclick="toggleVideo(${post.num},event)">
+                    <svg id="playicon-${post.num}" width="52" height="52" viewBox="0 0 52 52" fill="none">
+                        <circle cx="26" cy="26" r="26" fill="rgba(177,151,252,0.2)"/>
+                        <circle cx="26" cy="26" r="25" stroke="rgba(177,151,252,0.45)" stroke-width="1.5" fill="none"/>
+                        <polygon points="21,18 38,26 21,34" fill="white" opacity="0.9"/>
+                    </svg>
+                </div>
+                <button class="media-expand-btn" onclick="openLightbox(${post.num},event)" title="عرض كامل">${expandIcon}</button>
+                <div class="video-badge">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+                    فيديو
+                </div>
+                <div class="card-status-overlay" id="overlay-${post.num}"></div>
+                <span class="post-num">#${post.num}</span>
+            </div>`;
+        }
     } else {
         mediaHtml = `
         <div class="post-media" onclick="openLightbox(${post.num},event)">
@@ -752,10 +776,15 @@ function openLightbox(num, e) {
 
     const mediaEl = document.getElementById('lb-media');
     if (post.type === 'video') {
-        mediaEl.innerHTML = `<video src="${post.video}" controls autoplay style="max-width:100%;max-height:82vh;border-radius:10px;"></video>`;
-        const dl = document.getElementById('lb-download');
-        dl.href = post.video;
-        dl.download = `gendome-post-${num}.mp4`;
+        if (isDrive(post.video)) {
+            mediaEl.innerHTML = `<iframe src="${driveUrl(post.video)}" style="width:90vw;max-width:860px;height:62vw;max-height:82vh;border:none;border-radius:10px" allowfullscreen allow="autoplay"></iframe>`;
+            const dl = document.getElementById('lb-download');
+            dl.href = post.video; dl.download = '';
+        } else {
+            mediaEl.innerHTML = `<video src="${post.video}" controls autoplay style="max-width:100%;max-height:82vh;border-radius:10px;"></video>`;
+            const dl = document.getElementById('lb-download');
+            dl.href = post.video; dl.download = `gendome-post-${num}.mp4`;
+        }
     } else {
         mediaEl.innerHTML = `<img src="${post.img}" alt="بوست ${num}">`;
         const dl = document.getElementById('lb-download');
