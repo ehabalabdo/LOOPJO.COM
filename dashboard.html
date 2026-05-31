@@ -640,30 +640,12 @@ document.getElementById('f-date').addEventListener('input', function() {
   document.getElementById('f-day').value = DAYS_AR[d.getDay()];
 });
 
-// Convert any Google Drive share/view URL → embeddable URL
-function driveUrl(url) {
-  if (!url) return url;
-  // https://drive.google.com/file/d/FILE_ID/view... or /open?id=...
-  const m = url.match(/drive\.google\.com\/file\/d\/([^/\?]+)/) ||
-             url.match(/drive\.google\.com\/open\?id=([^&]+)/) ||
-             url.match(/drive\.google\.com\/uc\?.*id=([^&]+)/);
-  if (m) return `https://drive.google.com/file/d/${m[1]}/preview`;
-  return url;
-}
-function isDrive(url) {
-  return url && url.includes('drive.google.com');
-}
-
 function setMediaPreview(url, type) {
   const prev = document.getElementById('media-preview');
+  const ph   = document.getElementById('media-placeholder');
   if (!url) { prev.innerHTML = '<span id="media-placeholder">لا توجد صورة / فيديو</span>'; return; }
   if (type === 'video') {
-    if (isDrive(url)) {
-      const embed = driveUrl(url);
-      prev.innerHTML = `<iframe src="${escHtml(embed)}" style="width:100%;height:100%;border:none" allow="autoplay" allowfullscreen></iframe>`;
-    } else {
-      prev.innerHTML = `<video src="${escHtml(url)}" controls style="width:100%;height:100%;object-fit:contain"></video>`;
-    }
+    prev.innerHTML = `<video src="${escHtml(url)}" controls style="width:100%;height:100%;object-fit:contain"></video>`;
   } else {
     prev.innerHTML = `<img src="${escHtml(url)}" alt="" style="width:100%;height:100%;object-fit:contain">`;
   }
@@ -671,9 +653,7 @@ function setMediaPreview(url, type) {
 
 function handleUrlInput(val) {
   const type = document.getElementById('f-type').value;
-  // Auto-detect video type from Drive link
-  if (val && isDrive(val)) document.getElementById('f-type').value = 'video';
-  if (val) setMediaPreview(val, document.getElementById('f-type').value);
+  if (val) setMediaPreview(val, type);
 }
 
 // ── FILE UPLOAD ───────────────────────────────────────────────────────────────
@@ -681,24 +661,14 @@ async function handleFileSelect(input) {
   const file = input.files[0];
   if (!file) return;
   const prog = document.getElementById('upload-progress');
-  prog.style.color = 'var(--mint)';
+  prog.textContent = 'جاري الرفع...';
 
   // Detect type from MIME
-  const isVideo = file.type.startsWith('video/');
-  document.getElementById('f-type').value = isVideo ? 'video' : 'image';
-
-  // Size check — KV limit 24MB
-  const maxBytes = 24 * 1024 * 1024;
-  if (file.size > maxBytes) {
-    prog.style.color = 'var(--red)';
-    prog.innerHTML = `⚠ حجم الملف كبير جداً (${(file.size/1024/1024).toFixed(1)}MB من أقصى 24MB)<br>
-      <span style="font-size:11px;color:var(--muted)">الفيديوهات الكبيرة: ارفعها على Google Drive أو اي موقع واستخدم الرابط المباشر</span>`;
-    // Still show local preview
-    setMediaPreview(URL.createObjectURL(file), isVideo ? 'video' : 'image');
-    return;
+  if (file.type.startsWith('video/')) {
+    document.getElementById('f-type').value = 'video';
+  } else {
+    document.getElementById('f-type').value = 'image';
   }
-
-  prog.textContent = `جاري الرفع... (${(file.size/1024/1024).toFixed(1)}MB)`;
 
   try {
     const res = await fetch(
@@ -712,21 +682,19 @@ async function handleFileSelect(input) {
         body: file,
       }
     );
+    if (!res.ok) throw new Error(await res.text());
     const data = await res.json();
-    if (!res.ok) {
-      throw new Error(data.message || data.error || `HTTP ${res.status}`);
-    }
     document.getElementById('f-url').value = data.url;
     setMediaPreview(data.url, document.getElementById('f-type').value);
-    prog.textContent = `✓ تم الرفع (${(file.size/1024/1024).toFixed(1)}MB)`;
+    prog.textContent = '✓ تم الرفع';
     prog.style.color = 'var(--green)';
   } catch (e) {
+    prog.textContent = 'فشل الرفع: ' + e.message;
     prog.style.color = 'var(--red)';
-    prog.innerHTML = `✕ فشل الرفع: ${escHtml(e.message)}<br>
-      <span style="font-size:11px;color:var(--muted)">جرّب رابط خارجي بدلاً من رفع الملف</span>`;
-    // Show local preview so user can at least see the file
+    // Fall back: show local preview without upload
     const localUrl = URL.createObjectURL(file);
     setMediaPreview(localUrl, document.getElementById('f-type').value);
+    document.getElementById('f-url').value = localUrl;
   }
 }
 
@@ -752,7 +720,7 @@ async function savePost() {
     caption: caption,
     product: product,
   };
-  if (type === 'video') post.video = isDrive(url) ? driveUrl(url) : url;
+  if (type === 'video') post.video = url;
   else post.img = url;
 
   if (editingIdx !== null) {
