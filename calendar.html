@@ -504,10 +504,11 @@ async function loadRemotePosts() {
     try {
         const res = await fetch(`${API}/posts?client=${CLIENT_ID}`);
         const data = await res.json();
-        if (data.posts && Array.isArray(data.posts) && data.posts.length > 0) {
+        const arr = Array.isArray(data) ? data : (data.posts || []);
+        if (Array.isArray(arr) && arr.length > 0) {
             // Replace POSTS with remote version, sorted by date
             POSTS.length = 0;
-            data.posts.forEach(p => POSTS.push(p));
+            arr.forEach(p => POSTS.push(p));
             POSTS.sort((a, b) => parseDateDMY(a.date) - parseDateDMY(b.date));
             POSTS.forEach((p, i) => p.num = i + 1);
         }
