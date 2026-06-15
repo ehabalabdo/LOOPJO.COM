@@ -560,7 +560,7 @@ async function openClient(client) {
       fetch(API + `/state?client=${client.id}`),
     ]);
     const postsData = await postsRes.json();
-    posts = postsData.posts || [];
+    posts = Array.isArray(postsData) ? postsData : (postsData.posts || []);
     const stateData = await stateRes.json();
     clientState = stateData || {};
   } catch {
