@@ -88,6 +88,14 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
   justify-content:center; gap:8px; color:var(--muted); font-size:14px;
 }
 .add-client-card:hover { border-color:var(--blue); color:var(--blue); }
+.client-actions { display:flex; gap:6px; margin-top:12px; }
+.client-action-btn {
+  flex:1; padding:5px 8px; border-radius:7px; border:1px solid var(--border);
+  background:var(--bg3); color:var(--text); font-family:inherit; font-size:12px;
+  cursor:pointer; transition:.15s; text-align:center;
+}
+.client-action-btn:hover { border-color:var(--blue); color:var(--blue); }
+.client-action-btn.copied { border-color:var(--green); color:var(--green); }
 
 /* ── POSTS SCREEN ── */
 #posts-screen { padding:24px; max-width:1200px; margin:0 auto; }
@@ -332,6 +340,26 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
   </div>
 </div>
 
+<!-- ══ EDIT URL MODAL ════════════════════════════════════════════════════════ -->
+<div class="modal-backdrop" id="edit-url-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="edit-url-title">تعديل رابط الكالندر</span>
+      <button class="modal-close" onclick="closeEditUrlModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>رابط صفحة التقويم</label>
+        <input type="url" id="edit-url-input" placeholder="https://loopjo.com/...">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-nav" onclick="closeEditUrlModal()">إلغاء</button>
+      <button class="btn-nav btn-primary" onclick="saveEditUrl()">💾 حفظ</button>
+    </div>
+  </div>
+</div>
+
 <!-- ══ ADD CLIENT MODAL ═══════════════════════════════════════════════════════ -->
 <div class="modal-backdrop" id="client-modal">
   <div class="modal">
@@ -439,15 +467,34 @@ function showClients() {
 function renderClients() {
   const grid = document.getElementById('clients-grid');
   grid.innerHTML = '';
-  clients.forEach(c => {
+  clients.forEach((c, idx) => {
     const div = document.createElement('div');
     div.className = 'client-card';
     div.innerHTML = `
       <span class="client-badge">${c.id}</span>
       <div class="client-name">${c.name}</div>
-      <div class="client-meta" style="margin-top:24px">${c.pageUrl || ''}</div>
+      <div class="client-meta" style="margin-top:24px;margin-bottom:4px">${c.pageUrl || '<span style="color:#555">لا يوجد رابط</span>'}</div>
+      <div class="client-actions">
+        <button class="client-action-btn" id="copy-btn-${idx}">📋 نسخ الرابط</button>
+        <button class="client-action-btn">✏️ تعديل الرابط</button>
+      </div>
     `;
-    div.onclick = () => openClient(c);
+    div.querySelector('#copy-btn-' + idx).addEventListener('click', e => {
+      e.stopPropagation();
+      const url = c.pageUrl || '';
+      if (!url) { showToast('لا يوجد رابط', true); return; }
+      navigator.clipboard.writeText(url).then(() => {
+        const btn = div.querySelector('#copy-btn-' + idx);
+        btn.textContent = '✓ تم النسخ';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = '📋 نسخ الرابط'; btn.classList.remove('copied'); }, 2000);
+      });
+    });
+    div.querySelectorAll('.client-action-btn')[1].addEventListener('click', e => {
+      e.stopPropagation();
+      openEditUrlModal(idx, c);
+    });
+    div.addEventListener('click', () => openClient(c));
     grid.appendChild(div);
   });
   // Add client button
@@ -798,6 +845,35 @@ async function persistPosts() {
 }
 
 // ── CLIENTS CRUD ──────────────────────────────────────────────────────────────
+// ── EDIT URL MODAL ───────────────────────────────────────────────────────────
+let _editUrlIdx = null;
+function openEditUrlModal(idx, c) {
+  _editUrlIdx = idx;
+  document.getElementById('edit-url-title').textContent = 'تعديل رابط: ' + c.name;
+  document.getElementById('edit-url-input').value = c.pageUrl || '';
+  document.getElementById('edit-url-modal').classList.add('open');
+}
+function closeEditUrlModal() {
+  document.getElementById('edit-url-modal').classList.remove('open');
+  _editUrlIdx = null;
+}
+async function saveEditUrl() {
+  if (_editUrlIdx === null) return;
+  const url = document.getElementById('edit-url-input').value.trim();
+  clients[_editUrlIdx].pageUrl = url;
+  await fetch(API + '/clients', {
+    method: 'PUT',
+    headers: { Authorization: 'Bearer ' + adminToken, 'Content-Type': 'application/json' },
+    body: JSON.stringify(clients),
+  });
+  closeEditUrlModal();
+  renderClients();
+  showToast('✓ تم تحديث الرابط');
+}
+document.getElementById('edit-url-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeEditUrlModal();
+});
+
 function openClientModal() {
   document.getElementById('c-name').value = '';
   document.getElementById('c-id').value = '';
