@@ -2,6 +2,9 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
+    { "source": "/rose", "destination": "/calendar?client=lily", "permanent": false },
+    { "source": "/mijdaflogistics", "destination": "/calendar?client=mijdaflogistics", "permanent": false },
+
     { "source": "/lp-social-media-jordan", "destination": "/social-media-jordan", "permanent": true },
     { "source": "/lp-social-media-jordan.html", "destination": "/social-media-jordan", "permanent": true },
     { "source": "/lp-social-media-management-amman", "destination": "/social-media-jordan", "permanent": true },
