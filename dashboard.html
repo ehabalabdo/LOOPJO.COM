@@ -377,8 +377,8 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
         <input type="text" id="c-id" placeholder="مثلاً: gendome">
       </div>
       <div class="field">
-        <label>رابط صفحة التقويم</label>
-        <input type="url" id="c-url" placeholder="https://loopjo.com/...">
+        <label>رابط صفحة التقويم <span style="opacity:.5;font-size:.75rem">(اختياري — تلقائي: /calendar?client=ID)</span></label>
+        <input type="url" id="c-url" placeholder="تلقائي: https://loopjo.com/calendar?client=ID">
       </div>
     </div>
     <div class="modal-footer">
@@ -888,7 +888,8 @@ async function saveClient() {
   const id   = document.getElementById('c-id').value.trim().toLowerCase().replace(/\s+/g,'-');
   const url  = document.getElementById('c-url').value.trim();
   if (!name || !id) { showToast('أدخل الاسم والـ ID'); return; }
-  clients.push({ id, name, pageUrl: url });
+  const autoUrl = url || `https://loopjo.com/calendar?client=${id}`;
+  clients.push({ id, name, pageUrl: autoUrl });
   await fetch(API + '/clients', {
     method: 'PUT',
     headers: { Authorization: 'Bearer ' + adminToken, 'Content-Type': 'application/json' },

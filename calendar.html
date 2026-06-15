@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>رزنامة المحتوى</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0e0e11; --bg2: #141418; --bg3: #1a1a20;
+            --white: #f2f2f1; --white70: rgba(242,242,241,0.7);
+            --white40: rgba(242,242,241,0.35); --white10: rgba(242,242,241,0.08);
+            --white05: rgba(242,242,241,0.04);
+            --blue: #74bae1; --mint: #9ddad0; --gold: #f0c060;
+            --green: #4eca8b; --red: #e05a5a; --purple: #b197fc;
+            --holo: linear-gradient(135deg, #eea9c9, #74bae1, #9ddad0);
+        }
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior:smooth; }
+        body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--white); min-height:100vh; overflow-x:hidden; }
+        body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index:9999; opacity:0.18;
+            background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E"); }
+        body::after { content:''; position:fixed; inset:0; z-index:-1;
+            background: radial-gradient(ellipse 80% 50% at 20% 0%, rgba(116,186,225,0.06) 0%,transparent 60%),
+                        radial-gradient(ellipse 60% 40% at 80% 100%,rgba(238,169,201,0.04) 0%,transparent 60%); }
+
+        /* ── HEADER ── */
+        .header { padding:18px 36px; display:flex; align-items:center; justify-content:space-between;
+            border-bottom:1px solid var(--white10); backdrop-filter:blur(16px);
+            background:rgba(14,14,17,0.88); position:sticky; top:0; z-index:200; gap:12px; }
+        .logo-text { font-family:'Tajawal',sans-serif; font-weight:700; font-size:1.15rem;
+            background:var(--holo); -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+            background-clip:text; letter-spacing:2px; }
+        .header-right { display:flex; align-items:center; gap:10px; }
+        .client-badge { display:flex; align-items:center; gap:8px; background:var(--white05);
+            border:1px solid var(--white10); border-radius:50px; padding:6px 14px 6px 8px; }
+        .client-avatar { width:28px; height:28px; border-radius:50%; background:var(--holo);
+            display:flex; align-items:center; justify-content:center;
+            font-size:0.78rem; font-weight:900; color:var(--bg); flex-shrink:0; }
+        .client-name { font-size:0.85rem; font-weight:700; }
+        .counter-badge { font-size:0.75rem; font-weight:700; padding:5px 12px; border-radius:50px;
+            background:var(--white05); border:1px solid var(--white10); color:var(--white40); white-space:nowrap; }
+        .c-a{color:var(--green)} .c-r{color:var(--red)} .c-p{color:var(--gold)}
+
+        /* ── HERO ── */
+        .hero { padding:48px 36px 26px; text-align:center; }
+        .month-tag { display:inline-flex; align-items:center; gap:6px; padding:5px 18px; border-radius:50px;
+            border:1px solid rgba(116,186,225,0.3); color:var(--blue); font-size:0.75rem; font-weight:700;
+            letter-spacing:2px; margin-bottom:16px; text-transform:uppercase; }
+        .hero h1 { font-family:'Tajawal',sans-serif; font-size:clamp(1.7rem,4vw,2.6rem); font-weight:900;
+            margin-bottom:10px; line-height:1.3; }
+        .hero h1 span { background:var(--holo); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .hero p { color:var(--white40); font-size:0.88rem; max-width:480px; margin:0 auto; line-height:1.9; }
+
+        /* ── STATS ── */
+        .stats-bar { display:flex; justify-content:center; gap:8px; margin:20px 36px; flex-wrap:wrap; }
+        .stat-pill { padding:6px 14px; border-radius:50px; background:var(--white05); border:1px solid var(--white10);
+            font-size:0.78rem; color:var(--white70); display:flex; align-items:center; gap:6px; }
+        .dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+        .dot-gold{background:var(--gold)} .dot-mint{background:var(--mint)} .dot-blue{background:var(--blue)} .dot-purple{background:var(--purple)}
+
+        /* ── GRID ── */
+        .calendar-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+            gap:24px; padding:0 36px 90px; max-width:1440px; margin:0 auto; }
+
+        /* ── CARD ── */
+        .post-card { background:var(--bg2); border:1px solid var(--white10); border-radius:18px;
+            overflow:hidden; opacity:0; transform:translateY(22px);
+            transition:opacity .5s ease, transform .5s ease, border-color .3s, box-shadow .3s; }
+        .post-card.in-view { opacity:1; transform:translateY(0); }
+        .post-card.in-view:hover { transform:translateY(-3px); border-color:rgba(116,186,225,0.2); box-shadow:0 8px 32px rgba(0,0,0,.35); }
+        .post-card.approved { border-color:rgba(78,202,139,.4)!important; box-shadow:0 0 0 1px rgba(78,202,139,.1)!important; }
+        .post-card.rejected  { border-color:rgba(224,90,90,.4)!important;  box-shadow:0 0 0 1px rgba(224,90,90,.1)!important;  }
+
+        /* ── MEDIA AREA — full image, no crop ── */
+        .post-media { position:relative; background:#0c0c10; overflow:hidden; cursor:zoom-in; }
+        .post-media img { width:100%; height:auto; display:block; transition:transform .35s; }
+        .post-card:hover .post-media img { transform:scale(1.015); }
+        .post-media video { width:100%; height:auto; display:block; }
+
+        /* expand icon top-right */
+        .media-expand-btn { position:absolute; z-index:5; top:8px; right:8px;
+            width:30px; height:30px; border-radius:8px; background:rgba(14,14,17,.7);
+            border:1px solid rgba(242,242,241,.15); display:flex; align-items:center; justify-content:center;
+            cursor:pointer; opacity:0; transition:opacity .2s; backdrop-filter:blur(6px); }
+        .post-media:hover .media-expand-btn { opacity:1; }
+        .media-expand-btn svg { width:14px; height:14px; color:var(--white); }
+
+        .video-badge { position:absolute; z-index:4; top:8px; left:8px;
+            background:rgba(177,151,252,0.18); border:1px solid rgba(177,151,252,0.35);
+            color:var(--purple); font-size:0.7rem; font-weight:700; padding:4px 9px; border-radius:20px;
+            display:flex; align-items:center; gap:5px; backdrop-filter:blur(8px); pointer-events:none; }
+        .play-btn { position:absolute; z-index:4; inset:0; display:flex; align-items:center; justify-content:center;
+            background:rgba(0,0,0,0); transition:background .2s; cursor:pointer; }
+        .play-btn:hover { background:rgba(0,0,0,0.18); }
+        .play-btn svg { opacity:0.85; filter:drop-shadow(0 2px 8px rgba(0,0,0,.5)); transition:transform .2s,opacity .2s; }
+        .play-btn:hover svg { transform:scale(1.1); opacity:1; }
+
+        .post-num { position:absolute; z-index:2; bottom:8px; right:8px; font-size:0.68rem; font-weight:700;
+            color:rgba(242,242,241,.6); background:rgba(14,14,17,.65); padding:3px 8px; border-radius:20px;
+            pointer-events:none; }
+        .card-status-overlay { position:absolute; inset:0; z-index:3; display:flex; align-items:center;
+            justify-content:center; font-size:5rem; opacity:0; pointer-events:none; transition:opacity .3s; }
+        .post-card.approved .card-status-overlay { opacity:1; background:rgba(78,202,139,.1); }
+        .post-card.rejected  .card-status-overlay { opacity:1; background:rgba(224,90,90,.1); }
+
+        /* card body */
+        .post-body { padding:14px 15px 0; }
+        .post-date-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+        .post-date { display:flex; align-items:center; gap:5px; font-size:0.78rem; color:var(--blue); font-weight:700; }
+        .post-platforms { display:flex; gap:4px; }
+        .platform-icon { width:22px; height:22px; border-radius:6px; display:flex; align-items:center; justify-content:center; }
+        .platform-icon.ig { background:linear-gradient(135deg,#f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); }
+        .platform-icon.fb { background:#1877f2; }
+        .platform-icon svg { display:block; }
+        .post-caption { font-size:0.83rem; color:var(--white70); line-height:1.75; margin-bottom:4px;
+            display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden; }
+        .post-caption.expanded { -webkit-line-clamp:unset; overflow:visible; }
+        .expand-btn { background:none; border:none; color:var(--blue); font-size:0.72rem; cursor:pointer;
+            font-family:'Cairo',sans-serif; padding:2px 0 10px; display:block; }
+        .expand-btn:hover { text-decoration:underline; }
+
+        /* action row */
+        .action-row { display:flex; gap:8px; padding:12px 15px 15px; border-top:1px solid var(--white10); }
+        .btn-approve,.btn-reject { flex:1; padding:9px 8px; border-radius:10px; border:none; cursor:pointer;
+            font-family:'Cairo',sans-serif; font-size:0.85rem; font-weight:700;
+            display:flex; align-items:center; justify-content:center; gap:6px; transition:all .2s; }
+        .btn-approve { background:rgba(78,202,139,.1); color:var(--green); border:1.5px solid rgba(78,202,139,.25); }
+        .btn-approve:hover,.btn-approve.active { background:rgba(78,202,139,.25); border-color:rgba(78,202,139,.55); }
+        .btn-reject  { background:rgba(224,90,90,.1);  color:var(--red);   border:1.5px solid rgba(224,90,90,.25);  }
+        .btn-reject:hover,.btn-reject.active { background:rgba(224,90,90,.25); border-color:rgba(224,90,90,.55); }
+
+        /* rejection note */
+        .rejection-note { margin:0 15px 14px; background:rgba(224,90,90,.07);
+            border:1px solid rgba(224,90,90,.2); border-radius:10px; padding:10px 12px;
+            font-size:0.78rem; color:rgba(242,242,241,.65); line-height:1.65; display:none; }
+        .rejection-note.visible { display:block; }
+        .note-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; }
+        .note-label { font-size:0.68rem; color:var(--red); font-weight:700; }
+        .note-edit-btn { background:none; border:none; color:var(--white40); cursor:pointer; font-size:0.68rem; font-family:'Cairo',sans-serif; }
+        .note-edit-btn:hover { color:var(--white); }
+
+        /* ── BOTTOM BAR ── */
+        .approve-all-bar { position:fixed; bottom:0; left:0; right:0; z-index:150; background:rgba(14,14,17,.94);
+            backdrop-filter:blur(20px); border-top:1px solid var(--white10);
+            padding:13px 36px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+        .approve-summary { font-size:0.82rem; color:var(--white40); display:flex; gap:16px; flex-wrap:wrap; }
+        .bar-actions { display:flex; gap:8px; flex-wrap:wrap; }
+        .btn-approve-all { padding:10px 22px; border-radius:10px; border:none; cursor:pointer;
+            font-family:'Cairo',sans-serif; font-size:0.88rem; font-weight:700;
+            background:var(--holo); color:var(--bg); transition:opacity .2s,transform .15s; }
+        .btn-approve-all:hover { opacity:.85; transform:scale(1.03); }
+        .btn-send-wa { padding:10px 22px; border-radius:10px; cursor:pointer;
+            font-family:'Cairo',sans-serif; font-size:0.88rem; font-weight:700;
+            background:rgba(37,211,102,.1); color:#25d366; border:1.5px solid rgba(37,211,102,.3);
+            transition:all .2s; display:flex; align-items:center; gap:7px; }
+        .btn-send-wa:hover { background:rgba(37,211,102,.22); border-color:rgba(37,211,102,.55); }
+
+        /* ── LIGHTBOX ── */
+        .lb-backdrop { position:fixed; inset:0; z-index:600; background:rgba(0,0,0,.9);
+            backdrop-filter:blur(12px); display:flex; flex-direction:column; align-items:center; justify-content:center;
+            opacity:0; pointer-events:none; transition:opacity .22s; }
+        .lb-backdrop.open { opacity:1; pointer-events:all; }
+        .lb-topbar { position:absolute; top:0; left:0; right:0; display:flex; align-items:center;
+            justify-content:space-between; padding:14px 20px; z-index:2;
+            background:linear-gradient(to bottom,rgba(0,0,0,.65),transparent); }
+        .lb-info { font-size:0.82rem; color:var(--white70); }
+        .lb-info strong { color:var(--white); }
+        .lb-btn-row { display:flex; gap:8px; }
+        .lb-btn { height:36px; padding:0 16px; border-radius:10px; border:1px solid rgba(242,242,241,.18);
+            background:rgba(242,242,241,.08); color:var(--white70); cursor:pointer;
+            font-family:'Cairo',sans-serif; font-size:0.82rem; font-weight:600;
+            display:flex; align-items:center; gap:7px; transition:all .2s; }
+        .lb-btn:hover { background:rgba(242,242,241,.18); color:var(--white); }
+        .lb-btn.download { background:rgba(116,186,225,.12); border-color:rgba(116,186,225,.35); color:var(--blue); }
+        .lb-btn.download:hover { background:rgba(116,186,225,.25); }
+        .lb-btn.close-btn { background:rgba(224,90,90,.1); border-color:rgba(224,90,90,.3); color:var(--red); }
+        .lb-btn.close-btn:hover { background:rgba(224,90,90,.22); }
+        .lb-media-wrap { max-width:92vw; max-height:82vh; display:flex; align-items:center; justify-content:center;
+            transition:opacity .18s ease; }
+        .lb-media-wrap img { max-width:100%; max-height:82vh; border-radius:10px; object-fit:contain;
+            box-shadow:0 20px 80px rgba(0,0,0,.6); }
+        .lb-media-wrap video { max-width:100%; max-height:82vh; border-radius:10px;
+            box-shadow:0 20px 80px rgba(0,0,0,.6); }
+
+        /* ── SWIPE HINT (mobile one-time) ── */
+        .lb-swipe-hint { position:absolute; bottom:80px; left:50%; transform:translateX(-50%);
+            display:flex; align-items:center; gap:8px; background:rgba(0,0,0,.7);
+            border:1px solid rgba(255,255,255,.18); border-radius:50px; padding:9px 20px;
+            font-size:0.82rem; color:rgba(255,255,255,.85); pointer-events:none; z-index:10;
+            white-space:nowrap; animation:swipeHintFade 3.2s ease forwards; }
+        .lb-swipe-hint .hint-hand { display:inline-block; font-size:1.1rem;
+            animation:swipeHandMove 0.85s ease-in-out infinite; }
+        @keyframes swipeHintFade {
+            0%   { opacity:0; transform:translateX(-50%) translateY(10px); }
+            18%  { opacity:1; transform:translateX(-50%) translateY(0); }
+            72%  { opacity:1; }
+            100% { opacity:0; }
+        }
+        @keyframes swipeHandMove {
+            0%,100% { transform:translateX(0); }
+            50%     { transform:translateX(-9px); }
+        }
+        .lb-caption { position:absolute; bottom:0; left:0; right:0; padding:20px 28px 22px;
+            background:linear-gradient(to top,rgba(0,0,0,.7),transparent); text-align:center;
+            font-size:0.85rem; color:var(--white70); line-height:1.75; max-width:700px; margin:0 auto; }
+        .lb-nav { position:absolute; top:50%; transform:translateY(-50%); z-index:2;
+            width:42px; height:42px; border-radius:50%; background:rgba(242,242,241,.1);
+            border:1px solid rgba(242,242,241,.18); color:var(--white); cursor:pointer; font-size:1.1rem;
+            display:flex; align-items:center; justify-content:center; transition:all .2s; backdrop-filter:blur(4px); }
+        .lb-nav:hover { background:rgba(242,242,241,.22); }
+        .lb-nav.prev { right:16px; }
+        .lb-nav.next { left:16px; }
+
+        /* ── REJECT MODAL ── */
+        .modal-backdrop { position:fixed; inset:0; z-index:700; background:rgba(0,0,0,.72);
+            backdrop-filter:blur(6px); display:flex; align-items:center; justify-content:center;
+            padding:20px; opacity:0; pointer-events:none; transition:opacity .22s; }
+        .modal-backdrop.open { opacity:1; pointer-events:all; }
+        .modal { background:var(--bg3); border:1px solid var(--white10); border-radius:20px;
+            padding:26px; width:100%; max-width:440px; transform:translateY(20px); transition:transform .22s; }
+        .modal-backdrop.open .modal { transform:translateY(0); }
+        .modal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+        .modal-title { font-size:1rem; font-weight:700; color:var(--red); }
+        .modal-close { width:30px; height:30px; border-radius:8px; background:var(--white05);
+            border:1px solid var(--white10); cursor:pointer; color:var(--white40); font-size:1rem;
+            display:flex; align-items:center; justify-content:center; transition:all .2s; }
+        .modal-close:hover { background:var(--white10); color:var(--white); }
+        .modal-post-preview { display:flex; align-items:center; gap:12px; background:var(--white05);
+            border:1px solid var(--white10); border-radius:12px; padding:10px 12px; margin-bottom:18px; }
+        .modal-post-preview img { width:52px; height:52px; object-fit:cover; border-radius:8px; flex-shrink:0; }
+        .modal-post-preview .vid-thumb { width:52px; height:52px; border-radius:8px; background:rgba(177,151,252,.12);
+            border:1px solid rgba(177,151,252,.25); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+        .modal-post-num { font-size:0.68rem; color:var(--white40); margin-bottom:3px; }
+        .modal-post-date { font-size:0.82rem; font-weight:700; color:var(--blue); }
+        .modal-label { font-size:0.78rem; color:var(--white40); margin-bottom:8px; }
+        .modal-textarea { width:100%; background:var(--white05); border:1px solid var(--white10);
+            border-radius:12px; padding:12px; color:var(--white); font-family:'Cairo',sans-serif;
+            font-size:0.85rem; resize:none; min-height:100px; outline:none; direction:rtl;
+            transition:border-color .2s; }
+        .modal-textarea::placeholder { color:var(--white40); }
+        .modal-textarea:focus { border-color:rgba(224,90,90,.4); }
+        /* edit type chips */
+        .edit-type-row { display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
+        .edit-chip {
+            flex:1; min-width:90px; padding:9px 6px; border-radius:10px;
+            border:1.5px solid var(--white10); background:var(--white05);
+            color:var(--white70); font-family:'Cairo',sans-serif; font-size:0.82rem;
+            font-weight:700; cursor:pointer; text-align:center; transition:all .2s;
+        }
+        .edit-chip:hover { border-color:rgba(224,90,90,.4); color:var(--white); }
+        .edit-chip.selected { background:rgba(224,90,90,.15); border-color:rgba(224,90,90,.6); color:var(--red); }
+        .modal-actions { display:flex; gap:8px; margin-top:14px; }
+        .modal-btn-cancel { flex:1; padding:10px; border-radius:10px; border:1px solid var(--white10);
+            background:var(--white05); color:var(--white70); cursor:pointer;
+            font-family:'Cairo',sans-serif; font-size:0.85rem; font-weight:600; transition:all .2s; }
+        .modal-btn-cancel:hover { background:var(--white10); }
+        .modal-btn-confirm { flex:2; padding:10px; border-radius:10px; background:rgba(224,90,90,.15);
+            color:var(--red); cursor:pointer; font-family:'Cairo',sans-serif; font-size:0.85rem; font-weight:700;
+            border:1.5px solid rgba(224,90,90,.35); transition:all .2s; }
+        .modal-btn-confirm:hover { background:rgba(224,90,90,.28); }
+
+        /* ── TOAST ── */
+        .toast { position:fixed; bottom:88px; left:50%; transform:translateX(-50%) translateY(16px);
+            background:rgba(14,14,17,.95); border:1px solid var(--white10); color:var(--white70);
+            padding:9px 20px; border-radius:50px; font-size:0.8rem; font-weight:600; opacity:0;
+            transition:all .22s; z-index:9998; pointer-events:none; white-space:nowrap; }
+        .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+        .page-footer { text-align:center; padding:20px; color:var(--white40); font-size:0.76rem; }
+        .page-footer a { color:var(--blue); text-decoration:none; }
+
+        /* ── BRAND LOGO ── */
+        .brand-logo-section { display:flex; justify-content:center; margin-bottom:18px;
+            animation:brandLogoIn .9s cubic-bezier(.16,1,.3,1) both; }
+        .brand-logo-wrap { position:relative; display:inline-flex; align-items:center; justify-content:center; }
+        .brand-logo-glow { position:absolute; inset:-22px;
+            background:radial-gradient(ellipse,rgba(116,186,225,.28) 0%,transparent 65%);
+            border-radius:50%; pointer-events:none; animation:glowPulse 3.5s ease-in-out infinite; }
+        .brand-logo-img { position:relative; z-index:1; height:68px; width:auto; border-radius:12px; }
+        @keyframes brandLogoIn { from{opacity:0;transform:translateY(-16px) scale(.93)} to{opacity:1;transform:none} }
+        @keyframes glowPulse { 0%,100%{opacity:.45;transform:scale(1)} 50%{opacity:1;transform:scale(1.12)} }
+
+        /* ── PAGE ENTRANCE ANIMATIONS ── */
+        @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:none} }
+        .month-tag { animation:fadeUp .6s .3s  cubic-bezier(.16,1,.3,1) both; }
+        .hero h1   { animation:fadeUp .6s .44s cubic-bezier(.16,1,.3,1) both; }
+        .hero p    { animation:fadeUp .6s .55s cubic-bezier(.16,1,.3,1) both; }
+        .stats-bar { animation:fadeUp .6s .66s cubic-bezier(.16,1,.3,1) both; }
+
+        @media(max-width:600px){
+            /* Header */
+            .header { padding:10px 12px; gap:6px; }
+            .logo-text { font-size:1rem; letter-spacing:1px; }
+            .client-name { display:none; }
+            .client-badge { padding:5px 10px 5px 6px; }
+            .counter-badge { font-size:0.7rem; padding:4px 9px; gap:0; }
+
+            /* Hero */
+            .hero { padding:26px 16px 14px; }
+            .hero h1 { font-size:1.55rem; margin-bottom:8px; }
+            .hero p { font-size:0.82rem; }
+            .month-tag { font-size:0.7rem; padding:4px 14px; margin-bottom:12px; }
+
+            /* Stats — hide on mobile, not critical */
+            .stats-bar { display:none; }
+
+            /* Grid */
+            .calendar-grid { padding:0 10px 20px; gap:14px; grid-template-columns:1fr; }
+
+            /* Card */
+            .post-body { padding:12px 12px 0; }
+            .post-date { font-size:0.76rem; }
+            .post-caption { font-size:0.82rem; }
+            .action-row { padding:10px 12px 12px; gap:8px; }
+            .btn-approve, .btn-reject { padding:12px 8px; font-size:0.88rem; border-radius:12px; }
+
+            /* Bottom bar — static flow on mobile (below content, not fixed) */
+            .approve-all-bar {
+                position:static;
+                padding:16px 14px 20px;
+                flex-direction:column;
+                align-items:stretch;
+                gap:8px;
+                border-top:1px solid var(--white10);
+                border-radius:0;
+            }
+            .approve-summary {
+                justify-content:center;
+                gap:14px;
+                font-size:0.8rem;
+                padding-bottom:2px;
+                border-bottom:1px solid var(--white10);
+                padding-bottom:8px;
+            }
+            .bar-actions { gap:8px; }
+            .btn-approve-all, .btn-send-wa {
+                flex:1;
+                justify-content:center;
+                padding:11px 10px;
+                font-size:0.85rem;
+            }
+
+            /* Lightbox nav — bottom pill bar on mobile */
+            .lb-nav {
+                display:flex;
+                top:auto; bottom:72px; transform:none;
+                width:46px; height:46px;
+                border-radius:14px;
+                font-size:1.3rem;
+                background:rgba(30,30,38,.85);
+                border:1px solid rgba(255,255,255,.16);
+            }
+            .lb-nav.prev { right:16px; }
+            .lb-nav.next { left:16px; }
+            .lb-topbar { padding:10px 12px; flex-wrap:wrap; gap:8px; }
+            .lb-btn { height:32px; padding:0 12px; font-size:0.78rem; }
+            .lb-caption { font-size:0.8rem; padding:14px 16px 16px; }
+
+            /* Toast */
+            .toast { bottom:20px; font-size:0.76rem; padding:8px 16px;
+                max-width:88vw; white-space:normal; text-align:center; line-height:1.5; }
+
+            /* Modal */
+            .modal { padding:20px 16px; border-radius:16px; }
+            .modal-textarea { font-size:0.88rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="logo-text">LOOP</div>
+    <div class="header-right">
+        <div class="counter-badge">
+            ✓&nbsp;<span class="c-a" id="hdr-a">0</span>
+            &nbsp;·&nbsp;
+            ✗&nbsp;<span class="c-r" id="hdr-r">0</span>
+            &nbsp;·&nbsp;
+            ⏳&nbsp;<span class="c-p" id="hdr-p">0</span>
+        </div>
+        <div class="client-badge">
+            <div class="client-avatar" id="client-avatar">...</div>
+            <span class="client-name" id="client-name-hdr">جارٍ التحميل</span>
+        </div>
+    </div>
+</header>
+
+<section class="hero">
+    <div class="brand-logo-section">
+        <div class="brand-logo-wrap">
+            <div class="brand-logo-glow"></div>
+            <img class="brand-logo-img" id="client-logo" src="" alt="" style="display:none">
+        </div>
+    </div>
+    <div class="month-tag" id="hero-month-tag">رزنامة المحتوى</div>
+    <h1>رزنامة المحتوى<br><span id="hero-client-name">...</span></h1>
+    <p>راجع البوستات المجدولة، وافق أو أضف ملاحظاتك — ثم أرسل ردودك مرة واحدة عبر واتساب.</p>
+</section>
+
+<div class="stats-bar" id="stats-bar" style="display:none">
+    <div class="stat-pill"><span class="dot dot-gold"></span> <span id="stat-total">0</span> بوست</div>
+    <div class="stat-pill" id="stat-dates-pill" style="display:none"><span class="dot dot-blue"></span> <span id="stat-dates"></span></div>
+    <div class="stat-pill"><span class="dot dot-mint"></span> Instagram · Facebook</div>
+    <div class="stat-pill"><span class="dot dot-purple"></span> <span id="stat-videos">0</span> فيديوهات</div>
+</div>
+
+<div class="calendar-grid" id="grid"></div>
+
+<div class="approve-all-bar">
+    <div class="approve-summary">
+        <span>موافق: <strong class="c-a" id="bar-a">0</strong></span>
+        <span>تعديل: <strong class="c-r" id="bar-r">0</strong></span>
+        <span>لم تُراجع: <strong class="c-p" id="bar-p">23</strong></span>
+    </div>
+    <div class="bar-actions">
+        <button class="btn-approve-all" onclick="approveAll()">✓ جاهزين نبدأ نشر المحتوى خلال 48 ساعة</button>
+        <button class="btn-send-wa" onclick="sendViaWhatsapp()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+            إرسال الردود
+        </button>
+    </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lb-backdrop" id="lb-backdrop">
+    <div class="lb-topbar">
+        <div class="lb-info"><strong id="lb-title"></strong> &nbsp;·&nbsp; <span id="lb-date"></span></div>
+        <div class="lb-btn-row">
+            <a class="lb-btn download" id="lb-download" download>
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                تحميل
+            </a>
+            <button class="lb-btn close-btn" onclick="closeLightbox()">✕ إغلاق</button>
+        </div>
+    </div>
+    <div class="lb-media-wrap" id="lb-media"></div>
+    <div class="lb-caption" id="lb-caption"></div>
+    <button class="lb-nav prev" onclick="lbNav(1)">&#8249;</button>
+    <button class="lb-nav next" onclick="lbNav(-1)">&#8250;</button>
+</div>
+
+<!-- REJECT MODAL -->
+<div class="modal-backdrop" id="modal-backdrop">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="modal-title">✗ تعديل / رفض البوست</span>
+            <button class="modal-close" onclick="closeModal()">✕</button>
+        </div>
+        <div class="modal-post-preview" id="modal-preview"></div>
+        <div class="modal-label">شو اللي بدك تعدله؟</div>
+        <div class="edit-type-row">
+            <button class="edit-chip" id="chip-caption" onclick="selectChip('caption')">📝 الكابشن</button>
+            <button class="edit-chip" id="chip-media"   onclick="selectChip('media')">🖼 الصورة / الفيديو</button>
+            <button class="edit-chip" id="chip-both"    onclick="selectChip('both')">✏ الاثنين</button>
+        </div>
+        <div class="modal-label">اكتب التعديل المطلوب:</div>
+        <textarea class="modal-textarea" id="modal-textarea" placeholder="اكتب تفاصيل التعديل..." rows="4"></textarea>
+        <div class="modal-actions">
+            <button class="modal-btn-cancel" onclick="closeModal()">إلغاء</button>
+            <button class="modal-btn-confirm" onclick="confirmReject()">✗ تأكيد مع الملاحظة</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<footer class="page-footer">صُمِّم بـ ♥ من <a href="https://loopjo.com" target="_blank">Loop Marketing Solutions</a> &nbsp;·&nbsp; <a href="https://wa.me/962792020388">واتساب</a></footer>
+
+<script>
+const API = 'https://gendome-calendar-api.loopehab.workers.dev';
+const CLIENT_ID = new URLSearchParams(location.search).get('client') || 'gendome';
+
+// Convert Google Drive share URL → embed URL
+function driveUrl(url) {
+  if (!url) return url;
+  const m = url.match(/drive\.google\.com\/file\/d\/([^/\?]+)/);
+  if (m) return `https://drive.google.com/file/d/${m[1]}/preview`;
+  return url;
+}
+function isDrive(url) { return url && url.includes('drive.google.com'); }
+function bustUrl(url) { return url && url.includes('loopehab.workers.dev') ? url + '&v=3' : url; }
+
+const POSTS = []; // loaded dynamically from API
+
+// ── STATE + Cloudflare KV ──
+function initState() {
+    const s = {};
+    POSTS.forEach(p => s[p.num] = { status:'pending', note:'' });
+    return s;
+}
+async function loadState() {
+    try {
+        const res = await fetch(`${API}/state?client=${CLIENT_ID}`);
+        const saved = await res.json();
+        POSTS.forEach(p => {
+            if (!state[p.num]) state[p.num] = { status:'pending', note:'' };
+            if (saved[p.num]) state[p.num] = saved[p.num];
+        });
+    } catch(e) { /* offline fallback — keep defaults */ }
+}
+
+async function loadRemotePosts() {
+    try {
+        const res = await fetch(`${API}/posts?client=${CLIENT_ID}`);
+        const data = await res.json();
+        if (data.posts && Array.isArray(data.posts) && data.posts.length > 0) {
+            // Replace POSTS with remote version, sorted by date
+            POSTS.length = 0;
+            data.posts.forEach(p => POSTS.push(p));
+            POSTS.sort((a, b) => parseDateDMY(a.date) - parseDateDMY(b.date));
+            POSTS.forEach((p, i) => p.num = i + 1);
+        }
+    } catch(e) { /* use hardcoded POSTS */ }
+}
+
+function parseDateDMY(str) {
+    if (!str) return 0;
+    const p = str.split('/');
+    if (p.length === 3) return new Date(+p[2], +p[1]-1, +p[0]).getTime();
+    return new Date(str).getTime();
+}
+function saveState() {
+    fetch(`${API}/state?client=${CLIENT_ID}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(state),
+    }).catch(() => {});
+}
+
+const state = initState();
+let currentModal = null;
+let lbCurrentNum = null;
+
+// ── RENDER ──
+function renderGrid() {
+const grid = document.getElementById('grid');
+grid.innerHTML = '';
+POSTS.forEach(post => {
+    const isLong = post.caption.length > 130;
+    const captionHtml = post.caption.replace(/\n/g, '<br>');
+    const card = document.createElement('div');
+    card.className = 'post-card';
+    card.id = `card-${post.num}`;
+
+    const expandIcon = `<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>`;
+
+    let mediaHtml;
+    if (post.type === 'video') {
+        if (isDrive(post.video)) {
+            // Google Drive video: use iframe embed
+            mediaHtml = `
+            <div class="post-media" onclick="openLightbox(${post.num},event)" style="cursor:pointer;aspect-ratio:9/16">
+                <iframe src="${driveUrl(post.video)}" style="width:100%;height:100%;border:none;pointer-events:none;display:block" allow="autoplay" loading="lazy"></iframe>
+                <div class="card-status-overlay" id="overlay-${post.num}"></div>
+                <span class="post-num">#${post.num}</span>
+                <button class="media-expand-btn" onclick="openLightbox(${post.num},event)" title="عرض كامل">${expandIcon}</button>
+                <div class="video-badge">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+                    فيديو
+                </div>
+            </div>`;
+        } else {
+            mediaHtml = `
+            <div class="post-media" onclick="openLightbox(${post.num},event)">
+                <video id="vid-${post.num}" src="${post.video}" preload="metadata" playsinline muted loop></video>
+                <div class="play-btn" id="playbtn-${post.num}" onclick="toggleVideo(${post.num},event)">
+                    <svg id="playicon-${post.num}" width="52" height="52" viewBox="0 0 52 52" fill="none">
+                        <circle cx="26" cy="26" r="26" fill="rgba(177,151,252,0.2)"/>
+                        <circle cx="26" cy="26" r="25" stroke="rgba(177,151,252,0.45)" stroke-width="1.5" fill="none"/>
+                        <polygon points="21,18 38,26 21,34" fill="white" opacity="0.9"/>
+                    </svg>
+                </div>
+                <button class="media-expand-btn" onclick="openLightbox(${post.num},event)" title="عرض كامل">${expandIcon}</button>
+                <div class="video-badge">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+                    فيديو
+                </div>
+                <div class="card-status-overlay" id="overlay-${post.num}"></div>
+                <span class="post-num">#${post.num}</span>
+            </div>`;
+        }
+    } else {
+        mediaHtml = `
+        <div class="post-media" onclick="openLightbox(${post.num},event)">
+            <img src="${bustUrl(post.img)}" loading="lazy" alt="بوست ${post.num}">
+            <button class="media-expand-btn" onclick="openLightbox(${post.num},event)" title="عرض كامل">${expandIcon}</button>
+            <div class="card-status-overlay" id="overlay-${post.num}"></div>
+            <span class="post-num">#${post.num}</span>
+        </div>`;
+    }
+
+    card.innerHTML = `
+    ${mediaHtml}
+    <div class="post-body">
+        <div class="post-date-row">
+            <div class="post-date">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                ${post.dayAr}، ${post.date}
+            </div>
+            <div class="post-platforms">
+                <div class="platform-icon ig"><svg width="11" height="11" viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></div>
+                <div class="platform-icon fb"><svg width="11" height="11" viewBox="0 0 24 24" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></div>
+            </div>
+        </div>
+        <p class="post-caption" id="cap-${post.num}">${captionHtml}</p>
+        ${isLong ? `<button class="expand-btn" id="expbtn-${post.num}" onclick="toggleExpand(${post.num})">عرض المزيد ▾</button>` : ''}
+    </div>
+    <div class="action-row">
+        <button class="btn-approve" id="ba-${post.num}" onclick="approve(${post.num})">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            موافق
+        </button>
+        <button class="btn-reject" id="br-${post.num}" onclick="openRejectModal(${post.num})">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            تعديل / رفض
+        </button>
+    </div>
+    <div class="rejection-note" id="note-${post.num}">
+        <div class="note-header">
+            <span class="note-label">✗ ملاحظتك:</span>
+            <div style="display:flex;gap:6px;">
+                <button class="note-edit-btn" onclick="openRejectModal(${post.num})">تعديل</button>
+                <button class="note-edit-btn" style="color:var(--red);" onclick="clearStatus(${post.num})">✕ حذف</button>
+            </div>
+        </div>
+        <div id="note-text-${post.num}"></div>
+    </div>`;
+    grid.appendChild(card);
+});
+
+// Re-attach IntersectionObserver for entrance animations
+const _obs = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+            setTimeout(() => entry.target.classList.add('in-view'), i * 55);
+            _obs.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.06 });
+document.querySelectorAll('.post-card').forEach(c => _obs.observe(c));
+} // end renderGrid()
+
+// ── RESTORE SAVED STATE from server ──
+async function initPage() {
+    await loadRemotePosts();
+    // Update page title + header with client name
+    const clientName = CLIENT_ID.charAt(0).toUpperCase() + CLIENT_ID.slice(1);
+    document.title = `رزنامة المحتوى — ${clientName}`;
+    document.getElementById('client-avatar').textContent = clientName.charAt(0).toUpperCase();
+    document.getElementById('client-name-hdr').textContent = clientName;
+    document.getElementById('hero-client-name').textContent = clientName;
+    document.getElementById('hero-month-tag').textContent = new Date().toLocaleDateString('ar-EG', { month: 'long', year: 'numeric' });
+    // Update stats bar
+    const total = POSTS.length;
+    const videos = POSTS.filter(p => p.type === 'video').length;
+    document.getElementById('stat-total').textContent = total;
+    document.getElementById('stat-videos').textContent = videos;
+    if (total > 0) {
+        document.getElementById('stats-bar').style.display = '';
+        const dates = POSTS.map(p => p.date);
+        document.getElementById('stat-dates').textContent = `${dates[0]} — ${dates[dates.length-1]}`;
+        document.getElementById('stat-dates-pill').style.display = '';
+    }
+    renderGrid();
+    await loadState();
+    POSTS.forEach(p => {
+        if (!state[p.num]) state[p.num] = { status:'pending', note:'' };
+        const s = state[p.num];
+        if (s.status === 'approved') applyApproved(p.num);
+        else if (s.status === 'rejected') applyRejected(p.num, s.note);
+    });
+    updateCounters();
+}
+initPage();
+
+// ── APPLY VISUAL STATE (without saving again) ──
+function _setCardMod(num, mod) {
+    const c = document.getElementById(`card-${num}`);
+    c.classList.remove('approved', 'rejected');
+    if (mod) c.classList.add(mod);
+}
+function applyApproved(num) {
+    _setCardMod(num, 'approved');
+    document.getElementById(`overlay-${num}`).textContent = '✓';
+    document.getElementById(`ba-${num}`).classList.add('active');
+    document.getElementById(`br-${num}`).classList.remove('active');
+    document.getElementById(`note-${num}`).classList.remove('visible');
+}
+function applyRejected(num, note) {
+    _setCardMod(num, 'rejected');
+    document.getElementById(`overlay-${num}`).textContent = '✗';
+    document.getElementById(`br-${num}`).classList.add('active');
+    document.getElementById(`ba-${num}`).classList.remove('active');
+    if (note) {
+        document.getElementById(`note-${num}`).classList.add('visible');
+        document.getElementById(`note-text-${num}`).textContent = note;
+    } else {
+        document.getElementById(`note-${num}`).classList.remove('visible');
+    }
+}
+function applyPending(num) {
+    _setCardMod(num, null);
+    document.getElementById(`overlay-${num}`).textContent = '';
+    document.getElementById(`ba-${num}`).classList.remove('active');
+    document.getElementById(`br-${num}`).classList.remove('active');
+    document.getElementById(`note-${num}`).classList.remove('visible');
+    document.getElementById(`note-text-${num}`).textContent = '';
+}
+function clearStatus(num) {
+    state[num] = { status:'pending', note:'' };
+    saveState();
+    applyPending(num);
+    updateCounters();
+    showToast(`↺ تم إلغاء التعديل على البوست #${num}`);
+}
+
+// ── VIDEO TOGGLE (inline in card) ──
+function toggleVideo(num, e) {
+    if (e) e.stopPropagation();
+    const vid = document.getElementById(`vid-${num}`);
+    const icon = document.getElementById(`playicon-${num}`);
+    if (vid.paused) {
+        vid.muted = false;
+        vid.play();
+        icon.innerHTML = `<circle cx="26" cy="26" r="26" fill="rgba(177,151,252,0.15)"/>
+            <rect x="17" y="16" width="6" height="20" rx="2" fill="white" opacity="0.9"/>
+            <rect x="29" y="16" width="6" height="20" rx="2" fill="white" opacity="0.9"/>`;
+    } else {
+        vid.pause();
+        icon.innerHTML = `<circle cx="26" cy="26" r="26" fill="rgba(177,151,252,0.2)"/>
+            <circle cx="26" cy="26" r="25" stroke="rgba(177,151,252,0.45)" stroke-width="1.5" fill="none"/>
+            <polygon points="21,18 38,26 21,34" fill="white" opacity="0.9"/>`;
+    }
+}
+
+// ── LIGHTBOX ──
+function openLightbox(num, e) {
+    // Don't open if play button clicked (for video)
+    if (e && e.target.closest('.play-btn')) return;
+    if (e) e.stopPropagation();
+
+    lbCurrentNum = num;
+    const post = POSTS.find(p => p.num === num);
+
+    document.getElementById('lb-title').textContent = `بوست #${num} · ${post.product}`;
+    document.getElementById('lb-date').textContent = `${post.dayAr}، ${post.date}`;
+    document.getElementById('lb-caption').textContent = post.caption;
+
+    const mediaEl = document.getElementById('lb-media');
+    if (post.type === 'video') {
+        if (isDrive(post.video)) {
+            mediaEl.innerHTML = `<iframe src="${driveUrl(post.video)}" style="width:min(95vw,1100px);aspect-ratio:16/9;max-height:86vh;border:none;border-radius:10px" allowfullscreen allow="autoplay"></iframe>`;
+            const dl = document.getElementById('lb-download');
+            dl.href = post.video; dl.download = '';
+        } else {
+            mediaEl.innerHTML = `<video src="${post.video}" controls autoplay style="max-width:100%;max-height:82vh;border-radius:10px;"></video>`;
+            const dl = document.getElementById('lb-download');
+            dl.href = post.video; dl.download = `gendome-post-${num}.mp4`;
+        }
+    } else {
+        mediaEl.innerHTML = `<img src="${bustUrl(post.img)}" alt="بوست ${num}">`;
+        const dl = document.getElementById('lb-download');
+        dl.href = post.img;
+        dl.download = `gendome-post-${num}.jpg`;
+    }
+
+    document.getElementById('lb-backdrop').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    if (!document.querySelector('.lb-swipe-hint')) showSwipeHint();
+}
+
+function closeLightbox() {
+    document.getElementById('lb-backdrop').classList.remove('open');
+    document.body.style.overflow = '';
+    // stop any video playing in lightbox
+    const v = document.querySelector('#lb-media video');
+    if (v) v.pause();
+    lbCurrentNum = null;
+}
+
+function lbNav(dir) {
+    const idx = POSTS.findIndex(p => p.num === lbCurrentNum);
+    const nextPost = POSTS[idx + dir];
+    if (!nextPost) return;
+    const wrap = document.getElementById('lb-media');
+    wrap.style.opacity = '0';
+    setTimeout(() => {
+        openLightbox(nextPost.num, null);
+        wrap.style.opacity = '';
+    }, 180);
+}
+
+// ── APPROVE / REJECT ──
+function approve(num) {
+    if (state[num] && state[num].status === 'approved') {
+        clearStatus(num);
+        return;
+    }
+    state[num] = { status:'approved', note:'' };
+    saveState();
+    applyApproved(num);
+    updateCounters();
+    showToast(`✓ موافق على البوست #${num}`);
+}
+
+function openRejectModal(num) {
+    currentModal = num;
+    const post = POSTS.find(p => p.num === num);
+    const previewImg = post.type === 'video'
+        ? `<div class="vid-thumb"><svg width="22" height="22" viewBox="0 0 24 24" fill="rgba(177,151,252,0.8)"><polygon points="5,3 19,12 5,21"/></svg></div>`
+        : `<img src="${bustUrl(post.img)}" alt="">`;
+    document.getElementById('modal-preview').innerHTML = `
+        ${previewImg}
+        <div>
+            <div class="modal-post-num">بوست #${num} · ${post.product}</div>
+            <div class="modal-post-date">${post.dayAr}، ${post.date}</div>
+        </div>`;
+    document.getElementById('modal-textarea').value = state[num].note || '';
+    // reset chips
+    selectedEditType = null;
+    ['caption','media','both'].forEach(t => document.getElementById('chip-'+t).classList.remove('selected'));
+    // pre-select chip if editing existing rejection
+    const existing = state[num].note || '';
+    if (existing.startsWith('[كابشن]') || existing.startsWith('[caption]')) selectChip('caption', true);
+    else if (existing.startsWith('[ميديا]') || existing.startsWith('[media]')) selectChip('media', true);
+    else if (existing.startsWith('[الاثنين]') || existing.startsWith('[both]')) selectChip('both', true);
+    // strip prefix from textarea value
+    const noteBody = existing.replace(/^\[[^\]]+\]\s*/, '');
+    document.getElementById('modal-textarea').value = noteBody;
+    document.getElementById('modal-backdrop').classList.add('open');
+    setTimeout(() => document.getElementById('modal-textarea').focus(), 200);
+}
+
+function closeModal() {
+    document.getElementById('modal-backdrop').classList.remove('open');
+    currentModal = null;
+}
+
+let selectedEditType = null;
+function selectChip(type, silent) {
+    selectedEditType = type;
+    ['caption','media','both'].forEach(t => document.getElementById('chip-'+t).classList.remove('selected'));
+    document.getElementById('chip-'+type).classList.add('selected');
+    if (!silent) document.getElementById('modal-textarea').focus();
+}
+
+function confirmReject() {
+    if (!currentModal) return;
+    const num = currentModal;
+    if (!selectedEditType) { 
+        document.getElementById('edit-type-err') && (document.getElementById('edit-type-err').style.display = 'block');
+        // shake chips
+        document.querySelector('.edit-type-row').style.animation = 'none';
+        setTimeout(() => { document.querySelector('.edit-type-row').style.animation = ''; }, 10);
+        showToast('اختر نوع التعديل أولاً');
+        return;
+    }
+    const rawNote = document.getElementById('modal-textarea').value.trim();
+    const labelMap = { caption:'كابشن', media:'ميديا', both:'الاثنين' };
+    const note = `[${labelMap[selectedEditType]}] ${rawNote}`;
+    state[num] = { status:'rejected', note };
+    saveState();
+    applyRejected(num, note);
+    closeModal();
+    updateCounters();
+    showToast(`✗ تم تسجيل ملاحظتك على البوست #${num}`);
+}
+
+function approveAll() {
+    POSTS.forEach(p => {
+        if (state[p.num].status === 'pending') {
+            state[p.num] = { status:'approved', note:'' };
+            applyApproved(p.num);
+        }
+    });
+    saveState();
+    updateCounters();
+    showToast('✓ تمت الموافقة على جميع البوستات');
+}
+
+function toggleExpand(num) {
+    const cap = document.getElementById(`cap-${num}`);
+    const btn = document.getElementById(`expbtn-${num}`);
+    if (!btn) return;
+    const exp = cap.classList.toggle('expanded');
+    btn.textContent = exp ? 'عرض أقل ▴' : 'عرض المزيد ▾';
+}
+
+function updateCounters() {
+    const vals = Object.values(state);
+    const a = vals.filter(s => s.status==='approved').length;
+    const r = vals.filter(s => s.status==='rejected').length;
+    const p = POSTS.length - a - r;
+    ['bar-a','hdr-a'].forEach(id => document.getElementById(id).textContent = a);
+    ['bar-r','hdr-r'].forEach(id => document.getElementById(id).textContent = r);
+    ['bar-p','hdr-p'].forEach(id => document.getElementById(id).textContent = p);
+}
+
+function sendViaWhatsapp() {
+    const approved = POSTS.filter(p => state[p.num].status==='approved');
+    const rejected  = POSTS.filter(p => state[p.num].status==='rejected');
+    const pending   = POSTS.filter(p => state[p.num].status==='pending');
+    const cName = CLIENT_ID.charAt(0).toUpperCase() + CLIENT_ID.slice(1);
+    let msg = `🗓️ *رزنامة محتوى ${cName}*\nموافق: ${approved.length} | تعديل: ${rejected.length} | لم تُراجع: ${pending.length}\n`;
+    if (approved.length) {
+        msg += `\n✅ *موافق عليها:*\n`;
+        approved.forEach(p => { msg += `• بوست #${p.num} (${p.date}) — ${p.product}\n`; });
+    }
+    if (rejected.length) {
+        msg += `\n✏️ *تعديلات مطلوبة:*\n`;
+        rejected.forEach(p => {
+            msg += `• بوست #${p.num} (${p.date}) — ${p.product}`;
+            if (state[p.num].note) msg += `\n  ↳ ${state[p.num].note}`;
+            msg += '\n';
+        });
+    }
+    if (pending.length) {
+        msg += `\n⏳ *لم تُراجع:*\n`;
+        pending.forEach(p => { msg += `• بوست #${p.num} (${p.date}) — ${p.product}\n`; });
+    }
+    window.open(`https://wa.me/962792020388?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+// ── EVENT LISTENERS ──
+document.getElementById('lb-backdrop').addEventListener('click', e => {
+    if (e.target.id === 'lb-backdrop') closeLightbox();
+});
+document.getElementById('modal-backdrop').addEventListener('click', e => {
+    if (e.target.id === 'modal-backdrop') closeModal();
+});
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeLightbox(); closeModal(); }
+    if (document.getElementById('lb-backdrop').classList.contains('open')) {
+        if (e.key === 'ArrowRight') lbNav(1);
+        if (e.key === 'ArrowLeft')  lbNav(-1);
+    }
+});
+
+// ── SWIPE TO NAVIGATE (mobile) ──
+let _tsX = 0, _tsY = 0;
+const _lbEl = document.getElementById('lb-backdrop');
+_lbEl.addEventListener('touchstart', e => {
+    _tsX = e.touches[0].clientX;
+    _tsY = e.touches[0].clientY;
+}, { passive: true });
+_lbEl.addEventListener('touchend', e => {
+    if (!_lbEl.classList.contains('open')) return;
+    const dx = e.changedTouches[0].clientX - _tsX;
+    const dy = e.changedTouches[0].clientY - _tsY;
+    if (Math.abs(dx) < 44 || Math.abs(dx) < Math.abs(dy) * 1.2) return;
+    lbNav(dx > 0 ? 1 : -1);
+}, { passive: true });
+
+// ── SWIPE HINT — one-time on mobile ──
+function showSwipeHint() {
+    if (window.innerWidth > 600) return;
+    if (localStorage.getItem(`swipe_hint_${CLIENT_ID}`)) return;
+    localStorage.setItem(`swipe_hint_${CLIENT_ID}`, '1');
+    const hint = document.createElement('div');
+    hint.className = 'lb-swipe-hint';
+    hint.innerHTML = '<span class="hint-hand">👆</span> اسحب يميناً أو يساراً للتنقل';
+    document.getElementById('lb-backdrop').appendChild(hint);
+    setTimeout(() => hint.remove(), 3300);
+}
+
+// (IntersectionObserver is now inside renderGrid())
+
+let toastTimer;
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+}
+</script>
+</body>
+</html>
