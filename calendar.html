@@ -663,6 +663,14 @@ async function initPage() {
         document.getElementById('stat-dates').textContent = `${dates[0]} — ${dates[dates.length-1]}`;
         document.getElementById('stat-dates-pill').style.display = '';
     }
+    // Try to load client logo
+    const logoUrl = `${API}/media?client=${CLIENT_ID}&file=logo.png`;
+    const logoImg = document.getElementById('client-logo');
+    if (logoImg) {
+      const testImg = new Image();
+      testImg.onload = () => { logoImg.src = logoUrl; logoImg.style.display = ''; };
+      testImg.src = logoUrl;
+    }
     renderGrid();
     await loadState();
     POSTS.forEach(p => {

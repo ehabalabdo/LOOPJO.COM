@@ -474,10 +474,15 @@ function renderClients() {
       <span class="client-badge">${c.id}</span>
       <div class="client-name">${c.name}</div>
       <div class="client-meta" style="margin-top:24px;margin-bottom:4px">${c.pageUrl || '<span style="color:#555">لا يوجد رابط</span>'}</div>
+      <div class="client-logo-row" id="logo-row-${idx}">
+        <img id="logo-preview-${idx}" src="${c.logoUrl || ''}" style="display:${c.logoUrl ? 'block' : 'none'};height:40px;border-radius:8px;margin-bottom:8px;object-fit:contain;max-width:120px">
+      </div>
       <div class="client-actions">
         <button class="client-action-btn" id="copy-btn-${idx}">📋 نسخ الرابط</button>
         <button class="client-action-btn">✏️ تعديل الرابط</button>
+        <button class="client-action-btn logo-btn" id="logo-btn-${idx}">🖼 لوجو</button>
       </div>
+      <input type="file" id="logo-input-${idx}" accept="image/*" style="display:none">
     `;
     div.querySelector('#copy-btn-' + idx).addEventListener('click', e => {
       e.stopPropagation();
@@ -493,6 +498,40 @@ function renderClients() {
     div.querySelectorAll('.client-action-btn')[1].addEventListener('click', e => {
       e.stopPropagation();
       openEditUrlModal(idx, c);
+    });
+    div.querySelector('#logo-btn-' + idx).addEventListener('click', e => {
+      e.stopPropagation();
+      div.querySelector('#logo-input-' + idx).click();
+    });
+    div.querySelector('#logo-input-' + idx).addEventListener('change', async e => {
+      e.stopPropagation();
+      const file = e.target.files[0];
+      if (!file) return;
+      const btn = div.querySelector('#logo-btn-' + idx);
+      btn.textContent = '⏳ جارٍ...';
+      btn.disabled = true;
+      try {
+        const res = await fetch(`${API}/upload?client=${encodeURIComponent(c.id)}&filename=logo.png`, {
+          method: 'POST',
+          headers: { Authorization: 'Bearer ' + adminToken, 'Content-Type': file.type },
+          body: file,
+        });
+        const data = await res.json();
+        if (data.url) {
+          clients[idx].logoUrl = data.url + '&v=' + Date.now();
+          await fetch(API + '/clients', {
+            method: 'PUT',
+            headers: { Authorization: 'Bearer ' + adminToken, 'Content-Type': 'application/json' },
+            body: JSON.stringify(clients),
+          });
+          showToast('✓ تم رفع اللوجو');
+          renderClients();
+        } else {
+          showToast(data.error || 'فشل الرفع', true);
+        }
+      } catch { showToast('خطأ في الاتصال', true); }
+      btn.textContent = '🖼 لوجو';
+      btn.disabled = false;
     });
     div.addEventListener('click', () => openClient(c));
     grid.appendChild(div);
