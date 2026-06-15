@@ -816,7 +816,7 @@ async function saveClient() {
   await fetch(API + '/clients', {
     method: 'PUT',
     headers: { Authorization: 'Bearer ' + adminToken, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ clients }),
+    body: JSON.stringify(clients),
   });
   renderClients();
   closeClientModal();
