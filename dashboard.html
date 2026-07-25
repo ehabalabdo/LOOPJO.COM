@@ -88,7 +88,7 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
   justify-content:center; gap:8px; color:var(--muted); font-size:14px;
 }
 .add-client-card:hover { border-color:var(--blue); color:var(--blue); }
-.client-actions { display:flex; gap:6px; margin-top:12px; }
+.client-actions { display:flex; gap:6px; margin-top:12px; flex-wrap:wrap; }
 .client-action-btn {
   flex:1; padding:5px 8px; border-radius:7px; border:1px solid var(--border);
   background:var(--bg3); color:var(--text); font-family:inherit; font-size:12px;
@@ -96,6 +96,11 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
 }
 .client-action-btn:hover { border-color:var(--blue); color:var(--blue); }
 .client-action-btn.copied { border-color:var(--green); color:var(--green); }
+.client-action-btn.delete-calendar {
+  flex-basis:100%; color:var(--red); border-color:rgba(224,90,90,.35);
+  background:rgba(224,90,90,.08); margin-top:2px;
+}
+.client-action-btn.delete-calendar:hover { color:#ff7b7b; border-color:var(--red); background:rgba(224,90,90,.16); }
 
 /* ── POSTS SCREEN ── */
 #posts-screen { padding:24px; max-width:1200px; margin:0 auto; }
@@ -481,6 +486,7 @@ function renderClients() {
         <button class="client-action-btn" id="copy-btn-${idx}">📋 نسخ الرابط</button>
         <button class="client-action-btn">✏️ تعديل الرابط</button>
         <button class="client-action-btn logo-btn" id="logo-btn-${idx}">🖼 لوجو</button>
+        <button class="client-action-btn delete-calendar" id="delete-btn-${idx}">🗑 حذف الكالندر</button>
       </div>
       <input type="file" id="logo-input-${idx}" accept="image/*" style="display:none">
     `;
@@ -502,6 +508,10 @@ function renderClients() {
     div.querySelector('#logo-btn-' + idx).addEventListener('click', e => {
       e.stopPropagation();
       div.querySelector('#logo-input-' + idx).click();
+    });
+    div.querySelector('#delete-btn-' + idx).addEventListener('click', e => {
+      e.stopPropagation();
+      deleteClient(idx, c);
     });
     div.querySelector('#logo-input-' + idx).addEventListener('change', async e => {
       e.stopPropagation();
@@ -884,6 +894,40 @@ async function persistPosts() {
 }
 
 // ── CLIENTS CRUD ──────────────────────────────────────────────────────────────
+async function deleteClient(idx, client) {
+  const confirmed = confirm(
+    `حذف كالندر "${client.name}" من الداشبورد؟\n\n` +
+    'سيُحذف من قائمة الزبائن فقط، ولن تُحذف ملفات أو محتوى الزبون من التخزين.'
+  );
+  if (!confirmed) return;
+
+  const deleteBtn = document.getElementById('delete-btn-' + idx);
+  if (deleteBtn) {
+    deleteBtn.disabled = true;
+    deleteBtn.textContent = '⏳ جارٍ الحذف...';
+  }
+
+  const nextClients = clients.filter((_, clientIdx) => clientIdx !== idx);
+  try {
+    const res = await fetch(API + '/clients', {
+      method: 'PUT',
+      headers: { Authorization: 'Bearer ' + adminToken, 'Content-Type': 'application/json' },
+      body: JSON.stringify(nextClients),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    clients = nextClients;
+    renderClients();
+    showToast(`✓ تم حذف كالندر ${client.name}`);
+  } catch {
+    if (deleteBtn) {
+      deleteBtn.disabled = false;
+      deleteBtn.textContent = '🗑 حذف الكالندر';
+    }
+    showToast('✕ فشل حذف الكالندر من السيرفر', true);
+  }
+}
+
 // ── EDIT URL MODAL ───────────────────────────────────────────────────────────
 let _editUrlIdx = null;
 function openEditUrlModal(idx, c) {
