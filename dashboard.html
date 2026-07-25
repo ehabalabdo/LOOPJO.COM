@@ -9,22 +9,34 @@
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --bg:    #0e0e11;
-  --bg2:   #141418;
-  --bg3:   #1a1a20;
-  --bg4:   #22222a;
-  --border:#2a2a35;
+  --bg:    #f2f2f1;
+  --bg2:   rgba(255,255,255,.9);
+  --bg3:   #ffffff;
+  --bg4:   #e5dac5;
+  --border:rgba(24,23,25,.11);
+  --pink:  #eea9c9;
   --blue:  #74bae1;
+  --blue-ink:#3f83aa;
   --mint:  #9ddad0;
-  --gold:  #f0c060;
-  --green: #4eca8b;
-  --red:   #e05a5a;
-  --purple:#b197fc;
-  --text:  #e8e8f0;
-  --muted: #888;
+  --cream: #e5dac5;
+  --sage:  #c1d9c1;
+  --gold:  #a97e2f;
+  --green: #398a68;
+  --red:   #cf5360;
+  --purple:#998dc0;
+  --text:  #181719;
+  --muted: rgba(24,23,25,.56);
   --holo: linear-gradient(135deg,#eea9c9,#74bae1,#9ddad0);
 }
-body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; position:relative; }
+body::before {
+  content:''; position:fixed; inset:0; z-index:-1; pointer-events:none;
+  background:
+    radial-gradient(ellipse 70% 55% at 0% 0%, rgba(116,186,225,.28) 0%, transparent 64%),
+    radial-gradient(ellipse 62% 52% at 100% 5%, rgba(238,169,201,.25) 0%, transparent 64%),
+    radial-gradient(ellipse 72% 58% at 88% 100%, rgba(157,218,208,.23) 0%, transparent 65%),
+    radial-gradient(ellipse 55% 45% at 8% 95%, rgba(153,141,192,.13) 0%, transparent 67%);
+}
 
 /* ── SCREENS ── */
 .screen { display:none; }
@@ -33,13 +45,29 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
 /* ── LOGIN ── */
 #login-screen {
   display:flex; align-items:center; justify-content:center; min-height:100vh;
-  background: radial-gradient(ellipse at 50% 40%, #1a1340 0%, var(--bg) 70%);
+  padding:24px;
 }
 .login-box {
   background:var(--bg2); border:1px solid var(--border); border-radius:18px;
-  padding:40px 36px; width:340px; text-align:center;
+  padding:34px 36px 30px; width:360px; text-align:center;
+  box-shadow:0 24px 70px rgba(24,23,25,.13); backdrop-filter:blur(18px);
 }
-.login-logo { font-size:28px; font-weight:700; background:var(--holo); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:6px; }
+.company-brand { display:flex; align-items:center; gap:11px; direction:ltr; }
+.company-logo-art {
+  overflow:hidden; flex-shrink:0; background:var(--holo); border:1px solid rgba(24,23,25,.08);
+  box-shadow:0 8px 22px rgba(63,131,170,.18);
+}
+.company-logo-art img { width:100%; height:100%; object-fit:cover; object-position:50% 70%; display:block; }
+.company-wordmark { display:flex; flex-direction:column; align-items:flex-start; line-height:1; }
+.company-wordmark strong {
+  font-size:24px; font-weight:700; letter-spacing:3px; background:var(--holo);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.company-wordmark small { color:var(--muted); font-size:9px; letter-spacing:1.35px; margin-top:5px; }
+.login-logo { justify-content:center; margin-bottom:10px; }
+.login-logo .company-logo-art { width:74px; height:74px; border-radius:20px; }
+.login-logo .company-wordmark strong { font-size:30px; }
+.login-logo .company-wordmark small { font-size:10px; }
 .login-sub { color:var(--muted); font-size:13px; margin-bottom:28px; }
 .login-box input {
   width:100%; padding:12px 14px; background:var(--bg3); border:1px solid var(--border);
@@ -48,20 +76,24 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
 }
 .login-box input:focus { border-color:var(--blue); }
 .login-box button {
-  width:100%; padding:12px; background:var(--blue); color:#0e0e11; font-weight:700;
+  width:100%; padding:12px; background:var(--holo); color:#181719; font-weight:700;
   font-size:15px; font-family:inherit; border:none; border-radius:10px; cursor:pointer;
-  transition:opacity .2s;
+  transition:opacity .2s, transform .2s; box-shadow:0 8px 20px rgba(116,186,225,.22);
 }
-.login-box button:hover { opacity:.85; }
+.login-box button:hover { opacity:.9; transform:translateY(-1px); }
 .login-err { color:var(--red); font-size:13px; margin-top:10px; min-height:20px; }
 
 /* ── TOP NAV ── */
 .topnav {
-  background:var(--bg2); border-bottom:1px solid var(--border);
-  padding:0 24px; height:56px; display:flex; align-items:center; gap:16px;
-  position:sticky; top:0; z-index:100;
+  background:rgba(242,242,241,.88); border-bottom:1px solid var(--border);
+  padding:0 24px; min-height:64px; display:flex; align-items:center; gap:16px;
+  position:sticky; top:0; z-index:100; backdrop-filter:blur(18px);
+  box-shadow:0 8px 30px rgba(24,23,25,.06);
 }
-.topnav .logo { font-weight:700; font-size:18px; background:var(--holo); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.topnav .logo { flex-shrink:0; }
+.topnav .logo .company-logo-art { width:38px; height:38px; border-radius:11px; }
+.topnav .logo .company-wordmark strong { font-size:17px; letter-spacing:2px; }
+.topnav .logo .company-wordmark small { font-size:7px; letter-spacing:.8px; margin-top:3px; }
 .topnav .breadcrumb { color:var(--muted); font-size:13px; flex:1; }
 .topnav .breadcrumb span { color:var(--text); }
 .btn-nav { padding:7px 14px; border-radius:8px; border:1px solid var(--border); background:transparent; color:var(--text); font-family:inherit; font-size:13px; cursor:pointer; transition:.15s; }
@@ -77,11 +109,12 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
 .client-card {
   background:var(--bg2); border:1px solid var(--border); border-radius:14px;
   padding:20px; cursor:pointer; transition:.2s; position:relative;
+  box-shadow:0 10px 28px rgba(24,23,25,.07); backdrop-filter:blur(12px);
 }
-.client-card:hover { border-color:var(--blue); transform:translateY(-2px); }
+.client-card:hover { border-color:rgba(116,186,225,.7); transform:translateY(-2px); box-shadow:0 14px 32px rgba(24,23,25,.11); }
 .client-name { font-size:17px; font-weight:700; margin-bottom:4px; }
 .client-meta { color:var(--muted); font-size:12px; }
-.client-badge { position:absolute; top:14px; left:14px; background:var(--bg3); border:1px solid var(--border); border-radius:20px; padding:3px 10px; font-size:11px; color:var(--mint); }
+.client-badge { position:absolute; top:14px; left:14px; background:rgba(157,218,208,.22); border:1px solid rgba(57,138,104,.18); border-radius:20px; padding:3px 10px; font-size:11px; color:#367d6a; }
 .add-client-card {
   background:transparent; border:1px dashed var(--border); border-radius:14px;
   padding:20px; cursor:pointer; transition:.2s; display:flex; align-items:center;
@@ -100,7 +133,7 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
   flex-basis:100%; color:var(--red); border-color:rgba(224,90,90,.35);
   background:rgba(224,90,90,.08); margin-top:2px;
 }
-.client-action-btn.delete-calendar:hover { color:#ff7b7b; border-color:var(--red); background:rgba(224,90,90,.16); }
+.client-action-btn.delete-calendar:hover { color:#b43e4a; border-color:var(--red); background:rgba(224,90,90,.16); }
 
 /* ── POSTS SCREEN ── */
 #posts-screen { padding:24px; max-width:1200px; margin:0 auto; }
@@ -114,11 +147,12 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
 .post-card {
   background:var(--bg2); border:1px solid var(--border); border-radius:16px;
   overflow:hidden; transition:.2s; display:flex; flex-direction:column;
+  box-shadow:0 10px 28px rgba(24,23,25,.07); backdrop-filter:blur(12px);
 }
-.post-card:hover { border-color:var(--blue); transform:translateY(-2px); }
+.post-card:hover { border-color:rgba(116,186,225,.7); transform:translateY(-2px); box-shadow:0 14px 32px rgba(24,23,25,.11); }
 
 .post-media {
-  width:100%; aspect-ratio:1/1; background:var(--bg3); position:relative; overflow:hidden;
+  width:100%; aspect-ratio:1/1; background:var(--cream); position:relative; overflow:hidden;
   cursor:pointer; flex-shrink:0;
 }
 .post-media img { width:100%; height:100%; object-fit:cover; display:block; }
@@ -133,13 +167,13 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
   padding:3px 8px; border-radius:20px; backdrop-filter:blur(4px);
 }
 .type-badge { padding:3px 9px; border-radius:20px; font-size:11px; }
-.type-image { background:rgba(116,186,225,.12); color:var(--blue); }
+.type-image { background:rgba(116,186,225,.18); color:var(--blue-ink); }
 .type-video { background:rgba(177,151,252,.12); color:var(--purple); }
-.product-badge { padding:3px 9px; border-radius:20px; font-size:11px; background:var(--bg3); color:var(--mint); }
+.product-badge { padding:3px 9px; border-radius:20px; font-size:11px; background:rgba(157,218,208,.2); color:#367d6a; }
 
 .post-body { padding:12px 14px; flex:1; display:flex; flex-direction:column; gap:8px; }
 .post-date-row { display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap; }
-.post-date { font-size:12px; color:var(--blue); font-weight:600; }
+.post-date { font-size:12px; color:var(--blue-ink); font-weight:600; }
 .post-caption { font-size:13px; color:var(--text); line-height:1.7; flex:1;
   display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;
 }
@@ -163,7 +197,7 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
 .reject-strip .reject-label {
   color:var(--red); font-weight:700; margin-bottom:4px; display:flex; align-items:center; gap:5px;
 }
-.reject-strip .reject-note { color:#ddd; line-height:1.6; white-space:pre-wrap; }
+.reject-strip .reject-note { color:var(--text); line-height:1.6; white-space:pre-wrap; }
 .reject-strip .btn-done {
   margin-top:8px; width:100%; padding:6px 0; border-radius:8px;
   background:rgba(78,202,139,.1); border:1px solid var(--green); color:var(--green);
@@ -182,6 +216,7 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
   background:var(--bg2); border:1px solid var(--border); border-radius:18px;
   width:100%; max-width:560px; max-height:90vh; overflow-y:auto;
   transform:translateY(20px); transition:transform .2s;
+  box-shadow:0 24px 70px rgba(24,23,25,.2); backdrop-filter:blur(18px);
 }
 .modal-backdrop.open .modal { transform:translateY(0); }
 .modal-header { padding:20px 22px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
@@ -222,7 +257,7 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
   position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(60px);
   background:var(--bg2); border:1px solid var(--border); border-radius:10px;
   padding:10px 20px; font-size:14px; z-index:300; transition:transform .3s;
-  pointer-events:none;
+  pointer-events:none; box-shadow:0 12px 34px rgba(24,23,25,.12); backdrop-filter:blur(16px);
 }
 .toast.show { transform:translateX(-50%) translateY(0); }
 
@@ -234,6 +269,11 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
 @media(max-width:640px) {
   .posts-grid { grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px; }
   .field-row { grid-template-columns:1fr; }
+  .topnav { padding:8px 12px; min-height:60px; gap:8px; flex-wrap:wrap; }
+  .topnav .logo .company-wordmark small { display:none; }
+  .topnav .breadcrumb { order:5; flex-basis:100%; padding-bottom:4px; }
+  #clients-screen, #posts-screen { padding:22px 12px; }
+  .login-box { width:min(100%,360px); padding:30px 24px 26px; }
 }
 </style>
 </head>
@@ -242,7 +282,10 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
 <!-- ══ LOGIN ══════════════════════════════════════════════════════════════════ -->
 <div id="login-screen" class="screen active">
   <div class="login-box">
-    <div class="login-logo">LOOP CMS</div>
+    <div class="login-logo company-brand">
+      <span class="company-logo-art"><img src="assets/logo.png" alt="LOOP Marketing Solutions"></span>
+      <span class="company-wordmark"><strong>LOOP</strong><small>MARKETING SOLUTIONS</small></span>
+    </div>
     <div class="login-sub">لوحة تحكم المحتوى</div>
     <input type="password" id="pw-input" placeholder="كلمة المرور" autocomplete="current-password">
     <button onclick="doLogin()">دخول</button>
@@ -252,7 +295,10 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text); 
 
 <!-- ══ NAV (shared) ════════════════════════════════════════════════════════════ -->
 <nav class="topnav" id="topnav" style="display:none">
-  <span class="logo">LOOP CMS</span>
+  <div class="logo company-brand">
+    <span class="company-logo-art"><img src="assets/logo.png" alt="LOOP Marketing Solutions"></span>
+    <span class="company-wordmark"><strong>LOOP</strong><small>MARKETING SOLUTIONS</small></span>
+  </div>
   <span class="breadcrumb" id="breadcrumb">الزبائن</span>
   <button class="btn-nav" id="btn-back" style="display:none" onclick="showClients()">→ رجوع</button>
   <button class="btn-nav btn-primary" id="btn-add-post" style="display:none" onclick="openPostModal()">+ بوست جديد</button>
