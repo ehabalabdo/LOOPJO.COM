@@ -4,6 +4,7 @@
   "redirects": [
     { "source": "/rose", "destination": "/calendar?client=lily", "permanent": false },
     { "source": "/mijdaflogistics", "destination": "/calendar?client=mijdaflogistics", "permanent": false },
+    { "source": "/sanadkom", "destination": "/calendar?client=sanadkom", "permanent": false },
 
     { "source": "/lp-social-media-jordan", "destination": "/social-media-jordan", "permanent": true },
     { "source": "/lp-social-media-jordan.html", "destination": "/social-media-jordan", "permanent": true },
