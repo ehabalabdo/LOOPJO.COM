@@ -1,7 +1,6 @@
 User-agent: *
 Allow: /
 Sitemap: https://www.loopjo.com/sitemap.xml
-Sitemap: https://www.loopjo.com/sitemap.txt
 
 User-agent: GPTBot
 Allow: /
