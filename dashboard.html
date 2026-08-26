@@ -401,7 +401,7 @@ body::before {
     <div class="modal-body">
       <div class="field">
         <label>رابط صفحة التقويم</label>
-        <input type="url" id="edit-url-input" placeholder="https://loopjo.com/...">
+        <input type="url" id="edit-url-input" placeholder="https://www.loopjo.com/...">
       </div>
     </div>
     <div class="modal-footer">
@@ -429,7 +429,7 @@ body::before {
       </div>
       <div class="field">
         <label>رابط صفحة التقويم <span style="opacity:.5;font-size:.75rem">(اختياري — تلقائي: /calendar?client=ID)</span></label>
-        <input type="url" id="c-url" placeholder="تلقائي: https://loopjo.com/calendar?client=ID">
+        <input type="url" id="c-url" placeholder="تلقائي: https://www.loopjo.com/calendar?client=ID">
       </div>
     </div>
     <div class="modal-footer">
@@ -1017,7 +1017,7 @@ async function saveClient() {
   const id   = document.getElementById('c-id').value.trim().toLowerCase().replace(/\s+/g,'-');
   const url  = document.getElementById('c-url').value.trim();
   if (!name || !id) { showToast('أدخل الاسم والـ ID'); return; }
-  const autoUrl = url || `https://loopjo.com/calendar?client=${id}`;
+  const autoUrl = url || `https://www.loopjo.com/calendar?client=${id}`;
   clients.push({ id, name, pageUrl: autoUrl });
   await fetch(API + '/clients', {
     method: 'PUT',
