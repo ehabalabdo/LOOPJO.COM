@@ -29,3 +29,6 @@ Allow: /
 
 User-agent: Bytespider
 Allow: /
+
+# AI / LLM guidance
+# https://www.loopjo.com/llms.txt
