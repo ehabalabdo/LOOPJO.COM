@@ -946,3 +946,39 @@
         setTimeout(function(){ window.location.href = href; }, 200);
     });
 })();
+
+/* ── خلفية الفيديو: تحميل مؤجّل بعد جهوزية الصفحة ── */
+(function () {
+  function tryPlay(v, tries) {
+    var p = v.play();
+    if (p && p.catch) {
+      p.catch(function () {
+        if (tries > 0) setTimeout(function () { tryPlay(v, tries - 1); }, 300);
+      });
+    }
+  }
+  function startBgVideo() {
+    var v = document.querySelector('video.bg-video[data-src]');
+    if (!v) return;
+    var c = navigator.connection || {};
+    // تجاوز على وضع توفير البيانات، الشبكات البطيئة، الشاشات الصغيرة، وتقليل الحركة
+    if (c.saveData) return;
+    if (c.effectiveType && /(^|-)2g$/.test(c.effectiveType)) return;
+    if (window.matchMedia('(max-width: 768px)').matches) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    v.src = v.dataset.src;
+    v.removeAttribute('data-src');
+    v.load();
+    ['loadeddata', 'canplay'].forEach(function (ev) {
+      v.addEventListener(ev, function () { tryPlay(v, 3); }, { once: true });
+    });
+    // احتياط: بعض المتصفحات لا تُطلق الأحداث في التبويبات المخفية
+    setTimeout(function () { if (v.paused) tryPlay(v, 3); }, 1500);
+  }
+  function whenIdle(fn) {
+    // setTimeout صريح: requestIdleCallback يُخنق في التبويبات المخفية
+    setTimeout(fn, 800);
+  }
+  if (document.readyState === 'complete') whenIdle(startBgVideo);
+  else window.addEventListener('load', function () { whenIdle(startBgVideo); });
+})();
