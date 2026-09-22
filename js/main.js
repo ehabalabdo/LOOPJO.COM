@@ -998,3 +998,74 @@
   if (document.readyState === 'complete') whenIdle(startBgVideo);
   else window.addEventListener('load', function () { whenIdle(startBgVideo); });
 })();
+
+/* ── GA4: تتبّع التحويلات ── */
+(function () {
+    'use strict';
+    if (typeof window.gtag !== 'function') return;
+
+    function send(name, params) {
+        try { window.gtag('event', name, params || {}); } catch (e) {}
+    }
+
+    // اسم الصفحة كما يظهر في التقارير
+    function pageId() {
+        var p = location.pathname.replace(/^\//, '').replace(/\.html$/, '');
+        return p || 'home';
+    }
+
+    // ── نقرات التحويل: واتساب، هاتف، إيميل ──
+    document.addEventListener('click', function (e) {
+        var a = e.target.closest && e.target.closest('a[href]');
+        if (!a) return;
+        var href = a.getAttribute('href') || '';
+        var label = (a.getAttribute('aria-label') || a.textContent || '').trim().slice(0, 60);
+
+        if (/wa\.me|whatsapp/i.test(href)) {
+            // نص الرسالة المسبقة يكشف أي خدمة يسأل عنها الزائر
+            var msg = '';
+            var q = href.split('text=')[1];
+            if (q) { try { msg = decodeURIComponent(q).slice(0, 80); } catch (err) { msg = ''; } }
+            send('contact_whatsapp', {
+                page: pageId(),
+                link_label: label,
+                inquiry: msg,
+                value: 1
+            });
+        } else if (href.indexOf('tel:') === 0) {
+            send('contact_phone', { page: pageId(), link_label: label, value: 1 });
+        } else if (href.indexOf('mailto:') === 0) {
+            send('contact_email', { page: pageId(), link_label: label, value: 1 });
+        }
+    }, true);
+
+    // ── إرسال النماذج ──
+    document.addEventListener('submit', function (e) {
+        var f = e.target;
+        if (!f || f.tagName !== 'FORM') return;
+        send('form_submit', { page: pageId(), form_id: f.id || f.name || 'unnamed', value: 1 });
+    }, true);
+
+    // ── عمق القراءة: يميّز من قرأ الصفحة فعلاً عمّن ارتد ──
+    var marks = [25, 50, 75, 90], hit = {};
+    var onScroll = function () {
+        var h = document.documentElement;
+        var max = (h.scrollHeight - h.clientHeight);
+        if (max <= 0) return;
+        var pct = (h.scrollTop || document.body.scrollTop) / max * 100;
+        for (var i = 0; i < marks.length; i++) {
+            var m = marks[i];
+            if (pct >= m && !hit[m]) {
+                hit[m] = 1;
+                send('scroll_depth', { page: pageId(), percent: m });
+            }
+        }
+        if (hit[90]) window.removeEventListener('scroll', onScroll);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    // ── وقت تفاعل حقيقي: 30 ثانية على الصفحة ──
+    setTimeout(function () {
+        if (!document.hidden) send('engaged_30s', { page: pageId() });
+    }, 30000);
+}());
