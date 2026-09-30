@@ -96,6 +96,32 @@
             background:rgba(177,151,252,0.18); border:1px solid rgba(177,151,252,0.35);
             color:var(--purple); font-size:0.7rem; font-weight:700; padding:4px 9px; border-radius:20px;
             display:flex; align-items:center; gap:5px; backdrop-filter:blur(8px); pointer-events:none; }
+
+        /* ── CAROUSEL ── */
+        .carousel-badge { position:absolute; z-index:4; top:8px; inset-inline-end:8px;
+            background:rgba(0,0,0,0.62); color:#fff; font-size:0.7rem; font-weight:700;
+            padding:4px 8px; border-radius:20px; display:flex; align-items:center; gap:5px;
+            backdrop-filter:blur(8px); pointer-events:none; }
+        .lb-carousel { display:flex; flex-direction:column; align-items:center; }
+        .lb-slides { position:relative; display:flex; align-items:center; justify-content:center; }
+        .lb-slides img { max-width:100%; max-height:76vh; border-radius:10px; display:block; }
+        .lb-dots { display:flex; gap:7px; justify-content:center; margin-top:12px; }
+        .lb-dots i { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,.3);
+            transition:background .2s, transform .2s; cursor:pointer; display:block; }
+        .lb-dots i.on { background:#fff; transform:scale(1.25); }
+        .lb-counter { position:absolute; top:10px; inset-inline-end:10px; z-index:5;
+            background:rgba(0,0,0,0.66); color:#fff; font-size:0.72rem; font-weight:700;
+            padding:4px 10px; border-radius:20px; backdrop-filter:blur(8px); pointer-events:none; }
+        .slide-arrow { position:absolute; z-index:5; top:50%; transform:translateY(-50%);
+            width:38px; height:38px; border-radius:50%; border:none; cursor:pointer;
+            background:rgba(0,0,0,0.5); color:#fff; font-size:1.5rem; line-height:1;
+            display:flex; align-items:center; justify-content:center; backdrop-filter:blur(8px);
+            transition:background .18s; }
+        .slide-arrow:hover { background:rgba(0,0,0,0.75); }
+        .slide-arrow[disabled] { opacity:0; pointer-events:none; }
+        .slide-arrow.prev { inset-inline-start:8px; }
+        .slide-arrow.next { inset-inline-end:8px; }
+
         .play-btn { position:absolute; z-index:4; inset:0; display:flex; align-items:center; justify-content:center;
             background:rgba(0,0,0,0); transition:background .2s; cursor:pointer; }
         .play-btn:hover { background:rgba(0,0,0,0.18); }
@@ -592,6 +618,20 @@ POSTS.forEach(post => {
                 <span class="post-num">#${post.num}</span>
             </div>`;
         }
+    } else if (post.type === 'carousel') {
+        const imgs = carouselImages(post);
+        mediaHtml = `
+        <div class="post-media" onclick="openLightbox(${post.num},event)">
+            <img src="${bustUrl(imgs[0])}" loading="lazy" alt="بوست ${post.num}">
+            <div class="carousel-badge">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <rect x="8" y="3" width="13" height="13" rx="2"/><path d="M3 8v11a2 2 0 0 0 2 2h11"/>
+                </svg>${imgs.length}
+            </div>
+            <button class="media-expand-btn" onclick="openLightbox(${post.num},event)" title="عرض كامل">${expandIcon}</button>
+            <div class="card-status-overlay" id="overlay-${post.num}"></div>
+            <span class="post-num">#${post.num}</span>
+        </div>`;
     } else {
         mediaHtml = `
         <div class="post-media" onclick="openLightbox(${post.num},event)">
@@ -778,6 +818,9 @@ function openLightbox(num, e) {
             const dl = document.getElementById('lb-download');
             dl.href = post.video; dl.download = `gendome-post-${num}.mp4`;
         }
+    } else if (post.type === 'carousel') {
+        lbSlide = 0;
+        renderSlide(post);
     } else {
         mediaEl.innerHTML = `<img src="${bustUrl(post.img)}" alt="بوست ${num}">`;
         const dl = document.getElementById('lb-download');
@@ -799,7 +842,67 @@ function closeLightbox() {
     lbCurrentNum = null;
 }
 
+
+// ── CAROUSEL ──────────────────────────────────────────────────────────────────
+let lbSlide = 0;                       // فهرس الشريحة المعروضة
+
+function carouselImages(post) {
+    if (Array.isArray(post.images) && post.images.length) return post.images;
+    return post.img ? [post.img] : [];
+}
+
+function renderSlide(post) {
+    const imgs = carouselImages(post);
+    if (lbSlide < 0) lbSlide = 0;
+    if (lbSlide > imgs.length - 1) lbSlide = imgs.length - 1;
+    const mediaEl = document.getElementById('lb-media');
+    mediaEl.innerHTML = `
+      <div class="lb-carousel">
+        <div class="lb-slides">
+            <img src="${bustUrl(imgs[lbSlide])}" alt="بوست ${post.num} — صورة ${lbSlide + 1}">
+            <span class="lb-counter">${lbSlide + 1}/${imgs.length}</span>
+            <button class="slide-arrow prev" onclick="slideNav(-1,event)" ${lbSlide === 0 ? 'disabled' : ''} aria-label="السابق">&#8250;</button>
+            <button class="slide-arrow next" onclick="slideNav(1,event)" ${lbSlide === imgs.length - 1 ? 'disabled' : ''} aria-label="التالي">&#8249;</button>
+        </div>
+        <div class="lb-dots">
+            ${imgs.map((_, i) => `<i class="${i === lbSlide ? 'on' : ''}" onclick="goSlide(${i},event)"></i>`).join('')}
+        </div>
+      </div>`;
+    const dl = document.getElementById('lb-download');
+    dl.href = imgs[lbSlide];
+    dl.download = `post-${post.num}-${lbSlide + 1}.jpg`;
+}
+
+function slideNav(dir, e) {
+    if (e) e.stopPropagation();
+    const post = POSTS.find(p => p.num === lbCurrentNum);
+    if (!post || post.type !== 'carousel') return;
+    const imgs = carouselImages(post);
+    const next = lbSlide + dir;
+    if (next < 0 || next > imgs.length - 1) return;
+    lbSlide = next;
+    renderSlide(post);
+}
+
+function goSlide(i, e) {
+    if (e) e.stopPropagation();
+    const post = POSTS.find(p => p.num === lbCurrentNum);
+    if (!post) return;
+    lbSlide = i;
+    renderSlide(post);
+}
+
+// true إذا بقي شرائح في هذا الاتجاه — تُستخدم لتقرير: شريحة أم منشور؟
+function hasMoreSlides(dir) {
+    const post = POSTS.find(p => p.num === lbCurrentNum);
+    if (!post || post.type !== 'carousel') return false;
+    const n = carouselImages(post).length;
+    return dir > 0 ? lbSlide < n - 1 : lbSlide > 0;
+}
+
 function lbNav(dir) {
+    // داخل كاروسيل: تنقّل بين الصور أولاً، وعند آخر صورة انتقل للمنشور التالي
+    if (hasMoreSlides(dir)) { slideNav(dir); return; }
     const idx = POSTS.findIndex(p => p.num === lbCurrentNum);
     const nextPost = POSTS[idx + dir];
     if (!nextPost) return;
@@ -829,7 +932,7 @@ function openRejectModal(num) {
     const post = POSTS.find(p => p.num === num);
     const previewImg = post.type === 'video'
         ? `<div class="vid-thumb"><svg width="22" height="22" viewBox="0 0 24 24" fill="rgba(177,151,252,0.8)"><polygon points="5,3 19,12 5,21"/></svg></div>`
-        : `<img src="${bustUrl(post.img)}" alt="">`;
+        : `<img src="${bustUrl(carouselImages(post)[0] || post.img)}" alt="">`;
     document.getElementById('modal-preview').innerHTML = `
         ${previewImg}
         <div>

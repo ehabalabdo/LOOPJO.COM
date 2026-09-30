@@ -39,6 +39,33 @@ body::before {
     radial-gradient(ellipse 55% 45% at 8% 95%, rgba(153,141,192,.13) 0%, transparent 67%);
 }
 
+
+.carousel-badge { position:absolute; top:6px; inset-inline-end:6px; z-index:3;
+  background:rgba(0,0,0,.66); color:#fff; font-size:11px; font-weight:700;
+  padding:3px 7px; border-radius:20px; display:flex; align-items:center; gap:4px;
+  backdrop-filter:blur(6px); pointer-events:none; }
+
+/* ── CAROUSEL SLIDES ── */
+.slides-wrap { display:none; margin-top:10px; }
+.slides-wrap.on { display:block; }
+.slides-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.slides-head b { font-size:13px; color:var(--text); }
+.slides-head span { font-size:12px; color:var(--muted); }
+.slides-list { display:flex; flex-wrap:wrap; gap:8px; }
+.slide-item { position:relative; width:74px; height:74px; border-radius:10px; overflow:hidden;
+  border:1px solid var(--border); background:var(--bg3); flex:0 0 auto; }
+.slide-item img { width:100%; height:100%; object-fit:cover; display:block; }
+.slide-item .idx { position:absolute; top:3px; inset-inline-start:3px; background:rgba(0,0,0,.72);
+  color:#fff; font-size:10px; font-weight:700; padding:1px 5px; border-radius:20px; }
+.slide-item .ops { position:absolute; bottom:0; inset-inline:0; display:flex;
+  background:rgba(0,0,0,.66); opacity:0; transition:opacity .15s; }
+.slide-item:hover .ops { opacity:1; }
+.slide-item .ops button { flex:1; background:none; border:none; color:#fff; font-size:13px;
+  padding:3px 0; cursor:pointer; line-height:1.2; }
+.slide-item .ops button:hover { background:rgba(255,255,255,.18); }
+.slide-item .ops button.del:hover { background:rgba(224,90,90,.65); }
+.slides-empty { color:var(--muted); font-size:12px; padding:10px 0; }
+
 /* ── SCREENS ── */
 .screen { display:none; }
 .screen.active { display:block; }
@@ -345,8 +372,19 @@ body::before {
       <div class="upload-zone" onclick="document.getElementById('file-input').click()">
         <div>📁 اسحب ملف أو اضغط للرفع (صورة أو فيديو)</div>
         <div style="font-size:11px;margin-top:4px">JPG, PNG, MP4, MOV — حتى 50MB</div>
-        <input type="file" id="file-input" accept="image/*,video/*" onchange="handleFileSelect(this)">
+        <input type="file" id="file-input" accept="image/*,video/*" multiple onchange="handleFileSelect(this)">
         <div class="upload-progress" id="upload-progress"></div>
+      </div>
+
+
+      <!-- Carousel slides -->
+      <div class="slides-wrap" id="slides-wrap">
+        <div class="slides-head">
+          <b>صور الكاروسيل</b>
+          <span id="slides-count">0 صور</span>
+        </div>
+        <div class="slides-list" id="slides-list"></div>
+        <div class="slides-empty" id="slides-empty">ارفع صورتين أو أكثر — الترتيب هو ترتيب ظهورها عند العميل.</div>
       </div>
 
       <div class="or-divider">— أو أدخل رابط مباشر —</div>
@@ -373,9 +411,10 @@ body::before {
 
       <div class="field">
         <label>نوع البوست</label>
-        <select id="f-type">
+        <select id="f-type" onchange="renderSlides()">
           <option value="image">صورة</option>
           <option value="video">فيديو</option>
+          <option value="carousel">كاروسيل (عدة صور)</option>
         </select>
       </div>
 
@@ -653,6 +692,18 @@ function renderPosts() {
         </div>
         <span class="post-num-badge">#${post.num}</span>
       </div>`;
+    } else if (post.type === 'carousel') {
+      const imgs = Array.isArray(post.images) ? post.images : [];
+      mediaHtml = `
+      <div class="post-media">
+        <img src="${escHtml(imgs[0] || post.img || '')}" alt="بوست ${post.num}" loading="lazy">
+        <span class="carousel-badge" title="كاروسيل — ${imgs.length} صور">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="8" y="3" width="13" height="13" rx="2"/><path d="M3 8v11a2 2 0 0 0 2 2h11"/>
+          </svg>${imgs.length}
+        </span>
+        <span class="post-num-badge">#${post.num}</span>
+      </div>`;
     } else {
       mediaHtml = `
       <div class="post-media">
@@ -746,6 +797,7 @@ function openPostModal(idx) {
     document.getElementById('f-caption').value = '';
     document.getElementById('f-type').value = 'image';
     setMediaPreview(null, 'image');
+    slides = [];
   } else {
     const p = posts[idx];
     document.getElementById('f-url').value = p.img || p.video || '';
@@ -756,7 +808,9 @@ function openPostModal(idx) {
     document.getElementById('f-caption').value = p.caption || '';
     document.getElementById('f-type').value = p.type || 'image';
     setMediaPreview(p.img || p.video, p.type);
+    slides = Array.isArray(p.images) ? p.images.slice() : [];
   }
+  renderSlides();
 
   document.getElementById('post-modal').classList.add('open');
 }
@@ -820,9 +874,49 @@ function handleUrlInput(val) {
 }
 
 // ── FILE UPLOAD ───────────────────────────────────────────────────────────────
+
+async function uploadOne(file) {
+  const maxBytes = 24 * 1024 * 1024;
+  if (file.size > maxBytes) {
+    showToast(`⚠ ${file.name} أكبر من 24MB`, true);
+    return null;
+  }
+  try {
+    const res = await fetch(
+      `${API}/upload?client=${currentClient.id}&filename=${encodeURIComponent(file.name)}`,
+      { method:'POST',
+        headers:{ Authorization:'Bearer '+adminToken, 'Content-Type':file.type },
+        body:file });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || data.error || `HTTP ${res.status}`);
+    return data.url;
+  } catch (e) {
+    showToast(`✕ فشل رفع ${file.name}`, true);
+    return null;
+  }
+}
+
 async function handleFileSelect(input) {
-  const file = input.files[0];
-  if (!file) return;
+  const files = Array.from(input.files || []);
+  if (!files.length) return;
+  // كاروسيل أو عدة ملفات: ارفعها كلها كشرائح
+  if (isCarousel() || files.length > 1) {
+    document.getElementById('f-type').value = 'carousel';
+    renderSlides();
+    const prog = document.getElementById('upload-progress');
+    let done = 0;
+    for (const fl of files) {
+      prog.style.color = 'var(--mint)';
+      prog.textContent = `جاري رفع ${done + 1} من ${files.length}...`;
+      const url = await uploadOne(fl);
+      if (url) { addSlide(url); done++; }
+    }
+    prog.style.color = done === files.length ? 'var(--green)' : 'var(--red)';
+    prog.textContent = `✓ رُفعت ${done} من ${files.length}`;
+    input.value = '';
+    return;
+  }
+  const file = files[0];
   const prog = document.getElementById('upload-progress');
   prog.style.color = 'var(--mint)';
 
@@ -873,6 +967,54 @@ async function handleFileSelect(input) {
   }
 }
 
+
+// ── CAROUSEL SLIDES ──────────────────────────────────────────────────────────
+let slides = [];                       // روابط صور الكاروسيل بالترتيب
+
+function isCarousel() {
+  return document.getElementById('f-type').value === 'carousel';
+}
+
+function renderSlides() {
+  const wrap  = document.getElementById('slides-wrap');
+  const list  = document.getElementById('slides-list');
+  const empty = document.getElementById('slides-empty');
+  const count = document.getElementById('slides-count');
+  wrap.classList.toggle('on', isCarousel());
+  if (!isCarousel()) return;
+
+  count.textContent = slides.length ? `${slides.length} صور` : '0 صور';
+  empty.style.display = slides.length ? 'none' : '';
+  list.innerHTML = slides.map((u, i) => `
+    <div class="slide-item">
+      <img src="${escHtml(u)}" alt="صورة ${i + 1}">
+      <span class="idx">${i + 1}</span>
+      <div class="ops">
+        <button type="button" onclick="moveSlide(${i},-1)" title="تحريك لليمين" ${i === 0 ? 'disabled style="opacity:.35"' : ''}>›</button>
+        <button type="button" class="del" onclick="removeSlide(${i})" title="حذف">✕</button>
+        <button type="button" onclick="moveSlide(${i},1)" title="تحريك لليسار" ${i === slides.length - 1 ? 'disabled style="opacity:.35"' : ''}>‹</button>
+      </div>
+    </div>`).join('');
+}
+
+function addSlide(url) {
+  if (!url || slides.includes(url)) return;
+  slides.push(url);
+  renderSlides();
+}
+
+function removeSlide(i) {
+  slides.splice(i, 1);
+  renderSlides();
+}
+
+function moveSlide(i, dir) {
+  const j = i + dir;
+  if (j < 0 || j >= slides.length) return;
+  const t = slides[i]; slides[i] = slides[j]; slides[j] = t;
+  renderSlides();
+}
+
 // ── SAVE POST ─────────────────────────────────────────────────────────────────
 async function savePost() {
   const dateISO = document.getElementById('f-date').value;
@@ -881,7 +1023,9 @@ async function savePost() {
   const type    = document.getElementById('f-type').value;
 
   if (!dateISO) { showToast('اختر التاريخ'); return; }
-  if (!url)     { showToast('أضف صورة أو رابط'); return; }
+  if (type === 'carousel') {
+    if (slides.length < 2) { showToast('الكاروسيل يحتاج صورتين على الأقل'); return; }
+  } else if (!url) { showToast('أضف صورة أو رابط'); return; }
 
   const dayAr  = document.getElementById('f-day').value || DAYS_AR[new Date(dateISO+'T00:00:00').getDay()];
   const dmy    = isoDMY(dateISO);
@@ -896,6 +1040,7 @@ async function savePost() {
     product: product,
   };
   if (type === 'video') post.video = isDrive(url) ? driveUrl(url) : url;
+  else if (type === 'carousel') { post.images = slides.slice(); post.img = slides[0]; }
   else post.img = url;
 
   if (editingIdx !== null) {
