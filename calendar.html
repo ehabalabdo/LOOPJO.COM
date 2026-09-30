@@ -776,6 +776,65 @@ function clearStatus(num) {
 }
 
 // ── VIDEO TOGGLE (inline in card) ──
+
+// ── STOP MEDIA ────────────────────────────────────────────────────────────────
+// يعيد أيقونة التشغيل لحالتها الأصلية
+function resetPlayIcon(num) {
+    const icon = document.getElementById(`playicon-${num}`);
+    if (!icon) return;
+    icon.innerHTML = `<circle cx="26" cy="26" r="26" fill="rgba(177,151,252,0.2)"/>
+            <circle cx="26" cy="26" r="25" stroke="rgba(177,151,252,0.45)" stroke-width="1.5" fill="none"/>
+            <polygon points="21,18 38,26 21,34" fill="white" opacity="0.9"/>`;
+}
+
+// يوقف فيديو بطاقة واحدة ويكتم صوتها
+function stopCardVideo(vid) {
+    if (!vid || vid.paused) return;
+    vid.pause();
+    vid.muted = true;
+    const num = (vid.id || '').replace('vid-', '');
+    if (num) resetPlayIcon(num);
+}
+
+// يوقف كل فيديوهات الشبكة — يُستدعى عند فتح اللايت بوكس
+function stopAllCardVideos() {
+    document.querySelectorAll('.post-media video').forEach(stopCardVideo);
+}
+
+// يفرّغ محتوى اللايت بوكس: يوقف <video> ويقتل <iframe> الخاص بـDrive
+function clearLightboxMedia() {
+    const wrap = document.getElementById('lb-media');
+    if (!wrap) return;
+    const v = wrap.querySelector('video');
+    if (v) { v.pause(); v.removeAttribute('src'); v.load(); }
+    // إفراغ الـinnerHTML هو الطريقة الوحيدة لإيقاف صوت إطار Drive
+    wrap.innerHTML = '';
+}
+
+// أوقف فيديو البطاقة عندما تخرج عن الشاشة
+(function watchCardVideos() {
+    if (!('IntersectionObserver' in window)) return;
+    const io = new IntersectionObserver(entries => {
+        entries.forEach(en => { if (!en.isIntersecting) stopCardVideo(en.target); });
+    }, { threshold: 0.25 });
+    const attach = () => document.querySelectorAll('.post-media video').forEach(v => {
+        if (!v.dataset.watched) { v.dataset.watched = '1'; io.observe(v); }
+    });
+    attach();
+    // البطاقات تُبنى ديناميكياً — راقب الشبكة وأضف المراقبة للجديد
+    const grid = document.getElementById('grid');
+    if (grid) new MutationObserver(attach).observe(grid, { childList: true, subtree: true });
+})();
+
+// أوقف كل شيء عند إخفاء التبويب أو مغادرة الصفحة
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stopAllCardVideos();
+});
+window.addEventListener('pagehide', () => {
+    stopAllCardVideos();
+    clearLightboxMedia();
+});
+
 function toggleVideo(num, e) {
     if (e) e.stopPropagation();
     const vid = document.getElementById(`vid-${num}`);
@@ -800,6 +859,8 @@ function openLightbox(num, e) {
     if (e && e.target.closest('.play-btn')) return;
     if (e) e.stopPropagation();
 
+    stopAllCardVideos();    // لا يبقى صوت من بطاقة في الخلفية
+    clearLightboxMedia();   // أوقف ما كان معروضاً قبل استبداله
     lbCurrentNum = num;
     const post = POSTS.find(p => p.num === num);
 
@@ -836,10 +897,9 @@ function openLightbox(num, e) {
 function closeLightbox() {
     document.getElementById('lb-backdrop').classList.remove('open');
     document.body.style.overflow = '';
-    // stop any video playing in lightbox
-    const v = document.querySelector('#lb-media video');
-    if (v) v.pause();
+    clearLightboxMedia();   // يوقف <video> ويقتل إطار Drive بالصوت
     lbCurrentNum = null;
+    lbSlide = 0;
 }
 
 
