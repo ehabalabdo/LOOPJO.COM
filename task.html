@@ -39,7 +39,7 @@
 </style>
 </head>
 <body>
-<h1>تاسكات <small id="count"></small></h1>
+<h1><span>تاسكات <small id="sync" title="حالة الحفظ"></small></span><small id="count"></small></h1>
 <form id="f">
   <input id="txt" placeholder="تاسك جديد… (Enter)" autocomplete="off" autofocus>
   <input id="dt" type="date" title="تاريخ التاسك">
@@ -53,7 +53,47 @@
 const KEY = 'tasks-v1', LATE_DAYS = 3;
 let tasks = [];
 try { tasks = JSON.parse(localStorage.getItem(KEY)) || []; } catch {}
-const save = () => { try { localStorage.setItem(KEY, JSON.stringify(tasks)); } catch {} };
+const API = 'https://gendome-calendar-api.loopehab.workers.dev/tasks';
+let pw = ''; try { pw = localStorage.getItem('tasks-pw') || ''; } catch {}
+let pushTimer = null;
+const status = s => { $('sync').textContent = s; };
+const save = () => {
+  try { localStorage.setItem(KEY, JSON.stringify(tasks)); } catch {}
+  clearTimeout(pushTimer); status('⋯');
+  pushTimer = setTimeout(push, 600);
+};
+
+function askPw() {
+  const v = prompt('كلمة سر الداشبورد:');
+  if (!v) return false;
+  pw = v; try { localStorage.setItem('tasks-pw', v); } catch {}
+  return true;
+}
+
+async function api(method, body) {
+  if (!pw && !askPw()) throw new Error('nopw');
+  const res = await fetch(API, { method, body, headers: { Authorization: 'Bearer ' + pw, 'Content-Type': 'application/json' } });
+  if (res.status === 401) { pw = ''; try { localStorage.removeItem('tasks-pw'); } catch {} if (askPw()) return api(method, body); throw new Error('auth'); }
+  if (!res.ok) throw new Error(res.status);
+  return res.json();
+}
+
+async function push() {
+  pushTimer = null;
+  try { await api('PUT', JSON.stringify(tasks)); status('✓'); } catch { status('⚠ مش محفوظ عالسيرفر'); }
+}
+
+async function pull() {
+  if (pushTimer) return; // في تعديل لسا ما انرفع
+  try {
+    const remote = await api('GET');
+    if (pushTimer) return;
+    if (!remote.length && tasks.length) return push(); // أول مرة: ارفع اللي عالجهاز
+    tasks = remote;
+    try { localStorage.setItem(KEY, JSON.stringify(tasks)); } catch {}
+    render(); status('✓');
+  } catch { status('⚠ أوفلاين'); }
+}
 
 const today = () => { const d = new Date(); d.setHours(0,0,0,0); return d; };
 const iso = d => new Date(d - d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
@@ -103,6 +143,8 @@ $('f').onsubmit = e => {
 $('clear').onclick = () => { tasks = tasks.filter(t => !t.done); save(); render(); };
 
 render();
+pull();
+document.addEventListener('visibilitychange', () => { if (!document.hidden) pull(); });
 setInterval(render, 60 * 60 * 1000); // يحدّث الأعمار لو ضل مفتوح
 </script>
 </body>
