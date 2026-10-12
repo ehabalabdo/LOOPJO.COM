@@ -3,6 +3,11 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
+    { "source": "/tasks", "destination": "/task", "permanent": false },
+    { "source": "/Task", "destination": "/task", "permanent": false },
+    { "source": "/Tasks", "destination": "/task", "permanent": false },
+    { "source": "/TASK", "destination": "/task", "permanent": false },
+    { "source": "/TASKS", "destination": "/task", "permanent": false },
     { "source": "/rose", "destination": "/calendar?client=lily", "permanent": false },
     { "source": "/mijdaflogistics", "destination": "/calendar?client=mijdaflogistics", "permanent": false },
     { "source": "/sanadkom", "destination": "/calendar?client=sanadkom", "permanent": false },
