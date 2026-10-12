@@ -54,7 +54,13 @@ const KEY = 'tasks-v1', LATE_DAYS = 3;
 let tasks = [];
 try { tasks = JSON.parse(localStorage.getItem(KEY)) || []; } catch {}
 const API = 'https://gendome-calendar-api.loopehab.workers.dev/tasks';
+const cookiePw = () => decodeURIComponent((document.cookie.match(/(?:^|; )tpw=([^;]*)/) || [])[1] || '');
+const storePw = v => {
+  try { v ? localStorage.setItem('tasks-pw', v) : localStorage.removeItem('tasks-pw'); } catch {}
+  document.cookie = `tpw=${encodeURIComponent(v)}; path=/task; max-age=${v ? 31536000 : 0}; secure; samesite=strict`;
+};
 let pw = ''; try { pw = localStorage.getItem('tasks-pw') || ''; } catch {}
+if (!pw) pw = cookiePw();
 let pushTimer = null;
 const status = s => { $('sync').textContent = s; };
 const save = () => {
@@ -63,17 +69,17 @@ const save = () => {
   pushTimer = setTimeout(push, 600);
 };
 
-function askPw() {
-  const v = prompt('كلمة سر الداشبورد:');
+function askPw(wrong) {
+  const v = prompt(wrong ? 'كلمة السر غلط، جرّب مرة تانية:' : 'كلمة سر الداشبورد:');
   if (!v) return false;
-  pw = v; try { localStorage.setItem('tasks-pw', v); } catch {}
+  pw = v.trim(); storePw(pw);
   return true;
 }
 
 async function api(method, body) {
   if (!pw && !askPw()) throw new Error('nopw');
   const res = await fetch(API, { method, body, headers: { Authorization: 'Bearer ' + pw, 'Content-Type': 'application/json' } });
-  if (res.status === 401) { pw = ''; try { localStorage.removeItem('tasks-pw'); } catch {} if (askPw()) return api(method, body); throw new Error('auth'); }
+  if (res.status === 401) { pw = ''; storePw(''); if (askPw(true)) return api(method, body); throw new Error('auth'); }
   if (!res.ok) throw new Error(res.status);
   return res.json();
 }
