@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>تاسكات</title>
+<style>
+  :root{--bg:#0e0e10;--card:#18181b;--line:#27272a;--text:#f4f4f5;--mute:#8a8a93;--red:#ff3b3b;--ok:#3ddc84}
+  *{box-sizing:border-box;margin:0}
+  body{background:var(--bg);color:var(--text);font:15px/1.5 "Segoe UI",Tahoma,sans-serif;padding:20px 16px;max-width:640px;margin:auto}
+  h1{font-size:20px;font-weight:600;display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px}
+  h1 small{color:var(--mute);font-size:13px;font-weight:400}
+  form{display:flex;gap:8px;margin-bottom:18px}
+  input{background:var(--card);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:10px 12px;font:inherit;outline:none}
+  input:focus{border-color:#52525b}
+  #txt{flex:1;min-width:0}
+  #dt{width:150px;color-scheme:dark}
+  button{cursor:pointer;font:inherit}
+  #add{background:var(--text);color:var(--bg);border:0;border-radius:10px;padding:0 18px;font-weight:600}
+  ul{list-style:none;padding:0;display:flex;flex-direction:column;gap:8px}
+  li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px}
+  li.late{border-color:var(--red);box-shadow:0 0 0 1px var(--red),0 0 18px rgba(255,59,59,.35);animation:pulse 1.8s ease-in-out infinite}
+  li.late .age{color:var(--red);font-weight:600}
+  @keyframes pulse{50%{box-shadow:0 0 0 1px var(--red),0 0 6px rgba(255,59,59,.15)}}
+  li.done{opacity:.45;animation:none;box-shadow:none;border-color:var(--line)}
+  li.done .t{text-decoration:line-through}
+  .chk{width:22px;height:22px;border-radius:50%;border:2px solid #52525b;background:none;flex:none;display:grid;place-items:center;color:var(--bg);font-size:13px}
+  li.done .chk{background:var(--ok);border-color:var(--ok)}
+  .t{flex:1;word-break:break-word}
+  .t[contenteditable="true"]{outline:1px dashed #52525b;border-radius:4px;padding:0 4px}
+  .age{color:var(--mute);font-size:12px;white-space:nowrap}
+  .del{background:none;border:0;color:var(--mute);font-size:18px;line-height:1;padding:2px 4px;opacity:0;transition:opacity .15s}
+  li:hover .del{opacity:1}
+  .del:hover{color:var(--red)}
+  .sep{color:var(--mute);font-size:12px;margin:18px 2px 8px;display:flex;justify-content:space-between}
+  .sep button{background:none;border:0;color:var(--mute);text-decoration:underline;font-size:12px}
+  .empty{color:var(--mute);text-align:center;padding:40px 0}
+</style>
+</head>
+<body>
+<h1>تاسكات <small id="count"></small></h1>
+<form id="f">
+  <input id="txt" placeholder="تاسك جديد… (Enter)" autocomplete="off" autofocus>
+  <input id="dt" type="date" title="تاريخ التاسك">
+  <button id="add">+</button>
+</form>
+<ul id="open"></ul>
+<div class="sep" id="doneHead" hidden><span>منتهية</span><button id="clear">امسح المنتهية</button></div>
+<ul id="done"></ul>
+
+<script>
+const KEY = 'tasks-v1', LATE_DAYS = 3;
+let tasks = [];
+try { tasks = JSON.parse(localStorage.getItem(KEY)) || []; } catch {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(tasks)); } catch {} };
+
+const today = () => { const d = new Date(); d.setHours(0,0,0,0); return d; };
+const iso = d => new Date(d - d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
+const daysSince = s => Math.round((today() - new Date(s + 'T00:00')) / 864e5);
+const ageText = n => n <= 0 ? 'اليوم' : n === 1 ? 'مبارح' : n === 2 ? 'من يومين' : `من ${n} أيام`;
+
+const $ = id => document.getElementById(id);
+$('dt').value = iso(today());
+
+function render() {
+  const sorted = [...tasks].sort((a, b) => a.date.localeCompare(b.date) || a.id - b.id);
+  const open = sorted.filter(t => !t.done), done = sorted.filter(t => t.done);
+  const late = open.filter(t => daysSince(t.date) > LATE_DAYS).length;
+  $('count').textContent = open.length ? `${open.length} مفتوحة` + (late ? ` · ${late} متأخرة` : '') : '';
+  $('open').innerHTML = open.length ? '' : '<div class="empty">ما في تاسكات 👌</div>';
+  $('done').innerHTML = '';
+  open.forEach(t => $('open').append(row(t)));
+  done.forEach(t => $('done').append(row(t)));
+  $('doneHead').hidden = !done.length;
+}
+
+function row(t) {
+  const n = daysSince(t.date), li = document.createElement('li');
+  if (t.done) li.className = 'done'; else if (n > LATE_DAYS) li.className = 'late';
+  li.innerHTML = `<button class="chk" title="خلصت">${t.done ? '✓' : ''}</button>
+    <span class="t" title="دبل كليك للتعديل"></span><span class="age"></span>
+    <button class="del" title="حذف">×</button>`;
+  const txt = li.querySelector('.t');
+  txt.textContent = t.text;
+  li.querySelector('.age').textContent = ageText(n);
+  li.querySelector('.chk').onclick = () => { t.done = !t.done; save(); render(); };
+  li.querySelector('.del').onclick = () => { tasks = tasks.filter(x => x !== t); save(); render(); };
+  txt.ondblclick = () => { txt.contentEditable = 'true'; txt.focus(); document.getSelection().selectAllChildren(txt); };
+  txt.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); txt.blur(); } if (e.key === 'Escape') { txt.textContent = t.text; txt.blur(); } };
+  txt.onblur = () => { txt.contentEditable = 'false'; const v = txt.textContent.trim(); if (v) t.text = v; save(); render(); };
+  return li;
+}
+
+$('f').onsubmit = e => {
+  e.preventDefault();
+  const text = $('txt').value.trim();
+  if (!text) return;
+  tasks.push({ id: Date.now(), text, date: $('dt').value || iso(today()), done: false });
+  $('txt').value = ''; $('dt').value = iso(today());
+  save(); render(); $('txt').focus();
+};
+$('clear').onclick = () => { tasks = tasks.filter(t => !t.done); save(); render(); };
+
+render();
+setInterval(render, 60 * 60 * 1000); // يحدّث الأعمار لو ضل مفتوح
+</script>
+</body>
+</html>
