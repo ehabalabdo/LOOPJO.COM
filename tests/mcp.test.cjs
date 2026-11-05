@@ -11,10 +11,10 @@ async function session(fetcher) {
   await server.connect(a); await client.connect(b);
   return {client, close:async()=>{await client.close(); await server.close();}};
 }
-const index = readFileSync('llms.txt','utf8');
+const index = readFileSync('data/loopjo-services.json','utf8');
 test('catalog, Arabic search, detail allowlist, contacts, validation and outages',async()=>{
   const urls=[];
-  const s=await session(async url=>{urls.push(url);return {ok:true,text:async()=>url.endsWith('llms.txt')?index:'<main><h1>Service details</h1><p>Published scope</p><script>secret script</script></main>'};});
+  const s=await session(async url=>{urls.push(url);return {ok:true,text:async()=>index};});
   try {
     const tools=await s.client.listTools(); assert.equal(tools.tools.length,3);
     for(const t of tools.tools) assert.equal(t.annotations.readOnlyHint,true);
@@ -24,17 +24,44 @@ test('catalog, Arabic search, detail allowlist, contacts, validation and outages
     assert.ok(data(await call('search_services',{query:'سوشال'})).services.some(x=>x.id==='social-media-jordan'));
     assert.equal(data(await call('search_services',{query:'spaceship'})).services.length,0);
     const detail=data(await call('get_service_details',{service_id:'social-media-jordan'}));
-    assert.match(detail.content,/Published scope/); assert.doesNotMatch(detail.content,/secret script/);
+    assert.match(detail.content,/استراتيجية/);
+    assert.doesNotMatch(JSON.stringify(detail),/Info@|079|\+962|ehab|إيهاب/i);
     const count=urls.length;
     assert.equal(data(await call('get_service_details',{service_id:'calendar'})).found,false);
     assert.equal(urls.length,count+1); // Only the public catalog, never the unknown page.
     assert.equal((await call('get_service_details',{service_id:'../calendar'})).isError,true);
-    assert.match(data(await call('get_contact_details')).contact,/Info@loopjo.com/);
-    assert.equal(data(await call('get_contact_details')).sends_requests,false);
+    assert.deepEqual(data(await call('get_contact_details')),{contact_page_url:'https://www.loopjo.com/loopjo#support'});
   } finally {await s.close();}
   const broken=await session(async()=>{throw Error('offline');});
   try {assert.equal((await broken.client.callTool({name:'search_services',arguments:{}})).isError,true);}
   finally {await broken.close();}
+});
+
+test('all service responses exclude unrelated identifiers; polluted catalogs fail closed',async()=>{
+  const catalog=JSON.parse(index);
+  for(const service of catalog.services) {
+    service.personal_name='UNRELATED_PERSON'; service.email='private@example.com'; service.session_id='secret-session';
+    service.url='https://untrusted.example/user/secret';
+  }
+  const s=await session(async()=>({ok:true,text:async()=>JSON.stringify(catalog)}));
+  try {
+    for(const service of catalog.services) {
+      const result=await s.client.callTool({name:'get_service_details',arguments:{service_id:service.id}});
+      assert.ok(!result.isError);
+      assert.doesNotMatch(JSON.stringify(result),/UNRELATED_PERSON|private@example|secret-session|untrusted/);
+      assert.equal(JSON.parse(result.content[0].text).url,'https://www.loopjo.com/'+service.id);
+    }
+    const search=await s.client.callTool({name:'search_services',arguments:{}});
+    assert.doesNotMatch(JSON.stringify(search),/UNRELATED_PERSON|private@example|secret-session|untrusted/);
+  } finally {await s.close();}
+  for(const identifier of ['private@example.com','+962 79 202 0388','https://wa.me/962792020388']) {
+    const polluted=JSON.parse(index); polluted.services[0].offerings[0].description=identifier;
+    const p=await session(async()=>({ok:true,text:async()=>JSON.stringify(polluted)}));
+    try {
+      const r=await p.client.callTool({name:'get_service_details',arguments:{service_id:polluted.services[0].id}});
+      assert.equal(r.isError,true); assert.ok(!JSON.stringify(r).includes(identifier));
+    } finally {await p.close();}
+  }
 });
 test('HTTP transport supports initialize, tool listing and origin protection',async()=>{
   const express=require('express');
