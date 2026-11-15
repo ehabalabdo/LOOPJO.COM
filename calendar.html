@@ -702,7 +702,15 @@ async function initPage() {
     document.getElementById('client-avatar').textContent = clientName.charAt(0).toUpperCase();
     document.getElementById('client-name-hdr').textContent = clientName;
     document.getElementById('hero-client-name').textContent = clientName;
-    document.getElementById('hero-month-tag').textContent = new Date().toLocaleDateString('ar-EG', { month: 'long', year: 'numeric' });
+    // month badge = the month most posts fall in (falls back to today when there are no posts)
+    let monthDate = new Date();
+    if (POSTS.length) {
+        const counts = {};
+        POSTS.forEach(p => { const d = new Date(parseDateDMY(p.date)); if (!isNaN(d)) { const k = `${d.getFullYear()}-${d.getMonth()}`; counts[k] = (counts[k] || 0) + 1; } });
+        const top = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+        if (top) { const [y, m] = top[0].split('-').map(Number); monthDate = new Date(y, m, 1); }
+    }
+    document.getElementById('hero-month-tag').textContent = monthDate.toLocaleDateString('ar-EG', { month: 'long', year: 'numeric' });
     // Update stats bar
     const total = POSTS.length;
     const videos = POSTS.filter(p => p.type === 'video').length;
